@@ -3,31 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>GEJFA Rules — 2025</title>
-  <meta name="description" content="Instant sideline lookup for the 2025 GEJFA rulebook. Type a situation, get the rule.">
+  <title>Skyline Spartans — GEJFA Rules 2025</title>
+  <meta name="description" content="Skyline Spartans sideline lookup for the 2025 GEJFA rulebook. Type a situation, get the rule.">
   <meta name="theme-color" content="#16281c">
   <link rel="manifest" href="manifest.webmanifest">
   <!-- iOS "Add to Home Screen" support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="GEJFA Rules">
+  <meta name="apple-mobile-web-app-title" content="Spartans Rules">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="hero">
-    <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">GEJFA Rules 2025</h1>
+    <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Skyline Spartans — GEJFA Rules 2025</h1>
     <svg class="arc" viewBox="0 0 320 92" aria-hidden="true">
       <path id="arcPath" d="M 22 86 A 235 235 0 0 1 298 86" fill="none"/>
-      <text><textPath href="#arcPath" startOffset="50%" text-anchor="middle">GEJFA</textPath></text>
+      <text><textPath href="#arcPath" startOffset="50%" text-anchor="middle">SKYLINE</textPath></text>
     </svg>
     <div class="banner" aria-hidden="true">
-      <span>Sideline</span><span class="year">2025</span><span>Rules</span>
+      <span>Sammamish</span><span class="year">2025</span><span>Washington</span>
     </div>
     <hr class="stripe">
-    <p class="sub">Find the rule. Fast.</p>
+    <p class="sub">Spartans</p>
+    <p class="tagline">GEJFA sideline rules — find it fast</p>
   </header>
 
   <div class="searchwrap">
@@ -35,10 +36,26 @@
            autocapitalize="off" spellcheck="false" placeholder="Type a situation… (e.g. late weigh in, up 30, ejected)"
            aria-label="Search the rules">
     <button id="clearBtn" class="clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
+    <button id="micBtn" class="mic-btn" type="button" aria-label="Search by voice" hidden>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+    </button>
     <button id="levelBtn" class="level-btn" type="button" aria-label="Filter by level">All</button>
+    <button id="browseBtn" class="browse-btn" type="button" aria-label="Browse categories"
+            aria-expanded="false" aria-controls="catSheet">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 6h18v2.4H3zm0 4.8h18v2.4H3zm0 4.8h18V18H3z"/></svg>
+    </button>
   </div>
 
-  <nav id="chips" class="chips" aria-label="Browse by category"></nav>
+  <div id="catPillRow" class="cat-pill-row" hidden>
+    <button id="catPill" class="cat-pill" type="button"></button>
+  </div>
+
+  <div id="catSheet" class="level-sheet cat-sheet" hidden>
+    <div class="level-sheet-inner" role="dialog" aria-modal="true" aria-labelledby="catSheetTitle">
+      <h2 id="catSheetTitle">Browse categories</h2>
+      <div id="catOptions" class="cat-options"></div>
+    </div>
+  </div>
 
   <div id="levelSheet" class="level-sheet" hidden>
     <div class="level-sheet-inner">

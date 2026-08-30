@@ -172,11 +172,11 @@
     for (let i = 0; i < 8; i++) {
       const x = 50 + i * 34;
       s += `<rect x="${x - 6}" y="${y - 20}" width="12" height="12" class="dgm-x"/>`;
-      s += `<circle cx="${x}" cy="${y + 14}" r="6" class="dgm-o"/>`;
+      if (i !== 3) s += `<circle cx="${x}" cy="${y + 14}" r="6" class="dgm-o"/>`;
     }
-    s += `<circle cx="${cx}" cy="${y + 44}" r="7" class="dgm-ball"/>`;
-    s += `<text x="${cx + 14}" y="${y + 48}" class="dgm-small">punter</text>`;
-    s += `<text x="${W / 2}" y="${y + 68}" class="dgm-note" text-anchor="middle">Declared to the ref · clock stops · block OK, no return — dead where it stops.</text>`;
+    s += `<circle cx="${50 + 3 * 34}" cy="${y + 44}" r="7" class="dgm-ball"/>`;
+    s += `<text x="${50 + 3 * 34 + 14}" y="${y + 48}" class="dgm-small">punter</text>`;
+    s += `<text x="${W / 2}" y="${y + 68}" class="dgm-note" text-anchor="middle">8 within 3 yds each side, except the punter · declared · clock stops · no return.</text>`;
     return svgWrap(s, 134);
   })();
 
@@ -194,7 +194,7 @@
     s += `<text x="285" y="38" class="dgm-big" text-anchor="middle">1</text>`;
     s += `<text x="285" y="56" class="dgm-small" text-anchor="middle">POINT</text>`;
     s += `<text x="250" y="100" class="dgm-label" text-anchor="middle">RUN / PASS</text>`;
-    s += `<text x="${W / 2}" y="120" class="dgm-note" text-anchor="middle">Reversed from high school on purpose — kicking is harder here. Ball at the 3.</text>`;
+    s += `<text x="${W / 2}" y="120" class="dgm-note" text-anchor="middle">Kick = 2 · Run or pass = 1 — same at every level.</text>`;
     return svgWrap(s, 128);
   })();
   D["II-6-d"] = D["II-9"];
@@ -241,27 +241,33 @@
     { t: "1 TIMEOUT", sub: "per session" },
   ], "Used only for standings ties on the last playoff spot.");
 
-  // Playoff structure
+  // Playoff structure — Gold bracket per Appendix C (one-division format):
+  // QF: A1 v B4, B2 v A3, B1 v A4, A2 v B3 → two SFs → Championship.
   D["II-14-d"] = (function () {
-    function seed(x, y, t) {
-      return `<rect x="${x}" y="${y}" width="64" height="18" rx="3" class="dgm-box"/>` +
-             `<text x="${x + 32}" y="${y + 13}" class="dgm-boxsub" text-anchor="middle">${t}</text>`;
+    function seed(x, y, t, w) {
+      w = w || 58;
+      return `<rect x="${x}" y="${y}" width="${w}" height="16" rx="3" class="dgm-box"/>` +
+             `<text x="${x + w / 2}" y="${y + 12}" class="dgm-boxsub" text-anchor="middle">${t}</text>`;
     }
-    function joiner(x, y1, y2, x2) {
+    function joiner(x, y1, y2) {
       const ym = (y1 + y2) / 2;
-      return `<path d="M ${x} ${y1} h 10 V ${ym} h 8 M ${x} ${y2} h 10 V ${ym}" class="dgm-flowarrow" fill="none"/>` +
-             (x2 ? "" : "");
+      return `<path d="M ${x} ${y1} h 8 V ${ym} h 8 M ${x} ${y2} h 8 V ${ym}" class="dgm-flowarrow" fill="none"/>`;
     }
-    let s = `<text x="20" y="16" class="dgm-label">GOLD — TOP 4 PER CONFERENCE</text>`;
-    s += seed(20, 26, "1 SEED") + seed(20, 50, "4 SEED") + joiner(84, 35, 59);
-    s += seed(20, 80, "2 SEED") + seed(20, 104, "3 SEED") + joiner(84, 89, 113);
-    s += seed(112, 42, "SEMIFINAL") + seed(112, 88, "SEMIFINAL") + joiner(176, 51, 97);
-    s += seed(204, 65, "CHAMP");
-    s += `<text x="20" y="146" class="dgm-label">SILVER — NEXT 2 PER CONFERENCE</text>`;
-    s += seed(20, 156, "SF · WK 9") + seed(112, 156, "FINAL · WK 10");
-    s += `<path d="M 84 165 h 24" class="dgm-flowarrow"/>`;
-    s += `<text x="20" y="196" class="dgm-note">Everyone else: consolation matchup in week 9 vs a similar record.</text>`;
-    return svgWrap(s, 204);
+    const P = [["A 1st", "B 4th"], ["B 2nd", "A 3rd"], ["B 1st", "A 4th"], ["A 2nd", "B 3rd"]];
+    let s = `<text x="20" y="14" class="dgm-label">GOLD — TOP 4 PER CONFERENCE (A &amp; B)</text>`;
+    P.forEach((pair, i) => {
+      const y1 = 24 + i * 44, y2 = y1 + 20;
+      s += seed(20, y1, pair[0]) + seed(20, y2, pair[1]) + joiner(78, y1 + 8, y2 + 8);
+    });
+    // SF joins QF pairs 1+2 and 3+4
+    s += seed(102, 45, "SEMI", 50) + seed(102, 133, "SEMI", 50);
+    s += joiner(152, 53, 141);
+    s += seed(176, 89, "CHAMPION", 74);
+    s += `<text x="20" y="222" class="dgm-label">SILVER — NEXT 2 PER CONFERENCE</text>`;
+    s += seed(20, 230, "SF · WK 9", 66) + seed(118, 230, "FINAL · WK 10", 84);
+    s += `<path d="M 86 238 h 32" class="dgm-flowarrow"/>`;
+    s += `<text x="20" y="272" class="dgm-note">Everyone else: consolation matchup in week 9 vs a similar record.</text>`;
+    return svgWrap(s, 280);
   })();
 
   // Contact progression

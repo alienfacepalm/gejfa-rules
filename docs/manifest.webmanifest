@@ -1,7 +1,7 @@
 {
-  "name": "GEJFA Rules 2025",
-  "short_name": "GEJFA Rules",
-  "description": "Instant sideline lookup for the 2025 GEJFA rulebook. Type a situation, get the rule.",
+  "name": "Skyline Spartans — GEJFA Rules 2025",
+  "short_name": "Spartans Rules",
+  "description": "Skyline Spartans sideline lookup for the 2025 GEJFA rulebook. Type a situation, get the rule.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

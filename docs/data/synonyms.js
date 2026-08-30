@@ -4,7 +4,7 @@
 
 const GEJFA_SYNONYMS = {
   // score management
-  "mercy":      ["score management", "32 point rule", "running clock"],
+  "mercy":      ["score management", "32 point rule", "25 points"],
   "blowout":    ["score management", "32 point rule", "25 points"],
   "slaughter":  ["score management", "32 point rule"],
   "skunk":      ["score management", "32 point rule"],

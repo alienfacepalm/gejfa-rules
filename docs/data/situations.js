@@ -27,9 +27,9 @@ const GEJFA_SITUATIONS = [
   // ---- Score management ----
   { id: "S-up-big", ruleId: "II-10-b", question: "We're up 25+ — what changes right now?",
     answer: "Either coach may call a league timeout to discuss protocol. Trailing team takes possession at the 50 after any score creating the gap; when they get the ball it's at the 50 (or the spot inside your 50). When YOUR team takes possession outside your 20, the ball moves back to your 20. In the 4th quarter the clock runs. And never let the lead pass 32.",
-    keywords: ["winning big", "up by 30", "big lead", "what do i do blowout"] },
+    keywords: ["winning big", "up by 30", "big lead", "mercy rule", "mercy", "what do i do blowout"] },
   { id: "S-32-cap", ruleId: "II-10-c", question: "How much can we win by before I'm in trouble?",
-    answer: "Never lead by more than 32 at any point. Exceed 32 offensively = automatic next-game suspension for the head coach. Win by more than 38 in ANY situation = automatic suspension. Second violation in a season = suspended for the year, no appeal.",
+    answer: "Never lead by more than 32 at any point. Exceed 32 offensively = automatic next-game suspension for the head coach. If the score that broke 32 was DEFENSIVE, the coach instead meets the Grievance Committee before the next game. Win by more than 38 in ANY situation = automatic suspension. Second violation in a season = suspended for the year, no appeal.",
     keywords: ["win by too much", "max lead", "trouble for score"] },
   { id: "S-drive-red-zone", ruleId: "II-10-b2d", question: "Up 25+ and driving inside their 20 — can we score?",
     answer: "No. If your next snap would be at or inside their 20-yard line, possession immediately flips to them at the 50. A penalty can't put you inside the 20 either without offering you the decline.",
@@ -43,7 +43,7 @@ const GEJFA_SITUATIONS = [
 
   // ---- Kickoffs / PAT ----
   { id: "S-after-td", ruleId: "II-9", question: "What's the PAT worth — kick or run/pass?",
-    answer: "Kick = 2 points. Run or pass = 1 point. Same at every level (yes, reversed from high school).",
+    answer: "Kick = 2 points. Run or pass = 1 point. Same at every level.",
     keywords: ["extra point worth", "go for two", "kick the pat"] },
   { id: "S-no-kickoff", ruleId: "II-8", question: "Who gets the ball after we score?",
     answer: "No kickoffs at any level — the other team takes it at their own 35, 1st and 10. (After a safety, they take it at the 50.)",
@@ -159,7 +159,19 @@ const GEJFA_SITUATIONS = [
 
 ];
 
+/* One-tap "Game Time" quick answers — the situations coaches hit most mid-game. */
+const GEJFA_QUICK = [
+  { sitId: "S-after-td",       label: "PAT worth?" },
+  { sitId: "S-turnover-subs",  label: "Turnover — subs?" },
+  { sitId: "S-up-big",         label: "Up 25+" },
+  { sitId: "S-onside",         label: "Onside option" },
+  { sitId: "S-player-ejected", label: "Ejected" },
+  { sitId: "S-late-player",    label: "Player late" },
+  { sitId: "S-12-plays",       label: "Min plays" },
+  { sitId: "S-ot",             label: "Overtime" },
+];
+
 // Escape hatch for Node / React Native / bundlers
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { GEJFA_SITUATIONS };
+  module.exports = { GEJFA_SITUATIONS, GEJFA_QUICK };
 }

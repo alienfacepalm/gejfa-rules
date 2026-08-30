@@ -305,7 +305,7 @@ const GEJFA_RULES = [
     id: "II-5-g", cite: "Part II §5.g", category: "game-day",
     title: "Coaches on the field during play",
     levels: ["all"],
-    answer: "Varsity/JV/Sophomore/Cub: coaches on the field only during timeouts or injuries. Rookie: ONE coach per team allowed on the field; he may call plays and adjust between plays but must stop talking once the offense breaks the huddle — first violation is a warning, further violations are a 5-yard 'On-Field Interference' penalty. No-huddle offense is NOT permitted at Rookie.",
+    answer: "Varsity/JV/Sophomore/Cub: coaches on the field only during timeouts or injuries. Rookie: ONE coach per team allowed on the field; he may call plays and adjust between plays but must stop talking once the offense breaks the huddle — first violation is a warning; further violations could result in a 5-yard 'On-Field Interference' penalty. No-huddle offense is NOT permitted at Rookie.",
     text: "Coaches of the Varsity, Junior Varsity, Sophomore and Cub teams will not be permitted on the field of play except during a time-out or in the case of an injury. At the Rookie level, one coach from each team is permitted on the field at any time. The coach on the field may call the plays and make necessary adjustments between scrimmage plays. He may in no way interfere with the play of either team; including talking to or shouting at his or opposing players once the offensive team has broken their huddle. If a coach is still communicating after the huddle has broken, a warning will be issued by the referee. A second violation, and all subsequent violations could result in a 5 Yard Penalty for 'on Field Interference.' (Policy: The purpose of coaches on the field is instructional, therefore a no huddle offense is not permitted.)",
     keywords: ["coach on field", "on field coach", "talking after huddle", "interference penalty", "no huddle", "rookie coach"]
   },
@@ -471,7 +471,7 @@ const GEJFA_RULES = [
     id: "II-9", cite: "Part II §9", category: "kickoffs-pat",
     title: "PAT values: kick = 2, run/pass = 1",
     levels: ["all"],
-    answer: "At ALL levels: a PAT conversion KICK is worth TWO points; a run or pass PAT is worth ONE point. (Backwards from high school on purpose — kicking is harder here.)",
+    answer: "At ALL levels: a PAT conversion KICK is worth TWO points; a run or pass PAT is worth ONE point.",
     text: "At all levels: a point after touchdown conversion kick will be worth two (2) points. A run or pass PAT will be worth one (1) point.",
     keywords: ["pat", "extra point", "two point", "conversion", "point after touchdown", "kick worth", "try"]
   },
@@ -491,7 +491,7 @@ const GEJFA_RULES = [
     levels: ["all"],
     answer: "No team may lead by more than 32 points at ANY time. At 25+ ahead, either coach may call a league timeout to discuss protocol, and special possession rules kick in: after a score creating the gap, the TRAILING team takes the ball at the 50 (no kickoff); when the trailing team gains possession it starts at the 50 (or the spot if inside the opponent's 50); when the LEADING team takes possession outside its own 20, the ball moves BACK to its 20.",
     text: "The 32 Point Rule: It is the intent and spirit of the GEJFA Council that no team shall defeat, nor shall it at any point in the game lead an opponent by more than 32 points. Any time a team is ahead by 25 or more points, either coach may call a league timeout in order to discuss further game protocol. When the score differential is 25 or more points: after a score that creates this differential, the trailing team will take possession and start their offensive series at the 50 yard line; there will be no kick-off. When the trailing team takes possession of the ball, it shall start its offensive series at the 50 yard line or at the point of possession if inside the other team's 50. When the leading team takes possession anywhere outside its own 20 yard line, the ball will be moved back to that team's 20 yard line to start the offensive series.",
-    keywords: ["32 point rule", "mercy rule", "blowout", "running up score", "25 points", "lead cap", "50 yard line start", "back to 20"]
+    keywords: ["32 point rule", "mercy rule", "mercy", "blowout", "running up score", "25 points", "lead cap", "50 yard line start", "back to 20"]
   },
   {
     id: "II-10-b2d", cite: "Part II §10.b(2)(d)", category: "score-mgmt",
