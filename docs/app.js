@@ -39,6 +39,15 @@
     try { localStorage.setItem(RECENTS_KEY, JSON.stringify(list.slice(0, 6))); } catch {}
   }
 
+  // ---- level filter persistence (a coach's team is usually one level all season) ----
+  const LEVEL_KEY = "gejfa-level-v1";
+  function getSavedLevel() {
+    try { return localStorage.getItem(LEVEL_KEY) || null; } catch { return null; }
+  }
+  function saveLevel(id) {
+    try { id ? localStorage.setItem(LEVEL_KEY, id) : localStorage.removeItem(LEVEL_KEY); } catch {}
+  }
+
   // ---- category browse drawer ----
   const catChoices = [{ id: null, label: "All topics" }].concat(GEJFA_CATEGORIES);
   catChoices.forEach(cat => {
@@ -94,17 +103,23 @@
 
   // ---- level filter sheet ----
   const levelChoices = [{ id: null, label: "All levels" }].concat(GEJFA_LEVELS);
+  function setLevel(id, persist) {
+    const lv = levelChoices.find(l => l.id === id);
+    id = lv ? id : null; // guard against a stale/unknown saved level id
+    state.level = id;
+    $levelBtn.textContent = id ? lv.label : "All";
+    $levelBtn.classList.toggle("active", !!id);
+    if (persist) saveLevel(id);
+    updateLevelOptions();
+  }
   levelChoices.forEach(lv => {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "level-option";
     b.textContent = lv.label;
     b.addEventListener("click", () => {
-      state.level = lv.id;
-      $levelBtn.textContent = lv.id ? lv.label : "All";
-      $levelBtn.classList.toggle("active", !!lv.id);
+      setLevel(lv.id, true);
       closeSheet();
-      updateLevelOptions();
       render();
     });
     b.dataset.level = lv.id || "";
@@ -115,6 +130,8 @@
       o.classList.toggle("active", (o.dataset.level || null) === state.level));
   }
   function closeSheet() { $levelSheet.hidden = true; }
+  // Restore the coach's saved level (persists across visits — a team plays one level all season)
+  setLevel(getSavedLevel(), false);
   $levelBtn.addEventListener("click", () => { updateLevelOptions(); $levelSheet.hidden = false; });
   $levelSheet.addEventListener("click", (e) => { if (e.target === $levelSheet) closeSheet(); });
 
@@ -131,15 +148,17 @@
   });
   $q.addEventListener("keydown", (e) => { if (e.key === "Enter") $q.blur(); });
 
+  // ---- sticky search-bar shadow (only once something is actually scrolled beneath it) ----
+  function updateScrolled() { document.body.classList.toggle("scrolled", window.scrollY > 4); }
+  window.addEventListener("scroll", updateScrolled, { passive: true });
+  updateScrolled();
+
   // ---- reset to top level ----
   // Two quiet affordances: tap the hero crest/lockup (logo-home convention),
   // or the small "reset" chip that only appears when a query/filter is active.
   function resetAll() {
     $q.value = ""; state.query = ""; $clear.hidden = true;
-    state.level = null;
-    $levelBtn.textContent = "All";
-    $levelBtn.classList.remove("active");
-    updateLevelOptions();
+    setLevel(null, true); // also forgets the saved level — this is an explicit full reset
     setCategory(null); // clears the pill + browse state and re-renders
     window.scrollTo({ top: 0, behavior: "smooth" });
   }

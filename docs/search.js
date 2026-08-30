@@ -63,8 +63,13 @@ function createGejfaSearch({ MiniSearch, rules, situations, synonyms }) {
     { re: /\bkid\b|\bson\b|\bplayer\b.*\b(hurt|injur\w*)\b/, add: "injured substitution helmet" },
   ];
 
-  function expandQuery(query) {
-    const lower = query.toLowerCase();
+  /* Appends synonym/intent expansions derived from `intentSource` onto
+     `searchText`. Kept as two separate strings (rather than deriving one from
+     the other with a find/replace) so the caller can search a normalized or
+     trimmed version of the query while still detecting intents ("up 30") in
+     the original raw text. */
+  function expandQuery(searchText, intentSource) {
+    const lower = (intentSource != null ? intentSource : searchText).toLowerCase();
     const tokens = lower.split(/[^a-z0-9/']+/).filter(Boolean);
     const extra = [];
     tokens.forEach(t => {
@@ -72,7 +77,7 @@ function createGejfaSearch({ MiniSearch, rules, situations, synonyms }) {
       if (syn) extra.push(...syn);
     });
     INTENTS.forEach(it => { if (it.re.test(lower)) extra.push(it.add); });
-    return extra.length ? query + " " + extra.join(" ") : query;
+    return extra.length ? searchText + " " + extra.join(" ") : searchText;
   }
 
   function matchesFilters(doc, { level, category }) {
@@ -91,7 +96,7 @@ function createGejfaSearch({ MiniSearch, rules, situations, synonyms }) {
        they collide with unrelated numeric rule specs (ball sizes, rosters). */
     const stripped = q.replace(/(^|\s)\d+(?=\s|$)/g, " ").trim();
     const base = stripped || q;
-    const expanded = expandQuery(q).replace(q, base);
+    const expanded = expandQuery(base, q); // search `base` (numbers stripped); detect intents from `q`
 
     // precision first: docs containing every remaining term of the raw query
     const strict = base.split(/\s+/).length > 1

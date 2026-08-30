@@ -42,9 +42,17 @@ body {
   margin: 0;
   font-family: var(--body);
   font-size: 16px;
-  background: var(--field);
   color: var(--chalk);
   padding-bottom: env(safe-area-inset-bottom);
+  /* Non-solid background per DESIGN.md "Palette" — faint brushed-fabric
+     pinstripe, built only from existing field/press tokens, static. Tiles
+     uniformly (no viewport-anchored gradients) so it stays cheap and correct
+     on long scrollable pages and doesn't fight the sticky search bar. */
+  background-color: var(--field);
+  background-image: repeating-linear-gradient(115deg, transparent 0 26px, var(--field-press) 26px 27px);
+}
+@media (prefers-reduced-transparency: reduce) {
+  body { background-image: none; } /* flat field color is the safe fallback */
 }
 
 /* ---- Hero: the Collegiate Arc chest print (scrolls away) ---- */
@@ -105,8 +113,13 @@ body {
   /* full-width sticky background, but contents align to the 720px content column */
   padding: 10px max(12px, calc((100% - 696px) / 2)) 8px;
   background: var(--field);
-  box-shadow: 0 8px 16px -10px var(--field-deep);
+  box-shadow: 0 8px 16px -10px transparent;
+  transition: box-shadow .15s ease;
 }
+/* Only cast a shadow once the bar actually has content scrolled beneath it —
+   shown unconditionally it reads as a hard, out-of-place line across the
+   Game Time grid on an unscrolled page. */
+body.scrolled .searchwrap { box-shadow: 0 8px 16px -10px var(--field-deep); }
 .search {
   flex: 1; min-width: 0;
   font-family: var(--body); font-size: 1.1rem; font-weight: 400;
