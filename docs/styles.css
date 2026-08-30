@@ -56,7 +56,7 @@ body {
 }
 .pdf-link {
   position: absolute; top: calc(10px + env(safe-area-inset-top));
-  right: max(12px, calc((100% - 744px) / 2));
+  right: max(12px, calc((100% - 696px) / 2)); /* aligns to .results' true inner edge (720 box - its own 12px padding) */
   display: inline-flex; align-items: center; gap: 6px;
   min-height: 40px; padding: 8px 12px;
   font-family: var(--display); font-size: .66rem; letter-spacing: .12em;
@@ -103,7 +103,7 @@ body {
   position: sticky; top: 0; z-index: 20;
   display: flex; align-items: stretch; gap: 8px; /* equal heights: buttons match the input */
   /* full-width sticky background, but contents align to the 720px content column */
-  padding: 10px max(12px, calc((100% - 744px) / 2)) 8px;
+  padding: 10px max(12px, calc((100% - 696px) / 2)) 8px;
   background: var(--field);
   box-shadow: 0 8px 16px -10px var(--field-deep);
 }
@@ -143,7 +143,7 @@ body {
 }
 .browse-btn.active { color: var(--field); background: var(--chalk); border-color: var(--chalk); }
 
-.cat-pill-row { padding: 8px max(12px, calc((100% - 744px) / 2)) 4px; }
+.cat-pill-row { padding: 8px max(12px, calc((100% - 696px) / 2)) 4px; }
 .cat-pill {
   display: inline-flex; align-items: center; gap: 10px;
   min-height: 40px; padding: 9px 14px;
@@ -308,7 +308,7 @@ body {
 .empty { text-align: center; color: var(--chalk-dim); padding: 40px 20px; line-height: 1.55; }
 .empty strong { color: var(--chalk); }
 
-.foot { padding: 8px 20px calc(20px + env(safe-area-inset-bottom)); max-width: 720px; margin: 0 auto; }
+.foot { padding: 8px 12px calc(20px + env(safe-area-inset-bottom)); max-width: 720px; margin: 0 auto; }
 .foot p { color: var(--chalk-faint); font-size: .75rem; line-height: 1.45; }
 
 /* ---- Real-time answer aids ---- */
