@@ -148,6 +148,7 @@
     if (e.target.closest(".pdf-link")) return; // PDF link keeps its own action
     resetAll();
   });
+  document.getElementById("resetHomeBtn").addEventListener("click", resetAll);
 
   // ---- voice search (progressive enhancement) ----
   // Capability check on load: the button stays hidden unless the browser
@@ -523,41 +524,17 @@
     return t;
   }
 
-  /* "What's new" sheet: the latest changelog entry in the same bottom-sheet
-     language as the rest of the app. `afterUpdate` swaps the single "Got it"
-     dismiss for "Reload now" / "Not now", since a real update is waiting. */
-  function openWhatsNewSheet(afterUpdate) {
-    const entry = (typeof GEJFA_CHANGELOG !== "undefined") ? GEJFA_CHANGELOG[0] : null;
-    if (!entry) return;
-    const sheet = document.createElement("div");
-    sheet.className = "level-sheet";
-    const items = entry.changes.map(c => `<li>${esc(c)}</li>`).join("");
-    sheet.innerHTML = `
-      <div class="level-sheet-inner" role="dialog" aria-modal="true" aria-labelledby="whatsnewTitle">
-        <h2 id="whatsnewTitle">What's new${entry.date ? " — " + esc(entry.date) : ""}</h2>
-        <ul class="whatsnew-list">${items}</ul>
-        ${afterUpdate
-          ? `<div class="install-actions">
-               <button type="button" class="install-yes whatsnew-reload">Reload now</button>
-               <button type="button" class="install-later whatsnew-dismiss">Not now</button>
-             </div>`
-          : `<button type="button" class="back-home whatsnew-dismiss">Got it</button>`}
-      </div>`;
-    sheet.addEventListener("click", (e) => {
-      if (e.target.closest(".whatsnew-reload")) { location.reload(); return; }
-      if (e.target === sheet || e.target.closest(".whatsnew-dismiss")) sheet.remove();
-    });
-    document.body.appendChild(sheet);
-  }
-
-  // Let a coach revisit "what's new" anytime, not just right after an update.
-  if (document.querySelector(".foot") && typeof GEJFA_CHANGELOG !== "undefined" && GEJFA_CHANGELOG.length) {
-    const wnLink = document.createElement("button");
-    wnLink.type = "button";
-    wnLink.className = "install-foot";
-    wnLink.textContent = "What's new";
-    wnLink.addEventListener("click", () => openWhatsNewSheet(false));
-    document.querySelector(".foot").appendChild(wnLink);
+  /* Actionable status message — clickable, stays until acted on. Used only
+     for "an update is ready" (a decision the coach should make on their own
+     time, not something to auto-dismiss like infoToast). */
+  function actionToast(text, onClick) {
+    const t = document.createElement("button");
+    t.type = "button";
+    t.className = "toast";
+    t.textContent = text;
+    t.addEventListener("click", onClick);
+    document.body.appendChild(t);
+    return t;
   }
 
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
@@ -586,12 +563,12 @@
       });
     }).catch(() => {});
 
-    // Once the new version actually takes over, show what changed with a
-    // one-tap reload — this is the moment the update is fully ready to use.
+    // Once the new version actually takes over, offer a one-tap reload —
+    // this is the moment the update is fully ready to use.
     let hadController = hadControllerAtLoad;
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       if (!hadController) { hadController = true; return; } // first install, not an update
-      openWhatsNewSheet(true);
+      actionToast("Rulebook updated — tap to reload", () => location.reload());
     });
   }
 })();

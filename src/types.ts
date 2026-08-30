@@ -48,12 +48,6 @@ export type TSynonymMap = Record<string, string[]>;
 /** Map of rule id -> pre-rendered SVG markup string. */
 export type TDiagramMap = Record<string, string>;
 
-export interface IChangelogEntry {
-  version: string;
-  date: string;
-  changes: string[];
-}
-
 /** A unified search result: either a rule or a coach-facing situation card. */
 export interface ISearchDoc {
   docId: string;

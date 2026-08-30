@@ -66,32 +66,12 @@ body {
 /* ---- Hero: the Collegiate Arc chest print (scrolls away) ---- */
 .hero {
   position: relative;
-  z-index: 0; /* establishes a stacking context so .hero-bg-mark's negative
-                 z-index stays contained here, instead of escaping to
-                 compete with unrelated later page content */
-  overflow: hidden; /* crops .hero-bg-mark to the header — it's deliberately oversized */
   /* Real bottom padding (not reliance on a child's trailing margin) both
      gives the header room to breathe and prevents margin collapse from
      leaking the body's green grid through the black chrome as a stray line. */
   padding: calc(22px + env(safe-area-inset-top)) 16px 26px;
   text-align: center;
   background: var(--ink);
-}
-/* Oversized watermark: only a fraction is ever visible, cropped by .hero's
-   overflow:hidden. Sized in vw so a wider viewport shows proportionally
-   more of it, per the brief ("based on resolution"). Desaturated + at low
-   opacity so it reads as a faint chalk-toned ghost mark rather than
-   competing with the readable logo/wordmark in front of it, and stays
-   within the black/green/chalk palette (the source PNG has beige/tan
-   digital-camo coloring that grayscale removes). There's no true vector
-   Spartan mark to use here — the only asset is this illustrated PNG. */
-.hero-bg-mark {
-  position: absolute; top: 50%; left: 50%; z-index: -1;
-  transform: translate(-50%, -50%);
-  width: 220vw; height: auto; max-width: none;
-  opacity: .3;
-  filter: grayscale(1) brightness(1.6);
-  pointer-events: none;
 }
 .pdf-link {
   position: absolute; top: calc(10px + env(safe-area-inset-top));
@@ -419,6 +399,13 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   border: 2px solid var(--field-press); border-radius: 10px; cursor: pointer;
 }
 .mic-btn.listening { color: var(--field); background: var(--chalk); border-color: var(--chalk); }
+.reset-home {
+  flex: 0 0 auto; width: 54px; min-height: 54px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--chalk-dim); background: var(--field-raised);
+  border: 2px solid var(--field-press); border-radius: 10px; cursor: pointer;
+}
+.reset-home:active { color: var(--chalk); background: var(--field-press); }
 /* Non-interactive status message (offline-saved confirmation, downloading
    indicator) — sits below the sticky search bar so it never collides with
    the install banner or the What's New sheet, both anchored to the bottom. */
@@ -431,11 +418,19 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   border-radius: 10px; cursor: default;
   box-shadow: 0 8px 20px rgba(8, 14, 10, .5);
 }
-.whatsnew-list {
-  margin: 0 0 16px; padding-left: 20px;
-  color: var(--chalk-dim); font-size: .92rem; line-height: 1.6;
+/* Actionable status message (currently: "Rulebook updated — tap to reload") —
+   stays until tapped, unlike .toast-info which auto-dismisses. Bottom-
+   positioned; safe from colliding with .toast-info (top) or the install
+   banner (bottom, but only ever shown to a first-time visitor, who by
+   definition has no prior version to update from). */
+.toast {
+  position: fixed; left: 12px; right: 12px; bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 60; padding: 15px; min-height: 52px;
+  font-family: var(--body); font-weight: 700; font-size: .92rem;
+  color: var(--field); background: var(--chalk);
+  border: none; border-radius: 10px; cursor: pointer;
+  box-shadow: 0 10px 30px rgba(8, 14, 10, .6);
 }
-.whatsnew-list li { margin-bottom: 6px; }
 
 /* ---- one-time install prompt ---- */
 .install-banner {
@@ -501,6 +496,8 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   .install-yes:hover { background: var(--chalk-dim); }
   .install-later:hover { background: var(--field-raised); }
   .install-foot:hover { background: var(--field-press); }
+  .toast:hover { background: var(--chalk-dim); }
+  .reset-home:hover { background: var(--field-press); }
 }
 
 /* ---- quality floor ---- */

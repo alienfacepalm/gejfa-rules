@@ -1,7 +1,7 @@
 /* GEJFA Rules service worker — cache-first for full offline use on the sideline.
    Bump CACHE_VERSION whenever rules data or app files change so clients update. */
 
-const CACHE_VERSION = "gejfa-rules-v27";
+const CACHE_VERSION = "gejfa-rules-v29";
 const ASSETS = [
   "./",
   "./index.html",
@@ -17,7 +17,6 @@ const ASSETS = [
   "./data/situations.js",
   "./data/synonyms.js",
   "./data/diagrams.js",
-  "./data/changelog.js",
   "./manifest.webmanifest",
   "./2025-gejfa-rules.pdf",
   "./icons/logo.png",
