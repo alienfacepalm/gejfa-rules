@@ -1,0 +1,22 @@
+{
+  "name": "gejfa-rules",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Skyline Spartans sideline lookup PWA for the 2025 GEJFA rulebook",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && node build.mjs",
+    "test": "node tests/verify-rules.cjs",
+    "verify": "npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.19.2",
+    "@types/node": "^22.9.0"
+  },
+  "dependencies": {
+    "minisearch": "^7.1.1"
+  }
+}
