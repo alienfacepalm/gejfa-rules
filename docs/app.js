@@ -152,8 +152,9 @@
   // Capability check on load: the button stays hidden unless the browser
   // exposes SpeechRecognition AND has media devices. If the API turns out to
   // be a stub (no service / no microphone), hide the button permanently.
+  const SHOW_MIC = false; // mic hidden from the UI for now; flip to re-enable
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (SR && $mic && navigator.mediaDevices) {
+  if (SHOW_MIC && SR && $mic && navigator.mediaDevices) {
     $mic.hidden = false;
     let rec = null;
     $mic.addEventListener("click", () => {
