@@ -64,6 +64,7 @@ body {
   border: 2px solid var(--field-press); border-radius: 10px;
 }
 .pdf-link:active { color: var(--field); background: var(--chalk); }
+.hero .logo { display: block; height: 64px; width: auto; margin: 0 auto 2px; }
 .hero .arc { display: block; width: min(300px, 78vw); margin: 0 auto -6px; overflow: visible; }
 .hero .arc text {
   font-family: var(--display);
