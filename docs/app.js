@@ -401,7 +401,14 @@
   const INSTALL_KEY = "gejfa-install-v1";
   const isStandalone = window.matchMedia("(display-mode: standalone)").matches
     || window.navigator.standalone === true;
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  // iPadOS 13+ reports itself as "Macintosh", so touch support is the tell.
+  const isIPad = /ipad/i.test(navigator.userAgent)
+    || (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+  const isIOS = /iphone|ipod/i.test(navigator.userAgent) || isIPad;
+  const isAndroid = /android/i.test(navigator.userAgent);
+  // What to call the device in install copy: iPhone / iPad / phone / computer.
+  const deviceName = isIPad ? "iPad" : isIOS ? "iPhone" : isAndroid ? "phone" : "computer";
+  const isMobile = isIOS || isAndroid;
   let deferredInstall = null;
 
   window.addEventListener("beforeinstallprompt", (e) => {
@@ -432,16 +439,26 @@
            <li>Scroll and tap <strong>Add to Home Screen</strong></li>
            <li>Tap <strong>Add</strong> — Spartans Rules appears like an app</li>
          </ol>`
-      : `<ol class="install-steps">
+      : isAndroid
+      ? `<ol class="install-steps">
            <li>Open the browser menu (<strong>⋮</strong> or <strong>…</strong>)</li>
            <li>Tap <strong>Install app</strong> (or <strong>Add to Home screen</strong>)</li>
            <li>Confirm — Spartans Rules appears like an app</li>
+         </ol>`
+      : `<ol class="install-steps">
+           <li>Look for the <strong>install icon</strong> at the right end of the address bar</li>
+           <li>No icon? Open the browser menu (<strong>⋮</strong> or <strong>…</strong>) and choose <strong>Install app</strong> (in Safari: <strong>File → Add to Dock</strong>)</li>
+           <li>Confirm — Spartans Rules opens in its own window</li>
          </ol>`;
+    const title = isMobile ? `Add to your ${deviceName}` : "Install on this computer";
+    const note = isMobile
+      ? "Once added, it opens full-screen and works with no signal at the field."
+      : "Once installed, it opens in its own window and works offline.";
     sheet.innerHTML = `
       <div class="level-sheet-inner" role="dialog" aria-modal="true">
-        <h2>Add to your phone</h2>
+        <h2>${title}</h2>
         ${steps}
-        <p class="install-note">Once added, it opens full-screen and works with no signal at the field.</p>
+        <p class="install-note">${note}</p>
         <button type="button" class="back-home install-close">Got it</button>
       </div>`;
     sheet.addEventListener("click", (e) => {
@@ -466,12 +483,16 @@
     const b = document.createElement("div");
     b.className = "install-banner";
     b.setAttribute("role", "dialog");
-    b.setAttribute("aria-label", "Add this app to your phone");
+    b.setAttribute("aria-label", `Add this app to your ${deviceName}`);
+    const pitch = isMobile
+      ? `<strong>Keep Spartans Rules on your ${deviceName}.</strong>
+      Add it to your ${isIOS ? "Home Screen" : "home screen"} — it opens like an app and works offline at the field.`
+      : `<strong>Keep Spartans Rules on this computer.</strong>
+      Install it — it opens in its own window and works offline.`;
     b.innerHTML = `
-      <p class="install-msg"><strong>Keep Spartans Rules on your phone.</strong>
-      Add it to your home screen — it opens like an app and works offline at the field.</p>
+      <p class="install-msg">${pitch}</p>
       <div class="install-actions">
-        <button type="button" class="install-yes">Add to phone</button>
+        <button type="button" class="install-yes">${isMobile ? `Add to ${deviceName}` : "Install app"}</button>
         <button type="button" class="install-later">Later</button>
       </div>`;
     b.querySelector(".install-yes").addEventListener("click", () => {
@@ -497,7 +518,7 @@
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "install-foot";
-    btn.textContent = "Add this app to your phone";
+    btn.textContent = isMobile ? `Add this app to your ${deviceName}` : "Install this app on your computer";
     btn.addEventListener("click", doInstall);
     foot.insertBefore(btn, foot.firstChild);
   }
