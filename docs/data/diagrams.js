@@ -292,6 +292,156 @@
     return svgWrap(s, 144);
   })();
 
+  /* Condition → consequence rows (independent cases, not a sequence). */
+  function cases(rows, note) {
+    const bw = 128, bh = 34, y0 = 10, gap = 12;
+    let s = "";
+    rows.forEach((r, i) => {
+      const y = y0 + i * (bh + gap);
+      s += `<rect x="16" y="${y}" width="${bw}" height="${bh}" rx="4" class="dgm-box"/>`;
+      s += `<text x="${16 + bw / 2}" y="${y + 14}" class="dgm-boxtext" text-anchor="middle">${r.ifT}</text>`;
+      s += `<text x="${16 + bw / 2}" y="${y + 27}" class="dgm-boxsub" text-anchor="middle">${r.ifSub || ""}</text>`;
+      s += `<path d="M ${16 + bw + 6} ${y + bh / 2} h 26 l -6 -4 m 6 4 l -6 4" class="dgm-flowarrow"/>`;
+      s += `<rect x="${16 + bw + 40}" y="${y}" width="${bw}" height="${bh}" rx="4" class="dgm-box"/>`;
+      s += `<text x="${16 + bw + 40 + bw / 2}" y="${y + 14}" class="dgm-boxtext" text-anchor="middle">${r.thenT}</text>`;
+      s += `<text x="${16 + bw + 40 + bw / 2}" y="${y + 27}" class="dgm-boxsub" text-anchor="middle">${r.thenSub || ""}</text>`;
+    });
+    const h = y0 + rows.length * (bh + gap) + (note ? 18 : 4);
+    if (note) s += `<text x="${W / 2}" y="${h - 6}" class="dgm-note" text-anchor="middle">${note}</text>`;
+    return svgWrap(s, h);
+  }
+
+  /* Horizontal range/value bars with a shared scale. */
+  function bars(rows, maxVal, note, unit) {
+    let s = "";
+    rows.forEach((r, i) => {
+      const y = 12 + i * 22;
+      const x0 = 96, x1 = 316;
+      const scale = (v) => x0 + (v / maxVal) * (x1 - x0);
+      s += `<text x="${x0 - 8}" y="${y + 12}" class="dgm-small" text-anchor="end">${r.label}</text>`;
+      if (r.min !== undefined) {
+        s += `<rect x="${scale(r.min)}" y="${y}" width="${scale(r.max) - scale(r.min)}" height="15" class="dgm-bar"/>`;
+        s += `<text x="${scale(r.min) - 3}" y="${y + 12}" class="dgm-small" text-anchor="end"></text>`;
+        s += `<text x="${scale(r.min) + 3}" y="${y + 12}" class="dgm-barnum">${r.min}</text>`;
+        s += `<text x="${scale(r.max) - 3}" y="${y + 12}" class="dgm-barnum" text-anchor="end">${r.max}</text>`;
+      } else {
+        s += `<rect x="${x0}" y="${y}" width="${scale(r.val) - x0}" height="15" class="dgm-bar"/>`;
+        s += `<text x="${scale(r.val) + 4}" y="${y + 12}" class="dgm-small">${r.val}${unit || ""}</text>`;
+      }
+    });
+    const h = 12 + rows.length * 22 + (note ? 22 : 6);
+    if (note) s += `<text x="${W / 2}" y="${h - 8}" class="dgm-note" text-anchor="middle">${note}</text>`;
+    return svgWrap(s, h);
+  }
+
+  // Ejection consequences
+  D["II-3-c"] = cases([
+    { ifT: "EJECTED", ifSub: "player or coach", thenT: "NEXT GAME", thenSub: "automatically out" },
+    { ifT: "2ND EJECTION", ifSub: "same season", thenT: "REST OF SEASON", thenSub: "suspended" },
+    { ifT: "EJECTED COACH", ifSub: "before return", thenT: "GRIEVANCE CMTE", thenSub: "w/ club president" },
+  ], "Player ejections from judgment calls may be appealed with video — see Appendix B.");
+
+  // Player ejection appeal clock (Appendix B)
+  D["APP-B"] = timeline([
+    { at: "GAME ENDS", label: "ejection|occurred" },
+    { at: "+24 HRS", label: "board member files|with video" },
+    { at: "+48 HRS", label: "committee|decides" },
+    { at: "FINAL", label: "no further|appeal" },
+  ], "If the next game comes sooner, the decision comes before kickoff.");
+
+  // Practice limits
+  D["I-9-abc"] = bars([
+    { label: "PRE-LABOR DAY", val: 5 },
+    { label: "AFTER", val: 3 },
+  ], 6, "Per week (Sun–Sat) · max 15 total before Labor Day · every session ≤ 2 hours.", "/wk");
+
+  // Roster ranges by level
+  D["I-7-d"] = bars([
+    { label: "ROOKIE", min: 11, max: 21 },
+    { label: "CUB", min: 16, max: 31 },
+    { label: "SOPH", min: 17, max: 33 },
+    { label: "JV", min: 18, max: 35 },
+    { label: "VARSITY", min: 20, max: 35 },
+  ], 36, "Min–max roster before a split · take players in application order up to 26 (21 at 8-player).");
+
+  // Ball specs
+  D["II-4-g"] = (function () {
+    let s = `<rect x="16" y="8" width="150" height="80" rx="4" class="dgm-box"/>`;
+    s += `<text x="91" y="26" class="dgm-boxtext" text-anchor="middle">JV &amp; VARSITY</text>`;
+    s += `<text x="91" y="44" class="dgm-label" text-anchor="middle">YOUTH / INTERMEDIATE</text>`;
+    s += `<text x="91" y="62" class="dgm-small" text-anchor="middle">10–11 in · 26–27 in circ.</text>`;
+    s += `<text x="91" y="76" class="dgm-small" text-anchor="middle">12–14 oz</text>`;
+    s += `<rect x="174" y="8" width="150" height="80" rx="4" class="dgm-box"/>`;
+    s += `<text x="249" y="26" class="dgm-boxtext" text-anchor="middle">SOPH · CUB · ROOKIE</text>`;
+    s += `<text x="249" y="44" class="dgm-label" text-anchor="middle">JUNIOR</text>`;
+    s += `<text x="249" y="62" class="dgm-small" text-anchor="middle">9.5–10.5 in · 25–26 in circ.</text>`;
+    s += `<text x="249" y="76" class="dgm-small" text-anchor="middle">11–13 oz</text>`;
+    s += `<text x="${W / 2}" y="106" class="dgm-note" text-anchor="middle">Leather, composite, or rubber — officials give final approval.</text>`;
+    return svgWrap(s, 114);
+  })();
+
+  // Standings points
+  D["II-14-a"] = (function () {
+    const cols = [["WIN", "2"], ["TIE", "1"], ["LOSS", "0"]];
+    let s = "";
+    cols.forEach((c, i) => {
+      const x = 26 + i * 100;
+      s += `<rect x="${x}" y="10" width="88" height="62" rx="4" class="dgm-box"/>`;
+      s += `<text x="${x + 44}" y="44" class="dgm-big" text-anchor="middle">${c[1]}</text>`;
+      s += `<text x="${x + 44}" y="62" class="dgm-small" text-anchor="middle">POINTS</text>`;
+      s += `<text x="${x + 44}" y="90" class="dgm-label" text-anchor="middle">${c[0]}</text>`;
+    });
+    s += `<text x="${W / 2}" y="112" class="dgm-note" text-anchor="middle">8-game season · margin of victory never affects seeding.</text>`;
+    return svgWrap(s, 120);
+  })();
+
+  // Protest deadline
+  D["II-13-abc"] = timeline([
+    { at: "IN GAME", label: "judgment calls:|no protest" },
+    { at: "SATURDAY", label: "game|ends" },
+    { at: "MON 8 AM", label: "written protest due|to the President" },
+  ], "Rule-interpretation protests only — filed via your Club Director.");
+
+  // 32-point penalty ladder
+  D["II-10-c"] = cases([
+    { ifT: "LEAD > 32", ifSub: "offensive score", thenT: "AUTO SUSPENDED", thenSub: "next game" },
+    { ifT: "LEAD > 32", ifSub: "defensive score", thenT: "MEET GRIEVANCE", thenSub: "before next game" },
+    { ifT: "WIN BY > 38", ifSub: "any situation", thenT: "AUTO SUSPENDED", thenSub: "next game" },
+  ], "2nd violation, or team contact while suspended = rest of season, no appeal.");
+
+  // Interrupted games
+  D["II-12"] = flow([
+    { t: "UNSAFE", sub: "lightning etc." },
+    { t: "RESUME", sub: "same day if safe" },
+    { t: "REPORT", sub: "by end of day" },
+    { t: "TUE / WED", sub: "likely resume" },
+    { t: "SAME SPOT", sub: "point of interruption" },
+    { t: "OR AGREE", sub: "end with score" },
+  ], "Lopsided score? Terminating is encouraged; the League rules if no agreement.");
+
+  // Missed weight progression
+  D["II-2-l"] = flow([
+    { t: "MISS WEIGHT", sub: "game 1" },
+    { t: "MISS AGAIN", sub: "game 2*" },
+    { t: "MOVES UP", sub: "next level" },
+  ], "*Skipping the next game counts as the 2nd miss without a satisfactory reason.");
+
+  // Officials per game
+  D["II-5-h"] = bars([
+    { label: "ROOKIE", val: 2 },
+    { label: "CUB", val: 3 },
+    { label: "SOPH/JV/V", val: 4 },
+  ], 5, "Full crew: 2 at Rookie, 3 at Cub · 3 assigned everywhere, 4th targeted for Soph/JV/V.", " officials");
+
+  // Weigh-in tolerance
+  D["II-2-b"] = (function () {
+    let s = `<rect x="70" y="10" width="200" height="64" rx="4" class="dgm-box"/>`;
+    s += `<text x="${W / 2}" y="48" class="dgm-big" text-anchor="middle">+ 0.9 LB</text>`;
+    s += `<text x="${W / 2}" y="66" class="dgm-small" text-anchor="middle">MAXIMUM OVER ALLOWANCE</text>`;
+    s += `<text x="${W / 2}" y="96" class="dgm-note" text-anchor="middle">More than 9/10 of a pound over the max at weigh-in = cannot play this game.</text>`;
+    return svgWrap(s, 104);
+  })();
+
   const GEJFA_DIAGRAMS = D;
   root.GEJFA_DIAGRAMS = GEJFA_DIAGRAMS;
   if (typeof module !== "undefined" && module.exports) {

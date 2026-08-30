@@ -202,9 +202,12 @@
             ${rule ? `<span class="cite">${esc(rule.cite)}</span>` : ""}
             <span class="levels-tag">${esc(levelsLabel(doc.levels))}</span>
           </div>
-          ${rule ? `<div class="fulltext">
-            <div class="ft-title">Official rule — ${esc(rule.cite)}</div>${esc(rule.text)}
-          </div>` : ""}
+          ${rule ? `<details class="adv">
+            <summary>Advanced — official rule text</summary>
+            <div class="fulltext">
+              <div class="ft-title">Official rule — ${esc(rule.cite)}</div>${esc(rule.text)}
+            </div>
+          </details>` : ""}
         </div>
         <div class="peek">
           ${rule ? `<span class="cite-mini">${esc(rule.cite)}</span>` : "<span></span>"}
@@ -302,11 +305,13 @@
     const quick = e.target.closest(".quick, .recent");
     if (quick) { openDoc(quick.dataset.docid); return; }
     if (e.target.closest(".back-home")) { render(); return; }
+    if (e.target.closest(".adv")) return; // Advanced disclosure handles itself
     const card = e.target.closest(".card");
     if (card) toggleCard(card);
   });
   $results.addEventListener("keydown", (e) => {
     if (e.key !== "Enter" && e.key !== " ") return;
+    if (e.target.closest(".adv")) return; // let <summary> toggle natively
     const card = e.target.closest(".card");
     if (card) { e.preventDefault(); toggleCard(card); }
   });
