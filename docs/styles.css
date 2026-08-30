@@ -101,7 +101,7 @@ body {
 /* ---- Sticky search row ---- */
 .searchwrap {
   position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: stretch; gap: 8px; /* equal heights: buttons match the input */
   /* full-width sticky background, but contents align to the 720px content column */
   padding: 10px max(12px, calc((100% - 744px) / 2)) 8px;
   background: var(--field);
@@ -119,6 +119,7 @@ body {
 .search:focus { border-color: var(--chalk-dim); }
 .search::-webkit-search-cancel-button { display: none; }
 .clear-btn {
+  align-self: center;
   margin-left: -44px; width: 36px; height: 36px; flex: 0 0 36px;
   border: none; border-radius: 8px;
   background: var(--field-press); color: var(--chalk-dim);
