@@ -8,6 +8,11 @@ import type { ChangelogEntry } from "../types.js";
    user-visible change (see SPEC.md §9). Pure data — no DOM/browser APIs. */
 
 export const GEJFA_CHANGELOG: ChangelogEntry[] = [
+  { version: "v22", date: "Aug 2026", changes: [
+    "Fixed a stray green line at the top of the header, and gave it more breathing room",
+    "Background grid is now much more subtle and spaced way out",
+    "Every card now has a share button — send a coach a link straight to that exact rule",
+  ] },
   { version: "v21", date: "Aug 2026", changes: [
     "New look: black header up top, green field below with a subtle football-grid background",
     "The category button now works and looks just like the level filter",

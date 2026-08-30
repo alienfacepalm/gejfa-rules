@@ -24,7 +24,7 @@
   const $levelSheet = document.getElementById("levelSheet");
   const $levelOptions = document.getElementById("levelOptions");
 
-  const state = { query: "", category: null, level: null };
+  const state = { query: "", category: null, level: null, openDoc: null };
 
   // ---- deep-linkable filters (?q=&level=&cat=) ----
   // Lets a coach share or bookmark the exact filtered view they're looking
@@ -35,13 +35,17 @@
     if (state.query.trim()) params.set("q", state.query.trim());
     if (state.level) params.set("level", state.level);
     if (state.category) params.set("cat", state.category);
+    if (state.openDoc) params.set("doc", state.openDoc);
     const qs = params.toString();
     const url = location.pathname + (qs ? "?" + qs : "");
     history.replaceState(null, "", url);
   }
   function readUrlParams() {
     const params = new URLSearchParams(location.search);
-    return { q: params.get("q"), level: params.get("level"), cat: params.get("cat") };
+    return { q: params.get("q"), level: params.get("level"), cat: params.get("cat"), doc: params.get("doc") };
+  }
+  function shareUrlFor(docId) {
+    return location.origin + location.pathname + "?doc=" + encodeURIComponent(docId);
   }
 
   // ---- recents (persisted; answers themselves are all offline in the app bundle) ----
@@ -158,6 +162,9 @@
   // opening "…?level=rookie" almost certainly means that's this coach's team.
   setLevel(urlParams.level || getSavedLevel(), !!urlParams.level);
   if (urlParams.cat) setCategory(urlParams.cat);
+  // A shared "?doc=" link takes over the view entirely (openDoc paints the
+  // single-topic screen); skip the generic initial render below if it worked.
+  const openedFromLink = urlParams.doc ? openDoc(urlParams.doc) : false;
 
   $levelBtn.addEventListener("click", () => { updateLevelOptions(); $levelSheet.hidden = false; });
   $levelSheet.addEventListener("click", (e) => { if (e.target === $levelSheet) closeSheet(); });
@@ -185,8 +192,9 @@
   // or the small "reset" chip that only appears when a query/filter is active.
   function resetAll() {
     $q.value = ""; state.query = ""; $clear.hidden = true;
+    state.openDoc = null;
     setLevel(null, true); // also forgets the saved level — this is an explicit full reset
-    setCategory(null); // clears the pill + browse state and re-renders
+    setCategory(null); // clears the pill + browse state, syncs the URL, and re-renders
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   document.querySelector(".hero").addEventListener("click", (e) => {
@@ -285,7 +293,13 @@
         </div>
         <div class="peek">
           ${rule ? `<span class="cite-mini">${esc(rule.cite)}</span>` : "<span></span>"}
-          <span class="chev" aria-hidden="true">▾</span>
+          <span class="peek-actions">
+            <button type="button" class="share-btn" data-docid="${esc(doc.docId)}" data-title="${esc(heading)}"
+                    aria-label="Share this ${isSit ? "situation" : "rule"}">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18 16.08a2.9 2.9 0 0 0-1.94.75l-7.05-4.11a3 3 0 0 0 0-1.44l7.05-4.11a3 3 0 1 0-.89-1.72l-7.05 4.11a3 3 0 1 0 0 4.88l7.05 4.12a2.92 2.92 0 1 0 2.83-2.48z"/></svg>
+            </button>
+            <span class="chev" aria-hidden="true">▾</span>
+          </span>
         </div>
       </article>`;
   }
@@ -342,7 +356,8 @@
     if (hasQuery && docs[0]) pushRecent(docs[0].docId);
   }
 
-  /* Focus mode: one topic open at a time; opening scrolls it under the search bar. */
+  /* Focus mode: one topic open at a time; opening scrolls it under the search bar.
+     The open card is deep-linkable (?doc=) so the current view is always shareable. */
   function toggleCard(card, forceOpen) {
     const isOpen = card.classList.contains("open");
     $results.querySelectorAll(".card.open").forEach(c => {
@@ -359,42 +374,77 @@
       const d = card.querySelector(".detail");
       if (d) d.hidden = false;
       if (card.dataset.docid) pushRecent(card.dataset.docid);
+      state.openDoc = card.dataset.docid || null;
       requestAnimationFrame(() => {
         card.scrollIntoView({ block: "start", behavior: "smooth" });
       });
+    } else {
+      state.openDoc = null;
     }
+    syncUrl();
   }
 
-  /* Open one specific doc (quick answers, recents): render just that topic, focused. */
+  /* Open one specific doc (quick answers, recents, a shared ?doc= link):
+     render just that topic, focused, and reflect it in the URL. */
   function openDoc(docId) {
     const doc = engine.byDocId(docId);
-    if (!doc) return;
+    if (!doc) return false;
     $q.value = ""; state.query = ""; $clear.hidden = true;
+    state.openDoc = docId;
     $results.innerHTML =
       `<p class="result-count">Topic</p>` +
       cardHTML(doc, 0, [], true) +
       `<button type="button" class="back-home">← All topics</button>`;
     pushRecent(docId);
+    syncUrl();
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+    return true;
+  }
+
+  /* Share the deep link to one rule/situation — free, no third-party service:
+     the native OS share sheet where available, otherwise copy-to-clipboard. */
+  function shareDoc(docId, title) {
+    const url = shareUrlFor(docId);
+    if (navigator.share) {
+      navigator.share({ title: title || "GEJFA Rule", text: title || "GEJFA Rule", url }).catch(() => {
+        // user cancelled the share sheet, or it failed silently — nothing to do
+      });
+      return;
+    }
+    const done = () => infoToast("Link copied");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+    } else {
+      fallbackCopy(url, done);
+    }
+  }
+  function fallbackCopy(text, done) {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); done(); } catch { /* nothing more to try */ }
+    ta.remove();
   }
 
   $results.addEventListener("click", (e) => {
     if (e.target.closest(".reset-chip")) { resetAll(); return; }
+    const shareBtn = e.target.closest(".share-btn");
+    if (shareBtn) { shareDoc(shareBtn.dataset.docid, shareBtn.dataset.title); return; }
     const quick = e.target.closest(".quick, .recent");
     if (quick) { openDoc(quick.dataset.docid); return; }
-    if (e.target.closest(".back-home")) { render(); return; }
+    if (e.target.closest(".back-home")) { state.openDoc = null; syncUrl(); render(); return; }
     if (e.target.closest(".adv")) return; // Advanced disclosure handles itself
     const card = e.target.closest(".card");
     if (card) toggleCard(card);
   });
   $results.addEventListener("keydown", (e) => {
     if (e.key !== "Enter" && e.key !== " ") return;
-    if (e.target.closest(".adv")) return; // let <summary> toggle natively
+    if (e.target.closest(".adv") || e.target.closest(".share-btn")) return; // let the native button/details handle itself
     const card = e.target.closest(".card");
     if (card) { e.preventDefault(); toggleCard(card); }
   });
 
-  render();
+  if (!openedFromLink) render();
 
   // ---- one-time install prompt (first visit only; "Later" keeps a footer link) ----
   const INSTALL_KEY = "gejfa-install-v1";
