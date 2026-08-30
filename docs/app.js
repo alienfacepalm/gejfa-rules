@@ -20,20 +20,16 @@
   const $browseBtn = document.getElementById("browseBtn");
   const $catSheet = document.getElementById("catSheet");
   const $catOptions = document.getElementById("catOptions");
-  const $levelBtn = document.getElementById("levelBtn");
-  const $levelSheet = document.getElementById("levelSheet");
-  const $levelOptions = document.getElementById("levelOptions");
 
-  const state = { query: "", category: null, level: null, openDoc: null };
+  const state = { query: "", category: null, openDoc: null };
 
-  // ---- deep-linkable filters (?q=&level=&cat=) ----
+  // ---- deep-linkable filters (?q=&cat=&doc=) ----
   // Lets a coach share or bookmark the exact filtered view they're looking
   // at. Uses replaceState (not pushState) so typing/filtering doesn't spam
   // browser history — the address bar always reflects the current view.
   function syncUrl() {
     const params = new URLSearchParams();
     if (state.query.trim()) params.set("q", state.query.trim());
-    if (state.level) params.set("level", state.level);
     if (state.category) params.set("cat", state.category);
     if (state.openDoc) params.set("doc", state.openDoc);
     const qs = params.toString();
@@ -42,7 +38,7 @@
   }
   function readUrlParams() {
     const params = new URLSearchParams(location.search);
-    return { q: params.get("q"), level: params.get("level"), cat: params.get("cat"), doc: params.get("doc") };
+    return { q: params.get("q"), cat: params.get("cat"), doc: params.get("doc") };
   }
   function shareUrlFor(docId) {
     return location.origin + location.pathname + "?doc=" + encodeURIComponent(docId);
@@ -57,15 +53,6 @@
     const list = getRecents().filter(id => id !== docId);
     list.unshift(docId);
     try { localStorage.setItem(RECENTS_KEY, JSON.stringify(list.slice(0, 6))); } catch {}
-  }
-
-  // ---- level filter persistence (a coach's team is usually one level all season) ----
-  const LEVEL_KEY = "gejfa-level-v1";
-  function getSavedLevel() {
-    try { return localStorage.getItem(LEVEL_KEY) || null; } catch { return null; }
-  }
-  function saveLevel(id) {
-    try { id ? localStorage.setItem(LEVEL_KEY, id) : localStorage.removeItem(LEVEL_KEY); } catch {}
   }
 
   // ---- category browse drawer ----
@@ -88,11 +75,10 @@
   }
   function setCategory(id) {
     const cat = id ? GEJFA_CATEGORIES.find(c => c.id === id) : null;
-    id = cat ? id : null; // guard against a stale/unknown id, same as setLevel
+    id = cat ? id : null; // guard against a stale/unknown id
     state.category = id;
-    // Same control language as the level filter: the button itself shows the
-    // active selection (no separate pill) — this is a single-select filter,
-    // not a navigation menu, and now looks and behaves like one.
+    // The button itself shows the active selection (no separate pill) —
+    // this is a single-select filter, not a navigation menu.
     $browseBtn.textContent = cat ? cat.label : "Topic";
     $browseBtn.classList.toggle("active", !!cat);
     syncUrl();
@@ -116,58 +102,20 @@
     if (e.key === "Escape" && !$catSheet.hidden) closeCatSheet();
   });
 
-  // ---- level filter sheet ----
-  const levelChoices = [{ id: null, label: "All levels" }].concat(GEJFA_LEVELS);
-  function setLevel(id, persist) {
-    const lv = levelChoices.find(l => l.id === id);
-    id = lv ? id : null; // guard against a stale/unknown saved level id
-    state.level = id;
-    $levelBtn.textContent = id ? lv.label : "All";
-    $levelBtn.classList.toggle("active", !!id);
-    if (persist) saveLevel(id);
-    updateLevelOptions();
-    syncUrl();
-  }
-  levelChoices.forEach(lv => {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "level-option";
-    b.textContent = lv.label;
-    b.addEventListener("click", () => {
-      setLevel(lv.id, true);
-      closeSheet();
-      render();
-    });
-    b.dataset.level = lv.id || "";
-    $levelOptions.appendChild(b);
-  });
-  function updateLevelOptions() {
-    $levelOptions.querySelectorAll(".level-option").forEach(o =>
-      o.classList.toggle("active", (o.dataset.level || null) === state.level));
-  }
-  function closeSheet() { $levelSheet.hidden = true; }
-
-  // ---- apply startup state: a shared link's filters win; otherwise fall
-  // back to the coach's saved level (a team plays one level all season) ----
+  // ---- apply startup state: a shared link's filters win by default ----
   const urlParams = readUrlParams();
-  // Set query state first: setLevel/setCategory below call syncUrl(), which
-  // reads state.query — set it after and the ?q= param would be dropped
-  // from the address bar the instant the page loads.
+  // Set query state first: setCategory below calls syncUrl(), which reads
+  // state.query — set it after and the ?q= param would be dropped from the
+  // address bar the instant the page loads.
   if (urlParams.q) {
     $q.value = urlParams.q;
     state.query = urlParams.q;
     $clear.hidden = false;
   }
-  // An explicit level in a shared link becomes the new saved default too —
-  // opening "…?level=rookie" almost certainly means that's this coach's team.
-  setLevel(urlParams.level || getSavedLevel(), !!urlParams.level);
   if (urlParams.cat) setCategory(urlParams.cat);
   // A shared "?doc=" link takes over the view entirely (openDoc paints the
   // single-topic screen); skip the generic initial render below if it worked.
   const openedFromLink = urlParams.doc ? openDoc(urlParams.doc) : false;
-
-  $levelBtn.addEventListener("click", () => { updateLevelOptions(); $levelSheet.hidden = false; });
-  $levelSheet.addEventListener("click", (e) => { if (e.target === $levelSheet) closeSheet(); });
 
   // ---- search box ----
   let debounce = null;
@@ -193,7 +141,6 @@
   function resetAll() {
     $q.value = ""; state.query = ""; $clear.hidden = true;
     state.openDoc = null;
-    setLevel(null, true); // also forgets the saved level — this is an explicit full reset
     setCategory(null); // clears the pill + browse state, syncs the URL, and re-renders
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -328,7 +275,7 @@
 
   function render() {
     const hasQuery = !!state.query.trim();
-    const docs = engine.search(state.query, { level: state.level, category: state.category });
+    const docs = engine.search(state.query, { category: state.category });
     const terms = hasQuery ? highlightTerms() : [];
 
     if (!docs.length) {
@@ -344,7 +291,7 @@
     const label = hasQuery
       ? `${docs.length} match${docs.length === 1 ? "" : "es"}`
       : (state.category ? `${docs.length} in category` : `Common situations`);
-    const activeState = hasQuery || state.category || state.level;
+    const activeState = hasQuery || state.category;
     const resetChip = activeState
       ? `<button type="button" class="reset-chip" aria-label="Reset to all topics">↺ reset</button>` : "";
 

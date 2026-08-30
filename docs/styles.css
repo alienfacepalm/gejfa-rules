@@ -45,18 +45,19 @@ body {
   font-size: 16px;
   color: var(--chalk);
   padding-bottom: env(safe-area-inset-bottom);
-  /* Non-solid background per DESIGN.md "Palette" — a faint gridiron grid,
-     built only from existing field/press tokens, static. Tiles uniformly
-     (no viewport-anchored gradients, no fixed-position overlay for masked
-     tick marks) so it stays cheap and correct on long scrollable pages and
-     doesn't fight the sticky search bar. Bold yard lines every 384px, with
-     a tighter secondary hash-tick rhythm (96px, a quarter of the yard-line
-     spacing) for a two-weight field texture. Visible below the search bar,
-     where the black header chrome (.hero, .searchwrap) doesn't paint over it. */
+  /* Non-solid background per DESIGN.md "Palette" — a faint gridiron texture:
+     a small transparent PNG tile (96x384, generated, not hand-drawn — see
+     tools/ if regenerating) with a bold yard line across its top edge and a
+     short, confined hash tick beneath it, repeated via plain background-image
+     tiling. A tile lets the hash mark be genuinely short and confined near
+     the yard line, which two-direction CSS gradients alone can't do without
+     a masked overlay — and a masked overlay would need position:fixed, which
+     conflicts with position:sticky in Safari (see DESIGN.md). Static, no
+     viewport anchoring, tiles correctly on long scrollable pages. Visible
+     below the search bar, where the black header chrome doesn't paint over it. */
   background-color: var(--field);
-  background-image:
-    repeating-linear-gradient(to bottom, rgba(40, 68, 47, .5) 0 5px, transparent 5px 384px),
-    repeating-linear-gradient(to right, rgba(40, 68, 47, .4) 0 3px, transparent 3px 96px);
+  background-image: url("icons/field-grid.png");
+  background-repeat: repeat;
 }
 @media (prefers-reduced-transparency: reduce) {
   body { background-image: none; } /* flat field color is the safe fallback */
@@ -177,16 +178,18 @@ body.scrolled .searchwrap { box-shadow: 0 8px 16px -10px var(--field-deep); }
 .level-btn.active { background: var(--chalk); border-color: var(--chalk); color: var(--field); }
 @media (min-width: 640px) { .level-btn { flex: 0 0 auto; } }
 
-/* ---- Category filter: same control language as the level filter (#browseBtn
-   shares the .level-btn class) — one active selection, shown on the button
-   itself, opening the same bottom-sheet shell. ---- */
+/* ---- Category filter: the only filter now (a level filter was removed —
+   it only meaningfully narrowed results for one category out of twelve,
+   see SPEC.md). #browseBtn and the option buttons below keep the
+   ".level-btn"/".level-sheet"/".level-option" class names for historical
+   reasons; nothing about them is level-specific anymore. ---- */
 
-/* category sheet: reuses .level-sheet shell; 13 options need to scroll on short screens */
+/* category sheet: 13 options need to scroll on short screens */
 .cat-sheet .level-sheet-inner { max-height: min(80vh, 640px); overflow-y: auto; }
 .cat-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .cat-option-all { grid-column: 1 / -1; }
 
-/* ---- Level sheet ---- */
+/* ---- Bottom-sheet shell (used by the category filter) ---- */
 .level-sheet { position: fixed; inset: 0; background: rgba(8, 14, 10, .72); z-index: 50; }
 .level-sheet-inner {
   position: absolute; left: 0; right: 0; bottom: 0;
@@ -200,7 +203,6 @@ body.scrolled .searchwrap { box-shadow: 0 8px 16px -10px var(--field-deep); }
   letter-spacing: .2em; text-transform: uppercase; color: var(--chalk-dim);
   text-align: center;
 }
-.level-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .level-option {
   padding: 14px; min-height: 52px;
   font-family: var(--body); font-weight: 700; font-size: .95rem;

@@ -6,6 +6,10 @@
    user-visible change (see SPEC.md §9). Pure data — no DOM/browser APIs. */
 
 const GEJFA_CHANGELOG = [
+  { version: "v26", date: "Aug 2026", changes: [
+    "Background now has real, properly-spaced hash marks like a football field",
+    "Removed the level filter (Rookie/Cub/etc.) — it rarely changed results, so it's gone; the category filter stays",
+  ] },
   { version: "v25", date: "Aug 2026", changes: [
     "Background grid now looks more like an actual field, with bolder yard lines",
     "\"Spartans\" and the tagline now sit side by side under the logo",

@@ -48,23 +48,18 @@
     </div>
     <!-- mic button removed for now; voice-search code remains dormant in app.js (SHOW_MIC) -->
     <div class="search-controls">
-      <button id="levelBtn" class="level-btn" type="button" aria-label="Filter by level">All</button>
       <button id="browseBtn" class="level-btn" type="button" aria-label="Filter by category"
               aria-expanded="false" aria-controls="catSheet">Topic</button>
     </div>
   </div>
 
+  <!-- .level-btn/.level-sheet/.level-option class names are historical (this
+       was originally shared with a level filter that was removed as rarely
+       useful -- see SPEC.md); the category filter is now the only user. -->
   <div id="catSheet" class="level-sheet cat-sheet" hidden>
     <div class="level-sheet-inner" role="dialog" aria-modal="true" aria-labelledby="catSheetTitle">
       <h2 id="catSheetTitle">Filter by category</h2>
       <div id="catOptions" class="cat-options"></div>
-    </div>
-  </div>
-
-  <div id="levelSheet" class="level-sheet" hidden>
-    <div class="level-sheet-inner">
-      <h2>Playing level</h2>
-      <div id="levelOptions" class="level-options"></div>
     </div>
   </div>
 
