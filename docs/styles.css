@@ -1,0 +1,264 @@
+/* GEJFA Rules — art direction per DESIGN.md (project root): collegiate athletic apparel.
+   Forest green garment base, opaque-white "plastisol ink" graphics, light-grey secondary print,
+   collegiate block serif (Graduate) display, athletic sans (Barlow) body, banner/stripe motifs.
+   Two-color by design — hierarchy comes from type and the stripe, not extra hues. */
+
+@font-face {
+  font-family: "Graduate";
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url("fonts/graduate-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow";
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url("fonts/barlow-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow";
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url("fonts/barlow-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow";
+  font-style: normal; font-weight: 700; font-display: swap;
+  src: url("fonts/barlow-700.woff2") format("woff2");
+}
+
+:root {
+  --field: #16281c;          /* dark forest green — sweatshirt base */
+  --field-deep: #101f15;     /* shadowed seam */
+  --field-raised: #1f3627;   /* tee green — card surface */
+  --field-press: #28442f;    /* pressed/active surface */
+  --chalk: #f5f3ec;          /* opaque white plastisol ink */
+  --chalk-dim: #b7c2b6;      /* light grey print */
+  --chalk-faint: #7e8f80;    /* worn print — meta text */
+  --display: "Graduate", "Arial Black", sans-serif;
+  --body: "Barlow", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 16px;
+  background: var(--field);
+  color: var(--chalk);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ---- Hero: the Collegiate Arc chest print (scrolls away) ---- */
+.hero {
+  padding: calc(14px + env(safe-area-inset-top)) 16px 0;
+  text-align: center;
+  background: var(--field);
+}
+.hero .arc { display: block; width: min(300px, 78vw); margin: 0 auto -6px; overflow: visible; }
+.hero .arc text {
+  font-family: var(--display);
+  font-size: 56px;
+  fill: var(--chalk);
+  letter-spacing: 6px;
+}
+.banner {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: var(--body); font-weight: 600; font-size: .72rem;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--chalk-dim);
+  max-width: 340px; margin: 2px auto 0;
+}
+.banner .year {
+  font-family: var(--display); font-size: .82rem; letter-spacing: .12em;
+  color: var(--field); background: var(--chalk);
+  padding: 3px 12px; line-height: 1.3;
+}
+.stripe {
+  height: 4px; background: var(--chalk); border: none;
+  max-width: 340px; margin: 10px auto 0; opacity: .92;
+}
+.hero .sub {
+  font-family: var(--display); font-size: .8rem; letter-spacing: .3em;
+  color: var(--chalk); margin: 8px 0 12px; text-transform: uppercase;
+}
+
+/* ---- Sticky search row ---- */
+.searchwrap {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px 8px;
+  background: var(--field);
+  box-shadow: 0 8px 16px -10px var(--field-deep);
+}
+.search {
+  flex: 1; min-width: 0;
+  font-family: var(--body); font-size: 1.1rem; font-weight: 400;
+  color: var(--chalk); background: var(--field-raised);
+  border: 2px solid var(--field-press); border-radius: 10px;
+  padding: 13px 40px 13px 14px; min-height: 54px;
+  outline: none; -webkit-appearance: none; appearance: none;
+}
+.search::placeholder { color: var(--chalk-faint); }
+.search:focus { border-color: var(--chalk-dim); }
+.search::-webkit-search-cancel-button { display: none; }
+.clear-btn {
+  margin-left: -44px; width: 36px; height: 36px; flex: 0 0 36px;
+  border: none; border-radius: 8px;
+  background: var(--field-press); color: var(--chalk-dim);
+  font-size: 1.25rem; line-height: 1; cursor: pointer; z-index: 1;
+}
+.level-btn {
+  flex: 0 0 auto; min-height: 54px; padding: 0 14px;
+  font-family: var(--display); font-size: .72rem; letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--chalk); background: var(--field-raised);
+  border: 2px solid var(--field-press); border-radius: 10px; cursor: pointer;
+}
+.level-btn.active { background: var(--chalk); border-color: var(--chalk); color: var(--field); }
+
+/* ---- Category chips: screen-print letter patches ---- */
+.chips {
+  display: flex; gap: 8px; overflow-x: auto; padding: 6px 12px 12px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto; padding: 11px 14px; min-height: 42px;
+  font-family: var(--body); font-weight: 700; font-size: .78rem;
+  letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+  color: var(--chalk-dim); background: var(--field-raised);
+  border: none; border-radius: 6px; cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.chip.active { background: var(--chalk); color: var(--field); }
+
+/* ---- Level sheet ---- */
+.level-sheet { position: fixed; inset: 0; background: rgba(8, 14, 10, .72); z-index: 50; }
+.level-sheet-inner {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: var(--field-raised);
+  border-top: 4px solid var(--chalk);
+  border-radius: 16px 16px 0 0;
+  padding: 18px 16px calc(24px + env(safe-area-inset-bottom));
+}
+.level-sheet-inner h2 {
+  margin: 0 0 14px; font-family: var(--display); font-size: .85rem;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--chalk-dim);
+  text-align: center;
+}
+.level-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.level-option {
+  padding: 14px; min-height: 52px;
+  font-family: var(--body); font-weight: 700; font-size: .95rem;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--chalk); background: var(--field-press);
+  border: none; border-radius: 8px; cursor: pointer;
+}
+.level-option.active { background: var(--chalk); color: var(--field); }
+
+/* ---- Results ---- */
+.results { padding: 2px 12px 24px; max-width: 720px; margin: 0 auto; }
+
+/* banner-bar divider, echoing the year banner on the sweatshirt */
+.result-count {
+  display: flex; align-items: center; gap: 12px;
+  margin: 8px 2px 12px;
+  font-family: var(--display); font-size: .68rem; letter-spacing: .24em;
+  text-transform: uppercase; color: var(--chalk-dim);
+}
+.result-count::before, .result-count::after {
+  content: ""; flex: 1; height: 2px; background: var(--field-press);
+}
+
+.card {
+  background: var(--field-raised);
+  border: none; border-radius: 10px;
+  padding: 14px 16px 6px; margin-bottom: 10px;
+  cursor: pointer;
+  scroll-margin-top: calc(78px + env(safe-area-inset-top)); /* clears sticky search */
+  transition: background .2s ease;
+}
+.card.situation { box-shadow: inset 4px 0 0 var(--chalk); }
+.card.open { background: var(--field-press); }
+.card .q {
+  font-family: var(--body); font-weight: 700; font-size: 1.04rem;
+  line-height: 1.3; margin: 0 0 6px; color: var(--chalk);
+}
+/* at a glance: clamp the answer to two lines until opened */
+.card .a {
+  margin: 0; line-height: 1.5; color: var(--chalk-dim); font-size: .95rem;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card.open .a { display: block; -webkit-line-clamp: none; overflow: visible; }
+.card .peek {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 0 6px; min-height: 34px;
+}
+.cite-mini {
+  font-family: var(--display); font-size: .6rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--chalk-faint);
+}
+.card .chev { color: var(--chalk-faint); font-size: .9rem; transition: transform .2s ease; }
+.card.open .chev { transform: rotate(180deg); }
+.card .detail { padding-top: 10px; }
+.card .meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 10px 0 2px; }
+.cite {
+  font-family: var(--display); font-size: .66rem; letter-spacing: .1em;
+  color: var(--field); background: var(--chalk);
+  padding: 4px 9px 3px; border-radius: 3px; text-transform: uppercase;
+}
+.levels-tag {
+  font-family: var(--body); font-weight: 600; font-size: .72rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--chalk-faint);
+}
+.fulltext {
+  background: var(--field-deep); border-radius: 8px;
+  margin: 10px -4px 4px; padding: 12px 14px;
+  font-size: .9rem; line-height: 1.55; color: var(--chalk-dim); white-space: pre-line;
+}
+.fulltext .ft-title {
+  font-family: var(--display); font-size: .72rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--chalk); margin-bottom: 6px;
+}
+
+/* ---- Chalk diagrams ---- */
+.dgm-wrap {
+  background: var(--field-deep); border-radius: 8px;
+  margin: 2px -4px 0; padding: 12px 8px 8px;
+}
+.dgm { display: block; width: 100%; height: auto; }
+.dgm text { font-family: var(--body); }
+.dgm-turf { fill: none; stroke: var(--chalk-dim); stroke-width: 1.5; }
+.dgm-ez { fill: var(--field-press); stroke: var(--chalk-dim); stroke-width: 1.5; }
+.dgm-band { fill: var(--field-press); }
+.dgm-line { stroke: var(--chalk-faint); stroke-width: 1; }
+.dgm-line-mid { stroke: var(--chalk); stroke-width: 2; }
+.dgm-dash { stroke: var(--chalk-faint); stroke-width: 1.5; stroke-dasharray: 5 5; }
+.dgm-yardnum { fill: var(--chalk-faint); font-size: 9px; font-weight: 600; }
+.dgm-ezlabel { fill: var(--chalk-faint); font-size: 8px; font-weight: 700; letter-spacing: .15em; }
+.dgm-ball { fill: var(--chalk); }
+.dgm-label { fill: var(--chalk); font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+.dgm-small { fill: var(--chalk-dim); font-size: 9.5px; font-weight: 600; }
+.dgm-note { fill: var(--chalk-faint); font-size: 9.5px; font-weight: 600; }
+.dgm-big { fill: var(--chalk); font-size: 30px; font-weight: 700; font-family: var(--display); }
+.dgm-arrow { stroke: var(--chalk); stroke-width: 2; fill: none; }
+.dgm-arrowhead { fill: var(--chalk); }
+.dgm-flowarrow { stroke: var(--chalk-dim); stroke-width: 1.5; fill: none; }
+.dgm-box { fill: var(--field-press); stroke: var(--chalk-dim); stroke-width: 1; }
+.dgm-boxtext { fill: var(--chalk); font-size: 10.5px; font-weight: 700; letter-spacing: .06em; }
+.dgm-boxsub { fill: var(--chalk-dim); font-size: 9px; font-weight: 600; }
+.dgm-bar { fill: var(--chalk-dim); }
+.dgm-post { stroke: var(--chalk); stroke-width: 2.5; fill: none; }
+.dgm-x { fill: var(--chalk-dim); }
+.dgm-o { fill: none; stroke: var(--chalk); stroke-width: 2; }
+
+.empty { text-align: center; color: var(--chalk-dim); padding: 40px 20px; line-height: 1.55; }
+.empty strong { color: var(--chalk); }
+
+.foot { padding: 8px 20px calc(20px + env(safe-area-inset-bottom)); max-width: 720px; margin: 0 auto; }
+.foot p { color: var(--chalk-faint); font-size: .75rem; line-height: 1.45; }
+
+/* ---- quality floor ---- */
+:focus-visible { outline: 3px solid var(--chalk); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>GEJFA Rules — 2025</title>
+  <meta name="description" content="Instant sideline lookup for the 2025 GEJFA rulebook. Type a situation, get the rule.">
+  <meta name="theme-color" content="#16281c">
+  <link rel="manifest" href="manifest.webmanifest">
+  <!-- iOS "Add to Home Screen" support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GEJFA Rules">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">GEJFA Rules 2025</h1>
+    <svg class="arc" viewBox="0 0 320 92" aria-hidden="true">
+      <path id="arcPath" d="M 22 86 A 235 235 0 0 1 298 86" fill="none"/>
+      <text><textPath href="#arcPath" startOffset="50%" text-anchor="middle">GEJFA</textPath></text>
+    </svg>
+    <div class="banner" aria-hidden="true">
+      <span>Sideline</span><span class="year">2025</span><span>Rules</span>
+    </div>
+    <hr class="stripe">
+    <p class="sub">Find the rule. Fast.</p>
+  </header>
+
+  <div class="searchwrap">
+    <input id="q" class="search" type="search" inputmode="search" autocomplete="off"
+           autocapitalize="off" spellcheck="false" placeholder="Type a situation… (e.g. late weigh in, up 30, ejected)"
+           aria-label="Search the rules">
+    <button id="clearBtn" class="clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
+    <button id="levelBtn" class="level-btn" type="button" aria-label="Filter by level">All</button>
+  </div>
+
+  <nav id="chips" class="chips" aria-label="Browse by category"></nav>
+
+  <div id="levelSheet" class="level-sheet" hidden>
+    <div class="level-sheet-inner">
+      <h2>Playing level</h2>
+      <div id="levelOptions" class="level-options"></div>
+    </div>
+  </div>
+
+  <main id="results" class="results" aria-live="polite"></main>
+
+  <footer class="foot">
+    <p>Source: <em>2025 GEJFA Rules Final</em> (adopted Aug 1, 2025). Quick-reference only — the official rulebook and NFHS rules govern.</p>
+  </footer>
+
+  <script src="vendor/minisearch.min.js"></script>
+  <script src="data/rules.js"></script>
+  <script src="data/situations.js"></script>
+  <script src="data/synonyms.js"></script>
+  <script src="data/diagrams.js"></script>
+  <script src="search.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
