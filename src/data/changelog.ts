@@ -8,6 +8,9 @@ import type { ChangelogEntry } from "../types.js";
    user-visible change (see SPEC.md §9). Pure data — no DOM/browser APIs. */
 
 export const GEJFA_CHANGELOG: ChangelogEntry[] = [
+  { version: "v24", date: "Aug 2026", changes: [
+    "More breathing room below the search bar",
+  ] },
   { version: "v23", date: "Aug 2026", changes: [
     "Buttons, cards, and links now highlight when you point at them with a mouse or trackpad",
   ] },

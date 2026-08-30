@@ -123,7 +123,7 @@ body {
   position: sticky; top: 0; z-index: 20;
   display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px;
   /* full-width sticky background, but contents align to the 720px content column */
-  padding: 10px max(12px, calc((100% - 696px) / 2)) 8px;
+  padding: 10px max(12px, calc((100% - 696px) / 2)) 16px;
   background: var(--ink);
   box-shadow: 0 8px 16px -10px transparent;
   transition: box-shadow .15s ease;
@@ -200,7 +200,7 @@ body.scrolled .searchwrap { box-shadow: 0 8px 16px -10px var(--field-deep); }
 .level-option.active { background: var(--chalk); color: var(--field); }
 
 /* ---- Results ---- */
-.results { padding: 2px 12px 24px; max-width: 720px; margin: 0 auto; }
+.results { padding: 18px 12px 24px; max-width: 720px; margin: 0 auto; }
 
 /* banner-bar divider, echoing the year banner on the sweatshirt */
 .result-count {
