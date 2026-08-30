@@ -323,6 +323,50 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   box-shadow: 0 10px 30px rgba(8, 14, 10, .6);
 }
 
+/* ---- one-time install prompt ---- */
+.install-banner {
+  position: fixed; left: 12px; right: 12px;
+  bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 55;
+  background: var(--field-raised); border-radius: 12px;
+  border-top: 4px solid var(--chalk);
+  padding: 14px 16px;
+  box-shadow: 0 12px 34px rgba(8, 14, 10, .65);
+}
+.install-msg { margin: 0 0 12px; font-size: .92rem; line-height: 1.45; color: var(--chalk-dim); }
+.install-msg strong { color: var(--chalk); }
+.install-actions { display: flex; gap: 10px; }
+.install-yes {
+  flex: 1; min-height: 50px; padding: 12px;
+  font-family: var(--body); font-weight: 700; font-size: .9rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--field); background: var(--chalk);
+  border: none; border-radius: 10px; cursor: pointer;
+}
+.install-later {
+  flex: 0 0 auto; min-height: 50px; padding: 12px 18px;
+  font-family: var(--body); font-weight: 700; font-size: .9rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--chalk-dim); background: var(--field-press);
+  border: none; border-radius: 10px; cursor: pointer;
+}
+.install-steps {
+  margin: 0 0 12px; padding-left: 22px;
+  color: var(--chalk-dim); font-size: .95rem; line-height: 1.7;
+}
+.install-steps strong { color: var(--chalk); }
+.ios-share {
+  display: inline-block; transform: rotate(90deg);
+  color: var(--chalk); font-weight: 700;
+}
+.install-note { color: var(--chalk-faint); font-size: .82rem; margin: 0 0 14px; }
+.install-foot {
+  display: block; width: 100%; margin: 0 0 12px; padding: 13px; min-height: 48px;
+  font-family: var(--body); font-weight: 700; font-size: .85rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--chalk); background: var(--field-raised);
+  border: none; border-radius: 10px; cursor: pointer;
+}
+
 /* ---- quality floor ---- */
 :focus-visible { outline: 3px solid var(--chalk); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {

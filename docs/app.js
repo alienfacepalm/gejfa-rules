@@ -313,6 +313,117 @@
 
   render();
 
+  // ---- one-time install prompt (first visit only; "Later" keeps a footer link) ----
+  const INSTALL_KEY = "gejfa-install-v1";
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+    || window.navigator.standalone === true;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  let deferredInstall = null;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredInstall = e;
+  });
+  window.addEventListener("appinstalled", () => {
+    try { localStorage.setItem(INSTALL_KEY, "done"); } catch {}
+    removeInstallUI();
+  });
+
+  function installState() {
+    try { return localStorage.getItem(INSTALL_KEY); } catch { return "later"; }
+  }
+  function setInstallState(v) {
+    try { localStorage.setItem(INSTALL_KEY, v); } catch {}
+  }
+  function removeInstallUI() {
+    document.querySelectorAll(".install-banner, .install-foot").forEach(el => el.remove());
+  }
+
+  function openInstallSheet() {
+    const sheet = document.createElement("div");
+    sheet.className = "level-sheet";
+    const steps = isIOS
+      ? `<ol class="install-steps">
+           <li>Tap the <strong>Share</strong> button <span class="ios-share" aria-hidden="true">⎋</span> in Safari's toolbar</li>
+           <li>Scroll and tap <strong>Add to Home Screen</strong></li>
+           <li>Tap <strong>Add</strong> — Spartans Rules appears like an app</li>
+         </ol>`
+      : `<ol class="install-steps">
+           <li>Open the browser menu (<strong>⋮</strong> or <strong>…</strong>)</li>
+           <li>Tap <strong>Install app</strong> (or <strong>Add to Home screen</strong>)</li>
+           <li>Confirm — Spartans Rules appears like an app</li>
+         </ol>`;
+    sheet.innerHTML = `
+      <div class="level-sheet-inner" role="dialog" aria-modal="true">
+        <h2>Add to your phone</h2>
+        ${steps}
+        <p class="install-note">Once added, it opens full-screen and works with no signal at the field.</p>
+        <button type="button" class="back-home install-close">Got it</button>
+      </div>`;
+    sheet.addEventListener("click", (e) => {
+      if (e.target === sheet || e.target.closest(".install-close")) sheet.remove();
+    });
+    document.body.appendChild(sheet);
+  }
+
+  function doInstall() {
+    if (deferredInstall) {
+      deferredInstall.prompt();
+      deferredInstall.userChoice.then((choice) => {
+        if (choice && choice.outcome === "accepted") setInstallState("done");
+        deferredInstall = null;
+      }).catch(() => {});
+    } else {
+      openInstallSheet();
+    }
+  }
+
+  function showInstallBanner() {
+    const b = document.createElement("div");
+    b.className = "install-banner";
+    b.setAttribute("role", "dialog");
+    b.setAttribute("aria-label", "Add this app to your phone");
+    b.innerHTML = `
+      <p class="install-msg"><strong>Keep Spartans Rules on your phone.</strong>
+      Add it to your home screen — it opens like an app and works offline at the field.</p>
+      <div class="install-actions">
+        <button type="button" class="install-yes">Add to phone</button>
+        <button type="button" class="install-later">Later</button>
+      </div>`;
+    b.querySelector(".install-yes").addEventListener("click", () => {
+      setInstallState("prompted");
+      b.remove();
+      doInstall();
+      addFooterInstallLink(); // still reachable if they bail out of the native prompt
+    });
+    b.querySelector(".install-later").addEventListener("click", () => {
+      setInstallState("later");
+      b.remove();
+      addFooterInstallLink();
+    });
+    document.body.appendChild(b);
+  }
+
+  /* "Decide later" path: a quiet, always-available install link in the footer. */
+  function addFooterInstallLink() {
+    if (isStandalone || installState() === "done") return;
+    if (document.querySelector(".install-foot")) return;
+    const foot = document.querySelector(".foot");
+    if (!foot) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "install-foot";
+    btn.textContent = "Add this app to your phone";
+    btn.addEventListener("click", doInstall);
+    foot.insertBefore(btn, foot.firstChild);
+  }
+
+  if (!isStandalone && installState() === null) {
+    setTimeout(showInstallBanner, 1500); // one time only — first visit
+  } else if (!isStandalone && installState() !== "done") {
+    addFooterInstallLink();
+  }
+
   // ---- PWA: offline cache + updates ----
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     // ask the browser not to evict the offline rulebook cache
