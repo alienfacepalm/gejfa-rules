@@ -38,16 +38,20 @@
   </header>
 
   <div class="searchwrap">
-    <input id="q" class="search" type="search" inputmode="search" autocomplete="off"
-           autocapitalize="off" spellcheck="false" placeholder="Type a situation… (e.g. late weigh in, up 30, ejected)"
-           aria-label="Search the rules">
-    <button id="clearBtn" class="clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
+    <div class="search-field">
+      <input id="q" class="search" type="search" inputmode="search" autocomplete="off"
+             autocapitalize="off" spellcheck="false" placeholder="Type a situation… (e.g. late weigh in, up 30, ejected)"
+             aria-label="Search the rules">
+      <button id="clearBtn" class="clear-btn" type="button" aria-label="Clear search" hidden>&times;</button>
+    </div>
     <!-- mic button removed for now; voice-search code remains dormant in app.js (SHOW_MIC) -->
-    <button id="levelBtn" class="level-btn" type="button" aria-label="Filter by level">All</button>
-    <button id="browseBtn" class="browse-btn" type="button" aria-label="Browse categories"
-            aria-expanded="false" aria-controls="catSheet">
-      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 6h18v2.4H3zm0 4.8h18v2.4H3zm0 4.8h18V18H3z"/></svg>
-    </button>
+    <div class="search-controls">
+      <button id="levelBtn" class="level-btn" type="button" aria-label="Filter by level">All</button>
+      <button id="browseBtn" class="browse-btn" type="button" aria-label="Browse categories"
+              aria-expanded="false" aria-controls="catSheet">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 6h18v2.4H3zm0 4.8h18v2.4H3zm0 4.8h18V18H3z"/></svg>
+      </button>
+    </div>
   </div>
 
   <div id="catPillRow" class="cat-pill-row" hidden>
@@ -80,6 +84,7 @@
   <script src="data/situations.js"></script>
   <script src="data/synonyms.js"></script>
   <script src="data/diagrams.js"></script>
+  <script src="data/changelog.js"></script>
   <script src="search.js"></script>
   <script src="app.js"></script>
 </body>

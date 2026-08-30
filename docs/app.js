@@ -28,6 +28,24 @@
 
   const state = { query: "", category: null, level: null };
 
+  // ---- deep-linkable filters (?q=&level=&cat=) ----
+  // Lets a coach share or bookmark the exact filtered view they're looking
+  // at. Uses replaceState (not pushState) so typing/filtering doesn't spam
+  // browser history — the address bar always reflects the current view.
+  function syncUrl() {
+    const params = new URLSearchParams();
+    if (state.query.trim()) params.set("q", state.query.trim());
+    if (state.level) params.set("level", state.level);
+    if (state.category) params.set("cat", state.category);
+    const qs = params.toString();
+    const url = location.pathname + (qs ? "?" + qs : "");
+    history.replaceState(null, "", url);
+  }
+  function readUrlParams() {
+    const params = new URLSearchParams(location.search);
+    return { q: params.get("q"), level: params.get("level"), cat: params.get("cat") };
+  }
+
   // ---- recents (persisted; answers themselves are all offline in the app bundle) ----
   const RECENTS_KEY = "gejfa-recents-v1";
   function getRecents() {
@@ -79,7 +97,8 @@
       $catPill.appendChild(x);
       $catPill.setAttribute("aria-label", "Clear category filter: " + cat.label);
     }
-    $browseBtn.classList.toggle("active", !!id);
+    $browseBtn.classList.toggle("active", !!cat);
+    syncUrl();
     render();
   }
   function openCatSheet() {
@@ -111,6 +130,7 @@
     $levelBtn.classList.toggle("active", !!id);
     if (persist) saveLevel(id);
     updateLevelOptions();
+    syncUrl();
   }
   levelChoices.forEach(lv => {
     const b = document.createElement("button");
@@ -130,8 +150,23 @@
       o.classList.toggle("active", (o.dataset.level || null) === state.level));
   }
   function closeSheet() { $levelSheet.hidden = true; }
-  // Restore the coach's saved level (persists across visits — a team plays one level all season)
-  setLevel(getSavedLevel(), false);
+
+  // ---- apply startup state: a shared link's filters win; otherwise fall
+  // back to the coach's saved level (a team plays one level all season) ----
+  const urlParams = readUrlParams();
+  // Set query state first: setLevel/setCategory below call syncUrl(), which
+  // reads state.query — set it after and the ?q= param would be dropped
+  // from the address bar the instant the page loads.
+  if (urlParams.q) {
+    $q.value = urlParams.q;
+    state.query = urlParams.q;
+    $clear.hidden = false;
+  }
+  // An explicit level in a shared link becomes the new saved default too —
+  // opening "…?level=rookie" almost certainly means that's this coach's team.
+  setLevel(urlParams.level || getSavedLevel(), !!urlParams.level);
+  if (urlParams.cat) setCategory(urlParams.cat);
+
   $levelBtn.addEventListener("click", () => { updateLevelOptions(); $levelSheet.hidden = false; });
   $levelSheet.addEventListener("click", (e) => { if (e.target === $levelSheet) closeSheet(); });
 
@@ -141,10 +176,10 @@
     state.query = $q.value;
     $clear.hidden = !$q.value;
     clearTimeout(debounce);
-    debounce = setTimeout(render, 50);
+    debounce = setTimeout(() => { render(); syncUrl(); }, 50);
   });
   $clear.addEventListener("click", () => {
-    $q.value = ""; state.query = ""; $clear.hidden = true; $q.focus(); render();
+    $q.value = ""; state.query = ""; $clear.hidden = true; $q.focus(); render(); syncUrl();
   });
   $q.addEventListener("keydown", (e) => { if (e.key === "Enter") $q.blur(); });
 
@@ -480,23 +515,94 @@
     addFooterInstallLink();
   }
 
-  // ---- PWA: offline cache + updates ----
+  // ---- PWA: full sync when online, always works offline with what's cached ----
+  // Cache-first at the network layer (see sw.js) so the app is instant and
+  // reliable on bad sideline signal; this section is what tells the coach,
+  // in plain language, what's happening: saved for offline / downloading an
+  // update / here's what changed, with a one-tap reload once it's ready.
+
+  /* Small, non-interactive status message — auto-dismisses. For "this just
+     happened" info, not for anything requiring a decision (see .toast for
+     that / the install banner). */
+  function infoToast(text, ms) {
+    const t = document.createElement("div");
+    t.className = "toast-info";
+    t.setAttribute("role", "status");
+    t.textContent = text;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), ms || 3200);
+    return t;
+  }
+
+  /* "What's new" sheet: the latest changelog entry in the same bottom-sheet
+     language as the rest of the app. `afterUpdate` swaps the single "Got it"
+     dismiss for "Reload now" / "Not now", since a real update is waiting. */
+  function openWhatsNewSheet(afterUpdate) {
+    const entry = (typeof GEJFA_CHANGELOG !== "undefined") ? GEJFA_CHANGELOG[0] : null;
+    if (!entry) return;
+    const sheet = document.createElement("div");
+    sheet.className = "level-sheet";
+    const items = entry.changes.map(c => `<li>${esc(c)}</li>`).join("");
+    sheet.innerHTML = `
+      <div class="level-sheet-inner" role="dialog" aria-modal="true" aria-labelledby="whatsnewTitle">
+        <h2 id="whatsnewTitle">What's new${entry.date ? " — " + esc(entry.date) : ""}</h2>
+        <ul class="whatsnew-list">${items}</ul>
+        ${afterUpdate
+          ? `<div class="install-actions">
+               <button type="button" class="install-yes whatsnew-reload">Reload now</button>
+               <button type="button" class="install-later whatsnew-dismiss">Not now</button>
+             </div>`
+          : `<button type="button" class="back-home whatsnew-dismiss">Got it</button>`}
+      </div>`;
+    sheet.addEventListener("click", (e) => {
+      if (e.target.closest(".whatsnew-reload")) { location.reload(); return; }
+      if (e.target === sheet || e.target.closest(".whatsnew-dismiss")) sheet.remove();
+    });
+    document.body.appendChild(sheet);
+  }
+
+  // Let a coach revisit "what's new" anytime, not just right after an update.
+  if (document.querySelector(".foot") && typeof GEJFA_CHANGELOG !== "undefined" && GEJFA_CHANGELOG.length) {
+    const wnLink = document.createElement("button");
+    wnLink.type = "button";
+    wnLink.className = "install-foot";
+    wnLink.textContent = "What's new";
+    wnLink.addEventListener("click", () => openWhatsNewSheet(false));
+    document.querySelector(".foot").appendChild(wnLink);
+  }
+
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     // ask the browser not to evict the offline rulebook cache
     if (navigator.storage && navigator.storage.persist) {
       navigator.storage.persist().catch(() => {});
     }
-    navigator.serviceWorker.register("sw.js").catch(() => {});
-    // when a new version activates, offer a one-tap refresh
-    let hadController = !!navigator.serviceWorker.controller;
+    const hadControllerAtLoad = !!navigator.serviceWorker.controller;
+
+    navigator.serviceWorker.register("sw.js").then((reg) => {
+      // First-ever visit: confirm once everything is actually saved offline.
+      if (!hadControllerAtLoad) {
+        navigator.serviceWorker.ready.then(() => infoToast("Rulebook saved for offline use ✓"));
+      }
+      // A new version is downloading in the background — say so, since on
+      // poor sideline signal this can take a few seconds.
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        if (!nw) return;
+        const downloading = infoToast("Downloading rulebook update…", 15000);
+        nw.addEventListener("statechange", () => {
+          if (nw.state === "installed" || nw.state === "activated" || nw.state === "redundant") {
+            downloading.remove();
+          }
+        });
+      });
+    }).catch(() => {});
+
+    // Once the new version actually takes over, show what changed with a
+    // one-tap reload — this is the moment the update is fully ready to use.
+    let hadController = hadControllerAtLoad;
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       if (!hadController) { hadController = true; return; } // first install, not an update
-      const t = document.createElement("button");
-      t.type = "button";
-      t.className = "toast";
-      t.textContent = "Rulebook updated — tap to reload";
-      t.addEventListener("click", () => location.reload());
-      document.body.appendChild(t);
+      openWhatsNewSheet(true);
     });
   }
 })();

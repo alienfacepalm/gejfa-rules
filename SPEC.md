@@ -32,13 +32,16 @@ docs/                          ← deployed root (GitHub Pages, main:/docs)
   data/rules.js                81 rule entries (portable, pure data)
   data/situations.js           45 situation cards + GEJFA_QUICK (8) (portable)
   data/synonyms.js             coach-speak → rulebook-term expansion (portable)
-  data/diagrams.js             19 chalk-style SVG builders keyed by rule id (portable)
+  data/diagrams.js             31 chalk-style SVG builders keyed by rule id (portable)
+  data/changelog.js            coach-facing "what's new" entries, newest first (portable)
   vendor/minisearch.min.js     MiniSearch v7 UMD (only dependency, vendored)
   fonts/*.woff2                Graduate 400; Barlow 400/600/700 (self-hosted)
   icons/*.png                  192 / 512 / 512-maskable (Spartans lockup)
   manifest.webmanifest         "Skyline Spartans — GEJFA Rules 2025" / "Spartans Rules"
   sw.js                        cache-first service worker; version-stamped cache
   2025-gejfa-rules.pdf         official rulebook (linked upper-right, precached)
+tests/
+  verify-rules.js              pre-deploy gate: structural + source-fidelity + anchor + search tests (§9); NOT deployed (outside docs/)
 ```
 
 ## 4. Data model
@@ -86,17 +89,28 @@ Two-color garment palette: dark forest green surfaces (`--field` #16281c, raised
 
 ## 8. PWA behavior
 
-- `sw.js`: cache-first with network refresh; `CACHE_VERSION` (`gejfa-rules-vN`) must be bumped on every content/app change — clients then get a "Rulebook updated — tap to reload" toast.
+- **Sync/offline model — deliberately cache-first, not network-first.** `sw.js` always answers from cache instantly, refreshing that cache from the network in the background on every request when online. A network-first strategy was considered and rejected: on the poor sideline connectivity this app is built for, network-first would make every lookup wait on a slow/failing request before falling back to a perfectly good local copy — exactly the failure mode the app exists to avoid. "Full sync when online, offline works with the latest cached version" is delivered instead through the service-worker *version* lifecycle (below), which the coach can see and act on explicitly, rather than by racing the network on every tap.
+- `CACHE_VERSION` (`gejfa-rules-vN`) in `sw.js` must be bumped on every content/app change. The update lifecycle is fully visible to the coach:
+  1. **First-ever visit**: once everything is actually cached (`serviceWorker.ready`), a status message confirms *"Rulebook saved for offline use ✓."*
+  2. **While online and a new version is found**: a *"Downloading rulebook update…"* status message shows for the duration of the fetch (relevant on slow field connections; the PDF alone is ~480 KB).
+  3. **Once the new version is ready** (`controllerchange`, i.e. an update — not the first install): a **"What's new"** bottom sheet opens automatically, listing that version's `docs/data/changelog.js` entry in plain language, with **Reload now** / **Not now**. The same sheet is reachable anytime from a footer link, independent of any update.
+  4. Status messages (`.toast-info`) are non-interactive and auto-dismiss; they never require a decision, unlike the install prompt or the What's New sheet.
+- **Changelog practice**: add one entry to `docs/data/changelog.js` (newest first) whenever `CACHE_VERSION` is bumped for a **user-visible** change. Write it for a coach, not a developer — what changed for them, in plain language, no file names or version jargon in the bullets themselves. Skip entries for invisible/internal changes (refactors, doc-only edits, the test suite in §9).
 - `navigator.storage.persist()` requested so the offline cache isn't evicted.
 - **Install prompt**: one-time banner on first visit — **Add to phone** (native `beforeinstallprompt` on Chrome/Edge; step-by-step Share → Add to Home Screen sheet on iOS Safari) or **Later**. Either choice is remembered (localStorage `gejfa-install-v1`); a quiet footer link remains for deciding later. Never shown in standalone mode; hidden permanently after `appinstalled`.
+- **Deep-linkable filters**: the level, category, and search text are reflected in the URL (`?q=&level=&cat=`) via `history.replaceState` (no history spam while typing), so a coach can share or bookmark the exact filtered view. On load, URL params win over the saved level default; an explicit `?level=` in a shared link also becomes the new saved default (opening a team's link implies that's their level going forward).
 
 ## 9. Verification (required before any deploy)
 
 1. `node --check` on every changed `.js` file.
-2. Integrity script: all situation `ruleId`s and diagram keys resolve to rule ids; all quick-card ids resolve; SVGs well-formed; counts reported (81 / 45 / 19 / 8).
-3. Search gauntlet: top-hit assertions for the canonical queries (mercy, up 30, late weigh in, 4th and 10, overtime, ejected, twelve plays, headsets, …) — all must pass.
-4. Content changes: re-audit changed entries against `rules_extracted.txt` (see §2.1). For deep passes, cross-validate the extraction with a second PDF library (pypdf vs pdfminer numeric-token diff must be zero).
-5. After push: confirm the live build flipped (poll a version-stamped asset).
+2. **Run `node tests/verify-rules.js` — must exit 0.** This is the automated pre-deploy gate (not shipped to `docs/`, so it isn't part of the deployed bundle). It checks, against `rules_extracted.txt`:
+   - **Structural integrity** — every situation `ruleId` and diagram key resolves to a real rule id, every quick-card id resolves, every rule has its required fields, categories/levels are valid, no duplicate ids. Counts are logged (81 rules / 45 situations / 31 diagrams / 8 quick, as of this writing — update the anchor/count expectations in the test file when these legitimately change).
+   - **Source fidelity** — every rule's verbatim `text` field is checked for 4-word shingle overlap against the source; below `MIN_COVERAGE` (currently 0.30, calibrated against this dataset's most heavily-synthesized entry) fails loudly. This is the automated defense against hallucinated/invented rule text — a wholly fabricated sentence scores near 0%, since no 38-page rulebook contains a 4-word run matching an invented claim by chance.
+   - **Anchor facts** — a curated list of the highest-stakes numbers (PAT values, weigh-in tolerance, the 25/32/38-point thresholds, appeal windows, practice limits, transfer caps, etc.), each checked explicitly against *both* the app data and the source text. Add an anchor here whenever a new rule carries a penalty, deadline, or threshold a coach would act on.
+   - **Search behavior** — the top-hit gauntlet (mercy, up 30, late weigh in, 4th and 10, overtime, ejected, twelve plays, headsets, …).
+   - This test suite is a **regression net, not a substitute** for the full semantic audit required on genuinely new rule content (a shingle/anchor check can't catch a subtly-wrong paraphrase that reuses the right words) — for new content, do the multi-agent adversarial audit against the source (§2.1's method) first, then run this suite to lock the result in against future drift.
+3. Content changes: re-audit changed entries against `rules_extracted.txt`. For deep passes, cross-validate the extraction with a second PDF library (pypdf vs pdfminer numeric-token diff must be zero).
+4. After push: confirm the live build flipped (poll a version-stamped asset).
 
 ## 10. Deploy & operations
 
