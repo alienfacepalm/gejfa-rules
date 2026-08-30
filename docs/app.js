@@ -132,8 +132,11 @@
   $q.addEventListener("keydown", (e) => { if (e.key === "Enter") $q.blur(); });
 
   // ---- voice search (progressive enhancement) ----
+  // Capability check on load: the button stays hidden unless the browser
+  // exposes SpeechRecognition AND has media devices. If the API turns out to
+  // be a stub (no service / no microphone), hide the button permanently.
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (SR && $mic) {
+  if (SR && $mic && navigator.mediaDevices) {
     $mic.hidden = false;
     let rec = null;
     $mic.addEventListener("click", () => {
@@ -147,8 +150,15 @@
         $q.value = t; state.query = t; $clear.hidden = !t; render();
       };
       rec.onend = () => { $mic.classList.remove("listening"); rec = null; };
-      rec.onerror = () => { $mic.classList.remove("listening"); rec = null; };
-      try { rec.start(); } catch { rec = null; $mic.classList.remove("listening"); }
+      rec.onerror = (e) => {
+        $mic.classList.remove("listening"); rec = null;
+        // API exists but can't actually work here — remove the dead button
+        if (e && (e.error === "service-not-allowed" || e.error === "audio-capture" ||
+                  e.error === "language-not-supported")) {
+          $mic.hidden = true;
+        }
+      };
+      try { rec.start(); } catch { rec = null; $mic.classList.remove("listening"); $mic.hidden = true; }
     });
   }
 
