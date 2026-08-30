@@ -14,9 +14,15 @@ LINE = (40, 68, 47)  # --field-press, from docs/styles.css :root
 img = Image.new("RGBA", (TILE_W, TILE_H), (0, 0, 0, 0))
 d = ImageDraw.Draw(img)
 
-d.rectangle([0, 0, TILE_W, 4], fill=LINE + (128,))              # yard line
-tick_x0, tick_x1 = TILE_W // 2 - 1, TILE_W // 2 + 1
-d.rectangle([tick_x0, 5, tick_x1, 17], fill=LINE + (102,))       # hash tick
+# Yard line and hash tick are drawn as ONE contiguous shape (same color/alpha,
+# no seam between them) so they read as a connected mark, not two separate
+# floating pieces -- the previous version used different alpha values for
+# each rectangle, which (even though the pixels technically touched) looked
+# disconnected at low opacity.
+ALPHA = 115
+d.rectangle([0, 0, TILE_W, 4], fill=LINE + (ALPHA,))               # yard line, full tile width
+tick_x0, tick_x1 = TILE_W // 2 - 2, TILE_W // 2 + 2
+d.rectangle([tick_x0, 0, tick_x1, 20], fill=LINE + (ALPHA,))        # hash tick, overlapping the yard line from y=0
 
 OUT = r"C:\Users\brand\PROJECTS\AlienFacepalm\FOOTBALL\gejfa_rules\docs\icons\field-grid.png"
 img.save(OUT, optimize=True)

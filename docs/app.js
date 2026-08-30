@@ -213,7 +213,7 @@
   /* At a glance: title + clamped short answer. Opened: full answer,
      diagram (when the section has one), citation, and official rule text.
      When `spotlight` is true the card renders pre-opened as the best match. */
-  function cardHTML(doc, i, terms, spotlight) {
+  function cardHTML(doc, i, terms, spotlight, eyebrow) {
     const isSit = doc.type === "situation";
     const heading = isSit ? doc.situation.question : doc.title;
     const answer = isSit ? doc.situation.answer : doc.answer;
@@ -223,7 +223,7 @@
       <article class="card ${isSit ? "situation" : ""} ${spotlight ? "open spotlight" : ""}"
                data-i="${i}" data-docid="${esc(doc.docId)}" tabindex="0"
                role="button" aria-expanded="${spotlight ? "true" : "false"}">
-        ${spotlight ? `<p class="best">Best match</p>` : ""}
+        ${spotlight ? `<p class="best">${esc(eyebrow || "Best match")}</p>` : ""}
         <p class="q">${mark(esc(heading), terms)}</p>
         <p class="a">${mark(esc(answer), terms)}</p>
         <div class="detail" ${spotlight ? "" : "hidden"}>
@@ -333,15 +333,18 @@
   }
 
   /* Open one specific doc (quick answers, recents, a shared ?doc= link):
-     render just that topic, focused, and reflect it in the URL. */
-  function openDoc(docId) {
+     render just that topic, focused, and reflect it in the URL.
+     `clickedLabel` (the exact text of the button that was tapped, when
+     known) is echoed back as the card's eyebrow so it's unmistakable that
+     this is what was clicked — not a similar-sounding different topic. */
+  function openDoc(docId, clickedLabel) {
     const doc = engine.byDocId(docId);
     if (!doc) return false;
     $q.value = ""; state.query = ""; $clear.hidden = true;
     state.openDoc = docId;
     $results.innerHTML =
       `<p class="result-count">Topic</p>` +
-      cardHTML(doc, 0, [], true) +
+      cardHTML(doc, 0, [], true, clickedLabel ? `You tapped: ${clickedLabel}` : "Topic") +
       `<button type="button" class="back-home">← All topics</button>`;
     pushRecent(docId);
     syncUrl();
@@ -379,7 +382,7 @@
     const shareBtn = e.target.closest(".share-btn");
     if (shareBtn) { shareDoc(shareBtn.dataset.docid, shareBtn.dataset.title); return; }
     const quick = e.target.closest(".quick, .recent");
-    if (quick) { openDoc(quick.dataset.docid); return; }
+    if (quick) { openDoc(quick.dataset.docid, quick.textContent); return; }
     if (e.target.closest(".back-home")) { state.openDoc = null; syncUrl(); render(); return; }
     if (e.target.closest(".adv")) return; // Advanced disclosure handles itself
     const card = e.target.closest(".card");
