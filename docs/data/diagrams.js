@@ -278,19 +278,16 @@
     { t: "GAME", sub: "eligible" },
   ], "In equipment throughout. Meetings & film count as practice.");
 
-  // Quarter lengths
-  D["II-5-d"] = (function () {
-    const rows = [["ROOKIE", 8], ["CUB", 8], ["SOPH", 10], ["JV", 10], ["VARSITY", 10]];
-    let s = "";
-    rows.forEach((r, i) => {
-      const y = 12 + i * 22;
-      s += `<text x="86" y="${y + 12}" class="dgm-small" text-anchor="end">${r[0]}</text>`;
-      s += `<rect x="94" y="${y}" width="${r[1] * 18}" height="15" class="dgm-bar"/>`;
-      s += `<text x="${98 + r[1] * 18}" y="${y + 12}" class="dgm-small">${r[1]} min</text>`;
-    });
-    s += `<text x="${W / 2}" y="136" class="dgm-note" text-anchor="middle">Per quarter · NFHS timing rules otherwise.</text>`;
-    return svgWrap(s, 144);
-  })();
+  // Quarter lengths (shared bars() so the value prints inside the bar —
+  // a bare chalk rectangle with its number floating outside reads as an
+  // empty disabled form field, not a data bar)
+  D["II-5-d"] = bars([
+    { label: "ROOKIE", val: 8 },
+    { label: "CUB", val: 8 },
+    { label: "SOPH", val: 10 },
+    { label: "JV", val: 10 },
+    { label: "VARSITY", val: 10 },
+  ], 10, "Per quarter · NFHS timing rules otherwise.", " min");
 
   /* Condition → consequence rows (independent cases, not a sequence). */
   function cases(rows, note) {
@@ -326,7 +323,7 @@
         s += `<text x="${scale(r.max) - 3}" y="${y + 12}" class="dgm-barnum" text-anchor="end">${r.max}</text>`;
       } else {
         s += `<rect x="${x0}" y="${y}" width="${scale(r.val) - x0}" height="15" class="dgm-bar"/>`;
-        s += `<text x="${scale(r.val) + 4}" y="${y + 12}" class="dgm-small">${r.val}${unit || ""}</text>`;
+        s += `<text x="${scale(r.val) - 5}" y="${y + 12}" class="dgm-barnum" text-anchor="end">${r.val}${unit || ""}</text>`;
       }
     });
     const h = 12 + rows.length * 22 + (note ? 22 : 6);
