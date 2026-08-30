@@ -49,10 +49,21 @@ body {
 
 /* ---- Hero: the Collegiate Arc chest print (scrolls away) ---- */
 .hero {
+  position: relative;
   padding: calc(14px + env(safe-area-inset-top)) 16px 0;
   text-align: center;
   background: var(--field);
 }
+.pdf-link {
+  position: absolute; top: calc(10px + env(safe-area-inset-top)); right: 12px;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 40px; padding: 8px 12px;
+  font-family: var(--display); font-size: .66rem; letter-spacing: .12em;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--chalk-dim); background: var(--field-raised);
+  border: 2px solid var(--field-press); border-radius: 10px;
+}
+.pdf-link:active { color: var(--field); background: var(--chalk); }
 .hero .arc { display: block; width: min(300px, 78vw); margin: 0 auto -6px; overflow: visible; }
 .hero .arc text {
   font-family: var(--display);
