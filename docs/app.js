@@ -131,6 +131,23 @@
   });
   $q.addEventListener("keydown", (e) => { if (e.key === "Enter") $q.blur(); });
 
+  // ---- reset to top level ----
+  // Two quiet affordances: tap the hero crest/lockup (logo-home convention),
+  // or the small "reset" chip that only appears when a query/filter is active.
+  function resetAll() {
+    $q.value = ""; state.query = ""; $clear.hidden = true;
+    state.level = null;
+    $levelBtn.textContent = "All";
+    $levelBtn.classList.remove("active");
+    updateLevelOptions();
+    setCategory(null); // clears the pill + browse state and re-renders
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+  document.querySelector(".hero").addEventListener("click", (e) => {
+    if (e.target.closest(".pdf-link")) return; // PDF link keeps its own action
+    resetAll();
+  });
+
   // ---- voice search (progressive enhancement) ----
   // Capability check on load: the button stays hidden unless the browser
   // exposes SpeechRecognition AND has media devices. If the API turns out to
@@ -266,10 +283,13 @@
     const label = hasQuery
       ? `${docs.length} match${docs.length === 1 ? "" : "es"}`
       : (state.category ? `${docs.length} in category` : `Common situations`);
+    const activeState = hasQuery || state.category || state.level;
+    const resetChip = activeState
+      ? `<button type="button" class="reset-chip" aria-label="Reset to all topics">↺ reset</button>` : "";
 
     $results.innerHTML =
       (hasQuery ? "" : homeHTML()) +
-      `<p class="result-count">${esc(label)}</p>` +
+      `<p class="result-count">${esc(label)}${resetChip}</p>` +
       docs.map((d, i) => cardHTML(d, i, terms, hasQuery && i === 0)).join("");
 
     if (hasQuery && docs[0]) pushRecent(docs[0].docId);
@@ -312,6 +332,7 @@
   }
 
   $results.addEventListener("click", (e) => {
+    if (e.target.closest(".reset-chip")) { resetAll(); return; }
     const quick = e.target.closest(".quick, .recent");
     if (quick) { openDoc(quick.dataset.docid); return; }
     if (e.target.closest(".back-home")) { render(); return; }

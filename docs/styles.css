@@ -193,6 +193,15 @@ body {
 .result-count::before, .result-count::after {
   content: ""; flex: 1; height: 2px; background: var(--field-press);
 }
+.reset-chip {
+  flex: 0 0 auto; min-height: 34px; padding: 6px 12px;
+  font-family: var(--body); font-weight: 700; font-size: .68rem;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--chalk-faint); background: none;
+  border: 1.5px solid var(--field-press); border-radius: 999px; cursor: pointer;
+}
+.reset-chip:active { color: var(--field); background: var(--chalk); border-color: var(--chalk); }
+.hero { cursor: pointer; }
 
 .card {
   background: var(--field-raised);
