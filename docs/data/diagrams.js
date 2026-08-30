@@ -206,7 +206,7 @@
     { t: "4 PLAYS", sub: "locked in" },
     { t: "FREE SUBS", sub: "after play 4" },
     { t: "SCORE?", sub: "free sub for try" },
-    { t: "REPEAT", sub: "next turnover" },
+    { t: "RESTARTS", sub: "after score or turnover" },
   ], "Injured player: free sub anytime; he sits at least 1 play.");
   D["II-7-a3"] = D["II-7-a"];
 
@@ -214,7 +214,7 @@
   D["II-2-h"] = timeline([
     { at: "-60:00", label: "teams|arrive" },
     { at: "-55:00", label: "visitors|weigh" },
-    { at: "-50:00", label: "home|weighs" },
+    { at: "-50:00", label: "home weighs|(latest start)" },
     { at: "-15:00", label: "last regular|weigh-in" },
     { at: "HALF", label: "late arrivals|final window" },
   ], "Arrive later than -15:00 → no 1st half; weigh by halftime to play 2nd.");
@@ -239,7 +239,7 @@
     { t: "1st &amp; 10", sub: "from the 10" },
     { t: "REPEAT @ 10", sub: "until decided" },
     { t: "1 TIMEOUT", sub: "per session" },
-  ], "Used only for standings ties on the last playoff spot.");
+  ], "For seeding ties that require a shootout — e.g., the last playoff spot.");
 
   // Playoff structure — Gold bracket per Appendix C (one-division format):
   // QF: A1 v B4, B2 v A3, B1 v A4, A2 v B3 → two SFs → Championship.
@@ -254,7 +254,7 @@
       return `<path d="M ${x} ${y1} h 8 V ${ym} h 8 M ${x} ${y2} h 8 V ${ym}" class="dgm-flowarrow" fill="none"/>`;
     }
     const P = [["A 1st", "B 4th"], ["B 2nd", "A 3rd"], ["B 1st", "A 4th"], ["A 2nd", "B 3rd"]];
-    let s = `<text x="20" y="14" class="dgm-label">GOLD — TOP 4 PER CONFERENCE (A &amp; B)</text>`;
+    let s = `<text x="20" y="14" class="dgm-label">GOLD — TOP 4 PER CONF (ONE-DIVISION FORMAT)</text>`;
     P.forEach((pair, i) => {
       const y1 = 24 + i * 44, y2 = y1 + 20;
       s += seed(20, y1, pair[0]) + seed(20, y2, pair[1]) + joiner(78, y1 + 8, y2 + 8);
@@ -266,8 +266,9 @@
     s += `<text x="20" y="222" class="dgm-label">SILVER — NEXT 2 PER CONFERENCE</text>`;
     s += seed(20, 230, "SF · WK 9", 66) + seed(118, 230, "FINAL · WK 10", 84);
     s += `<path d="M 86 238 h 32" class="dgm-flowarrow"/>`;
-    s += `<text x="20" y="272" class="dgm-note">Everyone else: consolation matchup in week 9 vs a similar record.</text>`;
-    return svgWrap(s, 280);
+    s += `<text x="20" y="266" class="dgm-note">Everyone else: consolation matchup in week 9 vs a similar record.</text>`;
+    s += `<text x="20" y="280" class="dgm-note">Two-Division levels (&gt;20 teams): Division winners seed #1–2.</text>`;
+    return svgWrap(s, 290);
   })();
 
   // Contact progression
