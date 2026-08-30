@@ -278,16 +278,14 @@
     { t: "GAME", sub: "eligible" },
   ], "In equipment throughout. Meetings & film count as practice.");
 
-  // Quarter lengths (shared bars() so the value prints inside the bar —
-  // a bare chalk rectangle with its number floating outside reads as an
-  // empty disabled form field, not a data bar)
+  // Quarter lengths
   D["II-5-d"] = bars([
     { label: "ROOKIE", val: 8 },
     { label: "CUB", val: 8 },
     { label: "SOPH", val: 10 },
     { label: "JV", val: 10 },
     { label: "VARSITY", val: 10 },
-  ], 10, "Per quarter · NFHS timing rules otherwise.", " min");
+  ], "Per quarter · NFHS timing rules otherwise.", " min");
 
   /* Condition → consequence rows (independent cases, not a sequence). */
   function cases(rows, note) {
@@ -308,23 +306,21 @@
     return svgWrap(s, h);
   }
 
-  /* Horizontal range/value bars with a shared scale. */
-  function bars(rows, maxVal, note, unit) {
+  /* Stat rows: label · dotted leader · bold chalk value. No filled bars —
+     light rectangles read as empty (disabled) form inputs on the dark card,
+     so each row states its value directly, like a spec sheet. */
+  function bars(rows, note, unit) {
+    const xL = 20, xR = 316;
     let s = "";
     rows.forEach((r, i) => {
       const y = 12 + i * 22;
-      const x0 = 96, x1 = 316;
-      const scale = (v) => x0 + (v / maxVal) * (x1 - x0);
-      s += `<text x="${x0 - 8}" y="${y + 12}" class="dgm-small" text-anchor="end">${r.label}</text>`;
-      if (r.min !== undefined) {
-        s += `<rect x="${scale(r.min)}" y="${y}" width="${scale(r.max) - scale(r.min)}" height="15" class="dgm-bar"/>`;
-        s += `<text x="${scale(r.min) - 3}" y="${y + 12}" class="dgm-small" text-anchor="end"></text>`;
-        s += `<text x="${scale(r.min) + 3}" y="${y + 12}" class="dgm-barnum">${r.min}</text>`;
-        s += `<text x="${scale(r.max) - 3}" y="${y + 12}" class="dgm-barnum" text-anchor="end">${r.max}</text>`;
-      } else {
-        s += `<rect x="${x0}" y="${y}" width="${scale(r.val) - x0}" height="15" class="dgm-bar"/>`;
-        s += `<text x="${scale(r.val) - 5}" y="${y + 12}" class="dgm-barnum" text-anchor="end">${r.val}${unit || ""}</text>`;
-      }
+      const value = r.min !== undefined ? `${r.min}–${r.max}` : `${r.val}${unit || ""}`;
+      // Approximate text extents to keep the dotted leader clear of both ends.
+      const leadL = xL + r.label.length * 6.5 + 8;
+      const leadR = xR - value.length * 7.5 - 8;
+      s += `<text x="${xL}" y="${y + 12}" class="dgm-small">${r.label}</text>`;
+      if (leadR > leadL) s += `<path d="M ${leadL} ${y + 8.5} H ${leadR}" class="dgm-leader"/>`;
+      s += `<text x="${xR}" y="${y + 12}" class="dgm-stat" text-anchor="end">${value}</text>`;
     });
     const h = 12 + rows.length * 22 + (note ? 22 : 6);
     if (note) s += `<text x="${W / 2}" y="${h - 8}" class="dgm-note" text-anchor="middle">${note}</text>`;
@@ -350,7 +346,7 @@
   D["I-9-abc"] = bars([
     { label: "PRE-LABOR DAY", val: 5 },
     { label: "AFTER", val: 3 },
-  ], 6, "Per week (Sun–Sat) · max 15 total before Labor Day · every session ≤ 2 hours.", "/wk");
+  ], "Per week (Sun–Sat) · max 15 total before Labor Day · every session ≤ 2 hours.", "/wk");
 
   // Roster ranges by level
   D["I-7-d"] = bars([
@@ -359,7 +355,7 @@
     { label: "SOPH", min: 17, max: 33 },
     { label: "JV", min: 18, max: 35 },
     { label: "VARSITY", min: 20, max: 35 },
-  ], 36, "Min–max roster before a split · take players in application order up to 26 (21 at 8-player).");
+  ], "Min–max roster before a split · take players in application order up to 26 (21 at 8-player).");
 
   // Ball specs
   D["II-4-g"] = (function () {
@@ -428,7 +424,7 @@
     { label: "ROOKIE", val: 2 },
     { label: "CUB", val: 3 },
     { label: "SOPH/JV/V", val: 4 },
-  ], 5, "Full crew: 2 at Rookie, 3 at Cub · 3 assigned everywhere, 4th targeted for Soph/JV/V.", " officials");
+  ], "Full crew: 2 at Rookie, 3 at Cub · 3 assigned everywhere, 4th targeted for Soph/JV/V.", " officials");
 
   // Weigh-in tolerance
   D["II-2-b"] = (function () {

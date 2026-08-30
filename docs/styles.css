@@ -340,8 +340,8 @@ body.scrolled .searchwrap { box-shadow: 0 8px 16px -10px var(--field-deep); }
 .dgm-box { fill: var(--field-press); stroke: var(--chalk-dim); stroke-width: 1; }
 .dgm-boxtext { fill: var(--chalk); font-size: 10.5px; font-weight: 700; letter-spacing: .06em; }
 .dgm-boxsub { fill: var(--chalk-dim); font-size: 9px; font-weight: 600; }
-.dgm-bar { fill: var(--chalk-dim); }
-.dgm-barnum { fill: var(--field); font-size: 9.5px; font-weight: 700; }
+.dgm-stat { fill: var(--chalk); font-size: 12px; font-weight: 700; }
+.dgm-leader { stroke: var(--field-press); stroke-width: 1.5; stroke-dasharray: 2 4; fill: none; }
 .dgm-post { stroke: var(--chalk); stroke-width: 2.5; fill: none; }
 .dgm-x { fill: var(--chalk-dim); }
 .dgm-o { fill: none; stroke: var(--chalk); stroke-width: 2; }
