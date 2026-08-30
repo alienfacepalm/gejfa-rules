@@ -448,6 +448,28 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   border: none; border-radius: 10px; cursor: pointer;
 }
 
+/* ---- Rollover (hover) states for every button/interactive item ----
+   Scoped to real pointer devices only (mouse/trackpad) so touchscreens never
+   get a "stuck" hover look after a tap — touch already has its own :active
+   feedback throughout, defined alongside each element above. */
+@media (hover: hover) and (pointer: fine) {
+  .pdf-link:hover { color: var(--field); background: var(--chalk); }
+  .level-btn:hover:not(.active) { background: var(--field-press); border-color: var(--chalk-dim); }
+  .clear-btn:hover { background: var(--field-raised); color: var(--chalk); }
+  .level-option:hover:not(.active) { background: var(--field-press); }
+  .reset-chip:hover { color: var(--field); background: var(--chalk); border-color: var(--chalk); }
+  .card:hover { background: var(--field-press); }
+  .share-btn:hover { color: var(--chalk); background: var(--field-press); }
+  .quick:hover { background: var(--field-press); }
+  .recent:hover { color: var(--chalk); background: var(--field-press); }
+  .back-home:hover { background: var(--field-press); }
+  .mic-btn:hover { background: var(--field-press); color: var(--chalk); }
+  .adv summary:hover { color: var(--chalk); background: var(--field-press); }
+  .install-yes:hover { background: var(--chalk-dim); }
+  .install-later:hover { background: var(--field-raised); }
+  .install-foot:hover { background: var(--field-press); }
+}
+
 /* ---- quality floor ---- */
 :focus-visible { outline: 3px solid var(--chalk); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) {
