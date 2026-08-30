@@ -403,13 +403,6 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   border: 2px solid var(--field-press); border-radius: 10px; cursor: pointer;
 }
 .mic-btn.listening { color: var(--field); background: var(--chalk); border-color: var(--chalk); }
-.reset-home {
-  flex: 0 0 auto; width: 54px; min-height: 54px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--chalk-dim); background: var(--field-raised);
-  border: 2px solid var(--field-press); border-radius: 10px; cursor: pointer;
-}
-.reset-home:active { color: var(--chalk); background: var(--field-press); }
 /* Non-interactive status message (offline-saved confirmation, downloading
    indicator) — sits below the sticky search bar so it never collides with
    the install banner or the What's New sheet, both anchored to the bottom. */
@@ -501,7 +494,6 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   .install-later:hover { background: var(--field-raised); }
   .install-foot:hover { background: var(--field-press); }
   .toast:hover { background: var(--chalk-dim); }
-  .reset-home:hover { background: var(--field-press); }
 }
 
 /* ---- quality floor ---- */

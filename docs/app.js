@@ -136,8 +136,9 @@
   updateScrolled();
 
   // ---- reset to top level ----
-  // Two quiet affordances: tap the hero crest/lockup (logo-home convention),
-  // or the small "reset" chip that only appears when a query/filter is active.
+  // Tap the hero crest/lockup (logo-home convention). Each sub-state also has
+  // its own visible escape (clear ×, "← All topics", the category sheet), so
+  // no dedicated home button is needed.
   function resetAll() {
     $q.value = ""; state.query = ""; $clear.hidden = true;
     state.openDoc = null;
@@ -148,7 +149,6 @@
     if (e.target.closest(".pdf-link")) return; // PDF link keeps its own action
     resetAll();
   });
-  document.getElementById("resetHomeBtn").addEventListener("click", resetAll);
 
   // ---- voice search (progressive enhancement) ----
   // Capability check on load: the button stays hidden unless the browser
