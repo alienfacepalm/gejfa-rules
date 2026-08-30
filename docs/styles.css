@@ -67,6 +67,37 @@ body {
   body { background-image: none; } /* flat field color is the safe fallback */
 }
 
+/* Rotating photo backdrop: one of the bundled youth-football photos
+   (docs/img/bg/, picked at random per load in app.js) on a fixed viewport
+   layer behind all content. A fixed-position ELEMENT is fine here — the
+   Safari/sticky conflict called out above is specific to
+   background-attachment: fixed, not position: fixed (the level sheets
+   already rely on position: fixed). The photo is tinted toward the field
+   green inside the layer and heavily dimmed overall, so the field grid and
+   chalk type stay legible; solid surfaces (.hero, .searchwrap, cards) paint
+   over it and the photo reads only in the margins between them. The layer
+   stays at opacity 0 until app.js has actually loaded the image
+   (body.bg-photo-ready), so offline/slow loads keep the pure-CSS field. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(16, 31, 21, .55), rgba(16, 31, 21, .55)),
+    var(--bg-photo, none);
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(.25);
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+body.bg-photo-ready::before { opacity: .38; }
+@media (prefers-reduced-transparency: reduce) {
+  body::before { display: none; }
+}
+
 /* ---- Hero: the Collegiate Arc chest print (scrolls away) ---- */
 .hero {
   position: relative;

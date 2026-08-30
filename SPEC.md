@@ -33,9 +33,13 @@ docs/                          ← deployed root (GitHub Pages, main:/docs)
   data/situations.js           45 situation cards + GEJFA_QUICK (8) (portable)
   data/synonyms.js             coach-speak → rulebook-term expansion (portable)
   data/diagrams.js             31 chalk-style SVG builders keyed by rule id (portable)
+  data/backgrounds.js          GEJFA_BACKGROUNDS: list of bundled backdrop photos (portable, pure data)
   vendor/minisearch.min.js     MiniSearch v7 UMD (only dependency, vendored)
   fonts/*.woff2                Graduate 400; Barlow 400/600/700 (self-hosted)
   icons/*.png                  192 / 512 / 512-maskable (Spartans lockup)
+  img/bg/*.jpg                 openly licensed youth-football backdrop photos (Wikimedia
+                               Commons; sources in img/bg/ATTRIBUTION.md); one shown at
+                               random per load, cached on demand (NOT precached)
   manifest.webmanifest         "Skyline Spartans — GEJFA Rules 2025" / "Spartans Rules"
   sw.js                        cache-first service worker; version-stamped cache
   2025-gejfa-rules.pdf         official rulebook (linked upper-right, precached)

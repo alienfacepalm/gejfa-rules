@@ -23,6 +23,32 @@
 
   const state = { query: "", category: null, openDoc: null };
 
+  // ---- rotating photo backdrop ----
+  // Picks one of the bundled youth-football photos (docs/img/bg/, listed in
+  // data/backgrounds.js) at random on every load and fades it in behind the
+  // field grid once the file has actually loaded. Avoids showing the same
+  // photo twice in a row; offline or missing images just keep the pure-CSS
+  // field background, so this can never block or break the app.
+  (function initBackdrop() {
+    const BGS = (typeof GEJFA_BACKGROUNDS !== "undefined") ? GEJFA_BACKGROUNDS : null;
+    if (!BGS || !Array.isArray(BGS.files) || BGS.files.length === 0) return;
+    let pick = Math.floor(Math.random() * BGS.files.length);
+    const LAST_KEY = "gejfa-bg-last";
+    try {
+      if (BGS.files.length > 1 && String(pick) === localStorage.getItem(LAST_KEY)) {
+        pick = (pick + 1) % BGS.files.length;
+      }
+      localStorage.setItem(LAST_KEY, String(pick));
+    } catch {}
+    const url = BGS.dir + BGS.files[pick];
+    const img = new Image();
+    img.onload = () => {
+      document.body.style.setProperty("--bg-photo", 'url("' + url + '")');
+      document.body.classList.add("bg-photo-ready");
+    };
+    img.src = url;
+  })();
+
   // ---- deep-linkable filters (?q=&cat=&doc=) ----
   // Lets a coach share or bookmark the exact filtered view they're looking
   // at. Uses replaceState (not pushState) so typing/filtering doesn't spam

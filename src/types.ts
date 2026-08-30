@@ -45,6 +45,14 @@ export interface IQuickAnswer {
 
 export type TSynonymMap = Record<string, string[]>;
 
+/** Bundled backdrop photo set: `dir` is the app-relative folder ("img/bg/"),
+ *  `files` the JPG file names within it. Sources and licenses are recorded in
+ *  docs/img/bg/ATTRIBUTION.md. */
+export interface IBackgroundSet {
+  dir: string;
+  files: ReadonlyArray<string>;
+}
+
 /** Map of rule id -> pre-rendered SVG markup string. */
 export type TDiagramMap = Record<string, string>;
 
