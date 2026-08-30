@@ -45,16 +45,18 @@ body {
   font-size: 16px;
   color: var(--chalk);
   padding-bottom: env(safe-area-inset-bottom);
-  /* Non-solid background per DESIGN.md "Palette" — a faint gridiron grid
-     (yard-line + hash-mark rules), built only from existing field/press
-     tokens, static. Tiles uniformly (no viewport-anchored gradients) so it
-     stays cheap and correct on long scrollable pages and doesn't fight the
-     sticky search bar. Visible below the search bar, where the black header
-     chrome (.hero, .searchwrap) doesn't paint over it. */
+  /* Non-solid background per DESIGN.md "Palette" — a faint gridiron grid,
+     built only from existing field/press tokens, static. Tiles uniformly
+     (no viewport-anchored gradients, no fixed-position overlay for masked
+     tick marks) so it stays cheap and correct on long scrollable pages and
+     doesn't fight the sticky search bar. Bold yard lines every 384px, with
+     a tighter secondary hash-tick rhythm (96px, a quarter of the yard-line
+     spacing) for a two-weight field texture. Visible below the search bar,
+     where the black header chrome (.hero, .searchwrap) doesn't paint over it. */
   background-color: var(--field);
   background-image:
-    repeating-linear-gradient(to bottom, rgba(40, 68, 47, .35) 0 1px, transparent 1px 384px),
-    repeating-linear-gradient(to right, rgba(40, 68, 47, .35) 0 1px, transparent 1px 384px);
+    repeating-linear-gradient(to bottom, rgba(40, 68, 47, .5) 0 5px, transparent 5px 384px),
+    repeating-linear-gradient(to right, rgba(40, 68, 47, .4) 0 3px, transparent 3px 96px);
 }
 @media (prefers-reduced-transparency: reduce) {
   body { background-image: none; } /* flat field color is the safe fallback */
@@ -104,14 +106,23 @@ body {
   height: 4px; background: var(--chalk); border: none;
   max-width: 340px; margin: 16px auto 0; opacity: .92;
 }
+/* Bold mark on the left, caption on the right, as two columns in one row —
+   sized to fit together on a phone-width screen without wrapping. */
+.hero-title-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 10px; max-width: 340px; margin: 16px auto 0;
+}
 .hero .sub {
-  font-family: var(--display); font-size: 1.1rem; letter-spacing: .32em;
-  color: var(--chalk); margin: 16px 0 6px; text-transform: uppercase;
+  flex: 0 0 auto;
+  font-family: var(--display); font-size: .95rem; letter-spacing: .14em;
+  color: var(--chalk); margin: 0; text-transform: uppercase; white-space: nowrap;
 }
 .hero .tagline {
-  font-family: var(--body); font-weight: 600; font-size: .72rem;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--chalk-faint); margin: 6px 0 0;
+  flex: 1 1 auto; min-width: 0;
+  font-family: var(--body); font-weight: 600; font-size: .56rem;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--chalk-faint); margin: 0; text-align: right;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 /* ---- Sticky search row ----

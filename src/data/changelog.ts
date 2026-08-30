@@ -8,6 +8,10 @@ import type { ChangelogEntry } from "../types.js";
    user-visible change (see SPEC.md §9). Pure data — no DOM/browser APIs. */
 
 export const GEJFA_CHANGELOG: ChangelogEntry[] = [
+  { version: "v25", date: "Aug 2026", changes: [
+    "Background grid now looks more like an actual field, with bolder yard lines",
+    "\"Spartans\" and the tagline now sit side by side under the logo",
+  ] },
   { version: "v24", date: "Aug 2026", changes: [
     "More breathing room below the search bar",
   ] },
