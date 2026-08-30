@@ -8,6 +8,9 @@ import type { IChangelogEntry } from "../types.js";
    user-visible change (see SPEC.md §9). Pure data — no DOM/browser APIs. */
 
 export const GEJFA_CHANGELOG: IChangelogEntry[] = [
+  { version: "v27", date: "Aug 2026", changes: [
+    "Added a big, faint Spartan helmet watermark behind the header",
+  ] },
   { version: "v26", date: "Aug 2026", changes: [
     "Background now has real, properly-spaced hash marks like a football field",
     "Removed the level filter (Rookie/Cub/etc.) — it rarely changed results, so it's gone; the category filter stays",

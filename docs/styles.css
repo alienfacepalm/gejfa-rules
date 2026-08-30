@@ -66,12 +66,32 @@ body {
 /* ---- Hero: the Collegiate Arc chest print (scrolls away) ---- */
 .hero {
   position: relative;
+  z-index: 0; /* establishes a stacking context so .hero-bg-mark's negative
+                 z-index stays contained here, instead of escaping to
+                 compete with unrelated later page content */
+  overflow: hidden; /* crops .hero-bg-mark to the header — it's deliberately oversized */
   /* Real bottom padding (not reliance on a child's trailing margin) both
      gives the header room to breathe and prevents margin collapse from
      leaking the body's green grid through the black chrome as a stray line. */
   padding: calc(22px + env(safe-area-inset-top)) 16px 26px;
   text-align: center;
   background: var(--ink);
+}
+/* Oversized watermark: only a fraction is ever visible, cropped by .hero's
+   overflow:hidden. Sized in vw so a wider viewport shows proportionally
+   more of it, per the brief ("based on resolution"). Desaturated + at low
+   opacity so it reads as a faint chalk-toned ghost mark rather than
+   competing with the readable logo/wordmark in front of it, and stays
+   within the black/green/chalk palette (the source PNG has beige/tan
+   digital-camo coloring that grayscale removes). There's no true vector
+   Spartan mark to use here — the only asset is this illustrated PNG. */
+.hero-bg-mark {
+  position: absolute; top: 50%; left: 50%; z-index: -1;
+  transform: translate(-50%, -50%);
+  width: 220vw; height: auto; max-width: none;
+  opacity: .3;
+  filter: grayscale(1) brightness(1.6);
+  pointer-events: none;
 }
 .pdf-link {
   position: absolute; top: calc(10px + env(safe-area-inset-top));
