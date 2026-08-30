@@ -1,10 +1,10 @@
-import type { Rule, Category, Level } from "../types.js";
+import type { IRule, ICategory, ILevel } from "../types.js";
 
 /* GEJFA 2025 Rules — structured data curated from "2025 GEJFA Rules Final" (adopted Aug 1, 2025).
    Pure data module: no DOM/browser APIs. Usable in browser (global), Node, or a future native port.
    Fields: id, cite, category, title, levels, answer (plain-English), text (rule language), keywords. */
 
-export const GEJFA_CATEGORIES: Category[] = [
+export const GEJFA_CATEGORIES: ICategory[] = [
   { id: "weigh-in",     label: "Weigh-In" },
   { id: "substitution", label: "Substitution" },
   { id: "score-mgmt",   label: "Score Mgmt (32-pt)" },
@@ -19,7 +19,7 @@ export const GEJFA_CATEGORIES: Category[] = [
   { id: "eligibility",  label: "Eligibility & Rosters" },
 ];
 
-export const GEJFA_LEVELS: Level[] = [
+export const GEJFA_LEVELS: ILevel[] = [
   { id: "rookie",  label: "Rookie" },
   { id: "cub",     label: "Cub" },
   { id: "soph",    label: "Sophomore" },
@@ -27,7 +27,7 @@ export const GEJFA_LEVELS: Level[] = [
   { id: "varsity", label: "Varsity" },
 ];
 
-export const GEJFA_RULES: Rule[] = [
+export const GEJFA_RULES: IRule[] = [
 
   // ============ PART II — RULES FOR PLAY ============
 

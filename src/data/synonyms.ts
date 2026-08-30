@@ -1,10 +1,10 @@
-import type { SynonymMap } from "../types.js";
+import type { TSynonymMap } from "../types.js";
 
 /* Coach-speak → rulebook-term synonym expansion.
    Keys are single lowercase query tokens; values are extra terms appended to the search.
    Pure data module: no DOM/browser APIs. */
 
-export const GEJFA_SYNONYMS: SynonymMap = {
+export const GEJFA_SYNONYMS: TSynonymMap = {
   // score management
   "mercy":      ["score management", "32 point rule", "25 points"],
   "blowout":    ["score management", "32 point rule", "25 points"],

@@ -1,4 +1,4 @@
-import type { ChangelogEntry } from "../types.js";
+import type { IChangelogEntry } from "../types.js";
 
 /* Coach-facing changelog — newest first. Shown in the "What's new" sheet
    after an update, and reachable anytime from the footer.
@@ -7,7 +7,11 @@ import type { ChangelogEntry } from "../types.js";
    Add one entry here whenever CACHE_VERSION is bumped in sw.js for a
    user-visible change (see SPEC.md §9). Pure data — no DOM/browser APIs. */
 
-export const GEJFA_CHANGELOG: ChangelogEntry[] = [
+export const GEJFA_CHANGELOG: IChangelogEntry[] = [
+  { version: "v26", date: "Aug 2026", changes: [
+    "Background now has real, properly-spaced hash marks like a football field",
+    "Removed the level filter (Rookie/Cub/etc.) — it rarely changed results, so it's gone; the category filter stays",
+  ] },
   { version: "v25", date: "Aug 2026", changes: [
     "Background grid now looks more like an actual field, with bolder yard lines",
     "\"Spartans\" and the tagline now sit side by side under the logo",

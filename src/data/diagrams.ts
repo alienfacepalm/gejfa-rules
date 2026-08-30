@@ -2,7 +2,7 @@
    Pure JS string builders: no DOM APIs, portable to a native port.
    Styling comes from CSS classes on the host page (.dgm-*). */
 
-import type { DiagramMap } from "../types.js";
+import type { TDiagramMap } from "../types.js";
 
 const W = 340;
 
@@ -10,13 +10,13 @@ function svgWrap(inner: string, h: number): string {
   return `<svg viewBox="0 0 ${W} ${h}" class="dgm" role="img" preserveAspectRatio="xMidYMid meet">${inner}</svg>`;
 }
 
-interface FieldMarker { yard: number; label: string; sub?: string; }
-interface FieldArrow { from: number; to: number; label?: string; }
-interface FieldStripOpts { markers?: FieldMarker[]; arrows?: FieldArrow[]; note?: string; }
+interface IFieldMarker { yard: number; label: string; sub?: string; }
+interface IFieldArrow { from: number; to: number; label?: string; }
+interface IFieldStripOpts { markers?: IFieldMarker[]; arrows?: IFieldArrow[]; note?: string; }
 
 /* Horizontal field strip: own goal (left) to opponent goal (right).
    markers: [{yard: 0-100 from own goal, label, sub, down?}]  arrows: [{from,to,label}] */
-function fieldStrip(opts: FieldStripOpts): string {
+function fieldStrip(opts: IFieldStripOpts): string {
   const { markers = [], arrows = [], note = "" } = opts;
   const x0 = 24, x1 = 316, y = 78, fy0 = 40, fy1 = 104;
   const xAt = (yd: number) => x0 + (yd / 100) * (x1 - x0);
@@ -54,10 +54,10 @@ function fieldStrip(opts: FieldStripOpts): string {
   return svgWrap(s, note ? 150 : 132);
 }
 
-interface FlowStep { t: string; sub?: string; }
+interface IFlowStep { t: string; sub?: string; }
 
 /* Step flow: boxes with arrows, wrapping onto rows. steps: [{t, sub}] */
-function flow(steps: FlowStep[], note?: string): string {
+function flow(steps: IFlowStep[], note?: string): string {
   const bw = 96, bh = 40, gap = 18, perRow = 3;
   const rows = Math.ceil(steps.length / perRow);
   const h = rows * (bh + 26) + 16 + (note ? 20 : 0);
@@ -78,10 +78,10 @@ function flow(steps: FlowStep[], note?: string): string {
   return svgWrap(s, h);
 }
 
-interface TimelinePoint { at: string; label: string; }
+interface ITimelinePoint { at: string; label: string; }
 
 /* Timeline: [{at, label, sub}] left→right */
-function timeline(points: TimelinePoint[], note?: string): string {
+function timeline(points: ITimelinePoint[], note?: string): string {
   const x0 = 30, x1 = 310, y = 44;
   let s = `<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" class="dgm-arrow"/>`;
   s += `<path d="M ${x1 + 4} ${y} l -8 -4 v 8 z" class="dgm-arrowhead"/>`;
@@ -299,10 +299,10 @@ D["II-5-d"] = (function () {
   return svgWrap(s, 144);
 })();
 
-interface CaseRow { ifT: string; ifSub?: string; thenT: string; thenSub?: string; }
+interface ICaseRow { ifT: string; ifSub?: string; thenT: string; thenSub?: string; }
 
 /* Condition → consequence rows (independent cases, not a sequence). */
-function cases(rows: CaseRow[], note?: string): string {
+function cases(rows: ICaseRow[], note?: string): string {
   const bw = 128, bh = 34, y0 = 10, gap = 12;
   let s = "";
   rows.forEach((r, i) => {
@@ -320,10 +320,10 @@ function cases(rows: CaseRow[], note?: string): string {
   return svgWrap(s, h);
 }
 
-interface BarRow { label: string; val?: number; min?: number; max?: number; }
+interface IBarRow { label: string; val?: number; min?: number; max?: number; }
 
 /* Horizontal range/value bars with a shared scale. */
-function bars(rows: BarRow[], maxVal: number, note?: string, unit?: string): string {
+function bars(rows: IBarRow[], maxVal: number, note?: string, unit?: string): string {
   let s = "";
   rows.forEach((r, i) => {
     const y = 12 + i * 22;
@@ -455,4 +455,4 @@ D["II-2-b"] = (function () {
   return svgWrap(s, 104);
 })();
 
-export const GEJFA_DIAGRAMS: DiagramMap = D;
+export const GEJFA_DIAGRAMS: TDiagramMap = D;

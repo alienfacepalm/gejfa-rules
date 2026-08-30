@@ -1,26 +1,28 @@
 /** Shared data-shape contracts for the GEJFA rules app.
  *  Pure types — no runtime code, no DOM. This is the "escape hatch" contract
- *  a future native port (Capacitor / React Native) would implement against. */
+ *  a future native port (Capacitor / React Native) would implement against.
+ *
+ *  Naming convention: interfaces are prefixed `I`, type aliases `T`. */
 
-export type LevelId = "rookie" | "cub" | "soph" | "jv" | "varsity";
-export type RuleLevels = ReadonlyArray<LevelId | "all">;
+export type TLevelId = "rookie" | "cub" | "soph" | "jv" | "varsity";
+export type TRuleLevels = ReadonlyArray<TLevelId | "all">;
 
-export interface Category {
+export interface ICategory {
   id: string;
   label: string;
 }
 
-export interface Level {
-  id: LevelId;
+export interface ILevel {
+  id: TLevelId;
   label: string;
 }
 
-export interface Rule {
+export interface IRule {
   id: string;
   cite: string;
   category: string;
   title: string;
-  levels: RuleLevels;
+  levels: TRuleLevels;
   /** Plain-English ruling — may simplify wording, must never alter substance. */
   answer: string;
   /** Near-verbatim rule language, sourced from the official 2025 GEJFA PDF. */
@@ -28,7 +30,7 @@ export interface Rule {
   keywords: string[];
 }
 
-export interface Situation {
+export interface ISituation {
   id: string;
   ruleId: string;
   question: string;
@@ -36,24 +38,24 @@ export interface Situation {
   keywords: string[];
 }
 
-export interface QuickAnswer {
+export interface IQuickAnswer {
   sitId: string;
   label: string;
 }
 
-export type SynonymMap = Record<string, string[]>;
+export type TSynonymMap = Record<string, string[]>;
 
 /** Map of rule id -> pre-rendered SVG markup string. */
-export type DiagramMap = Record<string, string>;
+export type TDiagramMap = Record<string, string>;
 
-export interface ChangelogEntry {
+export interface IChangelogEntry {
   version: string;
   date: string;
   changes: string[];
 }
 
 /** A unified search result: either a rule or a coach-facing situation card. */
-export interface SearchDoc {
+export interface ISearchDoc {
   docId: string;
   type: "rule" | "situation";
   title: string;
@@ -62,13 +64,13 @@ export interface SearchDoc {
   text: string;
   keywords: string;
   category: string;
-  levels: RuleLevels;
-  rule?: Rule;
-  situation?: Situation;
+  levels: TRuleLevels;
+  rule?: IRule;
+  situation?: ISituation;
   score?: number;
 }
 
-export interface SearchFilters {
-  level?: LevelId | null;
+export interface ISearchFilters {
+  level?: TLevelId | null;
   category?: string | null;
 }

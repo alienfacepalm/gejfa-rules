@@ -1,10 +1,10 @@
-import type { Situation, QuickAnswer } from "../types.js";
+import type { ISituation, IQuickAnswer } from "../types.js";
 
 /* GEJFA situation cards — common sideline scenarios phrased the way a coach thinks.
    Each links to the underlying rule entry (ruleId) for the citation + full text.
    Pure data module: no DOM/browser APIs. */
 
-export const GEJFA_SITUATIONS: Situation[] = [
+export const GEJFA_SITUATIONS: ISituation[] = [
 
   // ---- Weigh-in ----
   { id: "S-late-player", ruleId: "II-2-i", question: "A player showed up late — can he still play?",
@@ -162,7 +162,7 @@ export const GEJFA_SITUATIONS: Situation[] = [
 ];
 
 /* One-tap "Game Time" quick answers — the situations coaches hit most mid-game. */
-export const GEJFA_QUICK: QuickAnswer[] = [
+export const GEJFA_QUICK: IQuickAnswer[] = [
   { sitId: "S-after-td",       label: "PAT worth?" },
   { sitId: "S-turnover-subs",  label: "Turnover — subs?" },
   { sitId: "S-up-big",         label: "Up 25+" },
