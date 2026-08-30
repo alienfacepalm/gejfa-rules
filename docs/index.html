@@ -47,20 +47,14 @@
     <!-- mic button removed for now; voice-search code remains dormant in app.js (SHOW_MIC) -->
     <div class="search-controls">
       <button id="levelBtn" class="level-btn" type="button" aria-label="Filter by level">All</button>
-      <button id="browseBtn" class="browse-btn" type="button" aria-label="Browse categories"
-              aria-expanded="false" aria-controls="catSheet">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 6h18v2.4H3zm0 4.8h18v2.4H3zm0 4.8h18V18H3z"/></svg>
-      </button>
+      <button id="browseBtn" class="level-btn" type="button" aria-label="Filter by category"
+              aria-expanded="false" aria-controls="catSheet">Topic</button>
     </div>
-  </div>
-
-  <div id="catPillRow" class="cat-pill-row" hidden>
-    <button id="catPill" class="cat-pill" type="button"></button>
   </div>
 
   <div id="catSheet" class="level-sheet cat-sheet" hidden>
     <div class="level-sheet-inner" role="dialog" aria-modal="true" aria-labelledby="catSheetTitle">
-      <h2 id="catSheetTitle">Browse categories</h2>
+      <h2 id="catSheetTitle">Filter by category</h2>
       <div id="catOptions" class="cat-options"></div>
     </div>
   </div>

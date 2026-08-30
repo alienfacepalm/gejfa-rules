@@ -25,6 +25,7 @@
 }
 
 :root {
+  --ink: #050705;            /* chrome black — header/search bar */
   --field: #16281c;          /* dark forest green — sweatshirt base */
   --field-deep: #101f15;     /* shadowed seam */
   --field-raised: #1f3627;   /* tee green — card surface */
@@ -44,12 +45,16 @@ body {
   font-size: 16px;
   color: var(--chalk);
   padding-bottom: env(safe-area-inset-bottom);
-  /* Non-solid background per DESIGN.md "Palette" — faint brushed-fabric
-     pinstripe, built only from existing field/press tokens, static. Tiles
-     uniformly (no viewport-anchored gradients) so it stays cheap and correct
-     on long scrollable pages and doesn't fight the sticky search bar. */
+  /* Non-solid background per DESIGN.md "Palette" — a faint gridiron grid
+     (yard-line + hash-mark rules), built only from existing field/press
+     tokens, static. Tiles uniformly (no viewport-anchored gradients) so it
+     stays cheap and correct on long scrollable pages and doesn't fight the
+     sticky search bar. Visible below the search bar, where the black header
+     chrome (.hero, .searchwrap) doesn't paint over it. */
   background-color: var(--field);
-  background-image: repeating-linear-gradient(115deg, transparent 0 26px, var(--field-press) 26px 27px);
+  background-image:
+    repeating-linear-gradient(to bottom, var(--field-press) 0 2px, transparent 2px 48px),
+    repeating-linear-gradient(to right, var(--field-press) 0 1px, transparent 1px 48px);
 }
 @media (prefers-reduced-transparency: reduce) {
   body { background-image: none; } /* flat field color is the safe fallback */
@@ -60,7 +65,7 @@ body {
   position: relative;
   padding: calc(14px + env(safe-area-inset-top)) 16px 0;
   text-align: center;
-  background: var(--field);
+  background: var(--ink);
 }
 .pdf-link {
   position: absolute; top: calc(10px + env(safe-area-inset-top));
@@ -116,7 +121,7 @@ body {
   display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px;
   /* full-width sticky background, but contents align to the 720px content column */
   padding: 10px max(12px, calc((100% - 696px) / 2)) 8px;
-  background: var(--field);
+  background: var(--ink);
   box-shadow: 0 8px 16px -10px transparent;
   transition: box-shadow .15s ease;
 }
@@ -158,27 +163,11 @@ body.scrolled .searchwrap { box-shadow: 0 8px 16px -10px var(--field-deep); }
 .level-btn.active { background: var(--chalk); border-color: var(--chalk); color: var(--field); }
 @media (min-width: 640px) { .level-btn { flex: 0 0 auto; } }
 
-/* ---- Category browse: drawer trigger + active-filter pill ---- */
-.browse-btn {
-  flex: 0 0 auto; width: 54px; min-height: 54px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--chalk); background: var(--field-raised);
-  border: 2px solid var(--field-press); border-radius: 10px; cursor: pointer;
-}
-.browse-btn.active { color: var(--field); background: var(--chalk); border-color: var(--chalk); }
+/* ---- Category filter: same control language as the level filter (#browseBtn
+   shares the .level-btn class) — one active selection, shown on the button
+   itself, opening the same bottom-sheet shell. ---- */
 
-.cat-pill-row { padding: 8px max(12px, calc((100% - 696px) / 2)) 4px; }
-.cat-pill {
-  display: inline-flex; align-items: center; gap: 10px;
-  min-height: 40px; padding: 9px 14px;
-  font-family: var(--body); font-weight: 700; font-size: .78rem;
-  letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
-  color: var(--field); background: var(--chalk);
-  border: none; border-radius: 6px; cursor: pointer;
-}
-.cat-pill .x { font-size: 1.2rem; line-height: 1; }
-
-/* category drawer: reuses .level-sheet shell; 13 options need to scroll on short screens */
+/* category sheet: reuses .level-sheet shell; 13 options need to scroll on short screens */
 .cat-sheet .level-sheet-inner { max-height: min(80vh, 640px); overflow-y: auto; }
 .cat-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .cat-option-all { grid-column: 1 / -1; }

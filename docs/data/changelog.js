@@ -6,6 +6,10 @@
    user-visible change (see SPEC.md §9). Pure data — no DOM/browser APIs. */
 
 const GEJFA_CHANGELOG = [
+  { version: "v21", date: "Aug 2026", changes: [
+    "New look: black header up top, green field below with a subtle football-grid background",
+    "The category button now works and looks just like the level filter",
+  ] },
   { version: "v20", date: "Aug 2026", changes: [
     "Added this ‘What's new’ screen so you can see what changed",
     "You'll now see a message while an update downloads, and a confirmation once the rulebook is saved for offline use",

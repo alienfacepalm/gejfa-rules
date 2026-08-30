@@ -20,8 +20,6 @@
   const $browseBtn = document.getElementById("browseBtn");
   const $catSheet = document.getElementById("catSheet");
   const $catOptions = document.getElementById("catOptions");
-  const $catPillRow = document.getElementById("catPillRow");
-  const $catPill = document.getElementById("catPill");
   const $levelBtn = document.getElementById("levelBtn");
   const $levelSheet = document.getElementById("levelSheet");
   const $levelOptions = document.getElementById("levelOptions");
@@ -85,18 +83,13 @@
       o.classList.toggle("active", (o.dataset.cat || null) === state.category));
   }
   function setCategory(id) {
-    state.category = id;
     const cat = id ? GEJFA_CATEGORIES.find(c => c.id === id) : null;
-    $catPillRow.hidden = !cat;
-    if (cat) {
-      $catPill.textContent = cat.label + " ";
-      const x = document.createElement("span");
-      x.className = "x";
-      x.setAttribute("aria-hidden", "true");
-      x.textContent = "×";
-      $catPill.appendChild(x);
-      $catPill.setAttribute("aria-label", "Clear category filter: " + cat.label);
-    }
+    id = cat ? id : null; // guard against a stale/unknown id, same as setLevel
+    state.category = id;
+    // Same control language as the level filter: the button itself shows the
+    // active selection (no separate pill) — this is a single-select filter,
+    // not a navigation menu, and now looks and behaves like one.
+    $browseBtn.textContent = cat ? cat.label : "Topic";
     $browseBtn.classList.toggle("active", !!cat);
     syncUrl();
     render();
@@ -118,7 +111,6 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !$catSheet.hidden) closeCatSheet();
   });
-  $catPill.addEventListener("click", () => setCategory(null));
 
   // ---- level filter sheet ----
   const levelChoices = [{ id: null, label: "All levels" }].concat(GEJFA_LEVELS);

@@ -76,7 +76,7 @@ MiniSearch config: prefix + fuzzy(0.2); field boosts question 5 / title 4 / keyw
 
 - **Hero** (scrolls away): DESIGN.md "Design 2" lockup — arched SKYLINE (Graduate), `SAMMAMISH [2025] WASHINGTON` banner, accent stripe, SPARTANS. **PDF** button upper-right opens the official rulebook in a new tab.
 - **Sticky search row**: autofocus-free large input, clear ×, mic (Web Speech API where supported), level filter button, ☰ browse button.
-- **Category browse**: bottom-sheet drawer, 2-column grid of 12 categories + "All topics"; active filter shown as a dismissible pill; Escape/overlay close; focus returned.
+- **Category filter**: single-select, same control language as the level filter — the `#browseBtn` shares the `.level-btn` class and shows the active category's name on the button itself (default "Topic"), opening a bottom sheet (2-column grid of 12 categories + "All topics"); Escape/overlay close; focus returned. Deliberately not framed as a "browse" menu: it only ever allows one selection, so it is a filter, styled and worded like one (no separate pill, no hamburger icon).
 - **Results**: banner-bar count divider. Cards show **title + 2-line clamped answer at a glance**; tapping opens the topic in focus mode (accordion — one open, auto-scrolled under the search bar) revealing the full answer, the section diagram (when one exists), the citation badge, level tags, and the official rule text. Query terms are highlighted.
 - **Best match**: with a non-empty query the top hit renders pre-opened with a "Best match" tag.
 - **Zero-typing paths**: Game Time grid (8 one-tap cards) and Recents (last 6 topics, localStorage) on the home state.
@@ -85,7 +85,7 @@ MiniSearch config: prefix + fuzzy(0.2); field boosts question 5 / title 4 / keyw
 
 ## 7. Visual system (per DESIGN.md)
 
-Two-color garment palette: dark forest green surfaces (`--field` #16281c, raised #1f3627, pressed #28442f) and chalk white (#f5f3ec) with light-grey secondary (#b7c2b6). Display type Graduate (collegiate block serif); body Barlow. Banner bars and the horizontal stripe are the structural motifs. Diagrams are chalk-on-green (X's-and-O's vernacular). No third accent color.
+Black chrome, green field, chalk print: the hero and sticky search bar are solid black (`--ink` #050705) — team chrome, distinct from the playing surface below; everything from the results area down sits on dark forest green (`--field` #16281c, raised #1f3627, pressed #28442f) with chalk white (#f5f3ec) and light-grey secondary (#b7c2b6) type. The green content area's background is a faint gridiron grid (yard-line/hash rules in `--field-press`, 48px spacing), not a flat fill. Display type Graduate (collegiate block serif); body Barlow. Banner bars and the horizontal stripe are the structural motifs. Diagrams are chalk-on-green (X's-and-O's vernacular). See DESIGN.md's Palette section for the full token table.
 
 ## 8. PWA behavior
 

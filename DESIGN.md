@@ -40,18 +40,22 @@ No hex values were specified in the original mockups — this section formalizes
 
 | Swatch | Token | Hex | Role |
 |---|---|---|---|
-| 🟩 | `--field` | `#16281c` | Garment base — page/header background |
+| ⬛ | `--ink` | `#050705` | Chrome black — header (`.hero`) and the sticky search bar (`.searchwrap`) only |
+| 🟩 | `--field` | `#16281c` | Garment base — content-area background |
 | 🟩 | `--field-deep` | `#101f15` | Shadowed seam — recessed surfaces, deepest layer |
 | 🟩 | `--field-raised` | `#1f3627` | Tee green — card and control surfaces |
-| 🟩 | `--field-press` | `#28442f` | Pressed/active surface, dividers |
+| 🟩 | `--field-press` | `#28442f` | Pressed/active surface, dividers, grid lines |
 | ⬜ | `--chalk` | `#f5f3ec` | Opaque white plastisol ink — primary text, print graphics |
 | ⬜ | `--chalk-dim` | `#b7c2b6` | Light grey print — secondary text |
 | ⬜ | `--chalk-faint` | `#7e8f80` | Worn print — meta/caption text |
 
-Rule: **two color families only** (forest green + chalk white/grey) — hierarchy comes from value steps within each family, plus type and the accent stripe, never a third hue. Any background texture or gradient must be built from these same tokens (see "Non-solid background" below), not new colors.
+Rule: **black chrome, green field, chalk print** — the header and search bar are a deliberate black "away jersey" block (`--ink`), distinct from the green playing-field content area below it. Within the green content area, hierarchy still comes from value steps in the forest-green family plus chalk white/grey type, never a fourth hue. Any background texture or gradient must be built from these same tokens (see "Non-solid background" below), not new colors.
+
+### Black header, green field
+`.hero` and `.searchwrap` (the sticky search row) are solid `--ink` — a black band that reads as team chrome, distinct from the playing surface below. Everything from the results area down (`main.results`, footer, credit line) sits on the green `--field` background, so the page reads in two clear bands: **black nav on top, green field below**, exactly like a team's dark jersey over a lit field.
 
 ### Non-solid background
-The page background is `--field` with a faint diagonal 1px pinstripe in `--field-press` repeating every 26px — reads as brushed athletic fabric rather than a flat fill. Deliberately a uniform repeating pattern (not a viewport-anchored gradient/vignette): it tiles correctly on long scrollable pages and avoids `background-attachment: fixed`, which has known rendering conflicts with `position: sticky` in Safari. Static, no animation, stays within the two-color palette above. Elements with their own solid surface (`.hero`, `.searchwrap`, `.card`, etc.) paint over it; it shows through in the margins and gaps between them.
+Below the black header, the page background is `--field` with a faint **gridiron grid** — thin horizontal "yard line" rules every 48px and thin vertical rules every 48px, both in `--field-press` — rather than a flat fill or arbitrary texture; it reads as a football field's yard markings, not generic fabric. Deliberately a uniform repeating pattern (not a viewport-anchored gradient/vignette): it tiles correctly on long scrollable pages and avoids `background-attachment: fixed`, which has known rendering conflicts with `position: sticky` in Safari. Static, no animation, stays within the palette above. Elements with their own solid surface (`.card`, etc.) paint over it; it shows through in the margins and gaps between them.
 
 ---
 
