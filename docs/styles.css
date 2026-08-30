@@ -324,6 +324,14 @@ body.scrolled .searchwrap { box-shadow: 0 8px 16px -10px var(--field-deep); }
 .foot { padding: 8px 12px calc(20px + env(safe-area-inset-bottom)); max-width: 720px; margin: 0 auto; }
 .foot p { color: var(--chalk-faint); font-size: .75rem; line-height: 1.45; }
 
+/* Slim, unobtrusive credit line under the footer — half-opaque, tiny type */
+.credit {
+  margin: 0; padding: 0 12px calc(10px + env(safe-area-inset-bottom));
+  max-width: 720px; margin-inline: auto;
+  font-family: var(--body); font-size: 10px; letter-spacing: .04em;
+  color: var(--chalk); opacity: .5; text-align: center;
+}
+
 /* ---- Real-time answer aids ---- */
 mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-radius: 2px; }
 .card.spotlight { box-shadow: 0 0 0 2px var(--chalk); }
