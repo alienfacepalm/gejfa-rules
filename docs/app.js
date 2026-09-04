@@ -335,8 +335,8 @@
   /* Open one specific doc (quick answers, recents, a shared ?doc= link):
      render just that topic, focused, and reflect it in the URL.
      `clickedLabel` (the exact text of the button that was tapped, when
-     known) is echoed back as the card's eyebrow so it's unmistakable that
-     this is what was clicked — not a similar-sounding different topic. */
+     known) becomes the card's eyebrow so it's unmistakable that this is
+     what was clicked — not a similar-sounding different topic. */
   function openDoc(docId, clickedLabel) {
     const doc = engine.byDocId(docId);
     if (!doc) return false;
@@ -344,7 +344,7 @@
     state.openDoc = docId;
     $results.innerHTML =
       `<p class="result-count">Topic</p>` +
-      cardHTML(doc, 0, [], true, clickedLabel ? `You tapped: ${clickedLabel}` : "Topic") +
+      cardHTML(doc, 0, [], true, clickedLabel || "Topic") +
       `<button type="button" class="back-home">← All topics</button>`;
     pushRecent(docId);
     syncUrl();
