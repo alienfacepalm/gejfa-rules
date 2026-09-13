@@ -480,6 +480,133 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   border: none; border-radius: 10px; cursor: pointer;
 }
 
+/* ---- Guided flow: Score check ----
+   Same chalk-on-green language as the cards. Values are printed as spec-sheet
+   stat rows (label ···· value), never as filled bars. The only chalk fills are
+   small badge labels (STOP eyebrow, OVER 32 tag), like the .best / .cite badges. */
+.flow { margin-bottom: 8px; }
+.flow-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.flow-edit {
+  min-height: 40px; padding: 8px 12px;
+  font-family: var(--body); font-weight: 700; font-size: .85rem;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--chalk); background: var(--field-raised);
+  border: 1.5px solid var(--field-press); border-radius: 999px; cursor: pointer;
+}
+.flow-edit-x { color: var(--chalk-faint); margin-left: 4px; }
+.flow-prompt {
+  margin: 4px 2px 10px; font-family: var(--display); font-size: 1.05rem;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--chalk);
+}
+.flow-score { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+.flow-num {
+  display: flex; flex-direction: column; gap: 6px;
+  font-family: var(--display); font-size: .66rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--chalk-dim);
+}
+.flow-num input {
+  width: 100%; min-height: 76px; padding: 0 8px;
+  font-family: var(--display); font-size: 2.2rem; text-align: center;
+  color: var(--chalk); background: var(--field-raised);
+  border: 2px solid var(--field-press); border-radius: 10px; outline: none;
+  -moz-appearance: textfield; appearance: textfield;
+}
+.flow-num input::-webkit-outer-spin-button,
+.flow-num input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.flow-num input:focus { border-color: var(--chalk-dim); }
+.flow-go {
+  grid-column: 1 / -1; min-height: 56px; padding: 12px;
+  font-family: var(--body); font-weight: 700; font-size: .95rem;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--field); background: var(--chalk);
+  border: none; border-radius: 10px; cursor: pointer;
+}
+.flow-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.flow-opt { text-transform: none; font-size: .98rem; }
+.flow-launch {
+  display: block; width: 100%; text-align: left; margin: 0 0 12px; padding: 14px 16px;
+  font-family: var(--body); font-weight: 700; font-size: 1rem; line-height: 1.3;
+  color: var(--chalk); background: var(--field-raised);
+  border: none; border-radius: 10px; box-shadow: inset 4px 0 0 var(--chalk); cursor: pointer;
+}
+.flow-launch-eyebrow {
+  display: block; margin-bottom: 4px;
+  font-family: var(--display); font-size: .62rem; letter-spacing: .24em;
+  text-transform: uppercase; color: var(--chalk-dim);
+}
+.flow-status {
+  background: var(--field-raised); border-top: 4px solid var(--chalk);
+  border-radius: 10px; padding: 14px 16px; margin: 0 0 10px;
+}
+.flow-score-line {
+  margin: 0; font-family: var(--display); font-size: 1.9rem; line-height: 1.1;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--chalk);
+}
+.flow-regime {
+  margin: 4px 0 0; font-family: var(--body); font-weight: 700; font-size: .95rem;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--chalk);
+}
+.flow-detail { margin: 6px 0 0; color: var(--chalk-dim); font-size: .92rem; line-height: 1.45; }
+.flow-table { background: var(--field-raised); border-radius: 10px; padding: 12px 16px 8px; margin: 0 0 10px; }
+.flow-table-title {
+  margin: 0 0 6px; font-family: var(--display); font-size: .66rem;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--chalk-dim);
+}
+.flow-stat { display: flex; align-items: baseline; gap: 8px; min-height: 36px; }
+.flow-stat-label {
+  font-family: var(--body); font-weight: 600; font-size: .85rem;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--chalk-dim); white-space: nowrap;
+}
+.flow-pts { color: var(--chalk-faint); }
+.flow-leader { flex: 1; min-width: 12px; border-bottom: 2px dotted var(--chalk-faint); transform: translateY(-4px); }
+.flow-stat-val { font-family: var(--body); font-weight: 700; font-size: 1rem; color: var(--chalk); white-space: nowrap; }
+.flow-ok, .flow-over {
+  display: inline-block; margin-left: 8px; padding: 2px 8px 1px; border-radius: 3px;
+  font-family: var(--display); font-weight: 400; font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+}
+.flow-ok { color: var(--chalk); border: 1.5px solid var(--chalk-dim); }
+.flow-over { color: var(--field); background: var(--chalk); }
+.flow-call {
+  background: var(--field-raised); border-radius: 10px; padding: 12px 16px; margin: 0 0 10px;
+  box-shadow: inset 4px 0 0 var(--field-press);
+}
+.flow-call.tone-stop { box-shadow: inset 4px 0 0 var(--chalk); }
+.flow-call.tone-go { box-shadow: inset 4px 0 0 var(--chalk-dim); }
+.flow-eyebrow {
+  margin: 0 0 6px; font-family: var(--display); font-size: .6rem;
+  letter-spacing: .24em; text-transform: uppercase; color: var(--chalk-faint);
+}
+.tone-stop .flow-eyebrow {
+  display: inline-block; padding: 3px 10px 2px; border-radius: 3px;
+  color: var(--field); background: var(--chalk);
+}
+.tone-go .flow-eyebrow { color: var(--chalk-dim); }
+.flow-call-head { margin: 0 0 4px; font-family: var(--body); font-weight: 700; font-size: 1.02rem; line-height: 1.3; color: var(--chalk); }
+.flow-call-text { margin: 0; color: var(--chalk-dim); font-size: .93rem; line-height: 1.5; }
+.flow-rule {
+  margin: 8px 0 0; min-height: 36px; padding: 6px 10px;
+  font-family: var(--display); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--chalk-faint); background: none;
+  border: 1.5px solid var(--field-press); border-radius: 999px; cursor: pointer;
+}
+.flow-rule[aria-expanded="true"] { color: var(--chalk); border-color: var(--chalk-dim); }
+.flow-rule-card .fulltext { margin: 10px 0 0; }
+.flow-open-rule {
+  display: block; margin: 6px 0 2px; min-height: 40px; padding: 8px 0;
+  font-family: var(--body); font-weight: 700; font-size: .8rem;
+  letter-spacing: .08em; text-transform: uppercase; text-decoration: underline;
+  color: var(--chalk-dim); background: none; border: none; cursor: pointer;
+}
+.flow-share {
+  display: block; width: 100%; margin: 4px 0 10px; padding: 14px; min-height: 52px;
+  font-family: var(--body); font-weight: 700; font-size: .9rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--chalk-dim); background: var(--field-raised);
+  border: 1.5px solid var(--field-press); border-radius: 10px; cursor: pointer;
+}
+.flow-share:active, .flow-edit:active, .flow-launch:active, .flow-rule:active { background: var(--field-press); color: var(--chalk); }
+.flow-go:active { background: var(--chalk-dim); }
+
 /* ---- Rollover (hover) states for every button/interactive item ----
    Scoped to real pointer devices only (mouse/trackpad) so touchscreens never
    get a "stuck" hover look after a tap — touch already has its own :active
@@ -502,6 +629,9 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
   .install-foot:hover { background: var(--field-press); }
   .toast:hover { background: var(--chalk-dim); }
   .reset-home:hover { background: var(--field-press); }
+  .flow-edit:hover, .flow-launch:hover, .flow-share:hover, .flow-rule:hover { background: var(--field-press); color: var(--chalk); }
+  .flow-go:hover { background: var(--chalk-dim); }
+  .flow-open-rule:hover { color: var(--chalk); }
 }
 
 /* ---- quality floor ---- */

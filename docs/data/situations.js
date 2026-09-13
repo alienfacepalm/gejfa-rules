@@ -159,8 +159,10 @@ const GEJFA_SITUATIONS = [
 
 ];
 
-/* One-tap "Game Time" quick answers — the situations coaches hit most mid-game. */
+/* One-tap "Game Time" quick answers — the situations coaches hit most mid-game.
+   A `flowId` entry opens a guided flow (data/flows.js) instead of a card. */
 const GEJFA_QUICK = [
+  { flowId: "score",           label: "Score check" },
   { sitId: "S-after-td",       label: "PAT worth?" },
   { sitId: "S-turnover-subs",  label: "Turnover — subs?" },
   { sitId: "S-up-big",         label: "Up 25+" },

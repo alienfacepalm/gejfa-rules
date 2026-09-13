@@ -1,13 +1,17 @@
 /* GEJFA Rules service worker — cache-first for full offline use on the sideline.
-   Bump CACHE_VERSION whenever rules data or app files change so clients update. */
+   Bump CACHE_VERSION whenever rules data or app files change so clients update.
+   Update triggers: every open/resume of the app (app.js calls registration.update()),
+   and a Periodic Background Sync every 24 h (see "periodicsync" below). */
 
-const CACHE_VERSION = "gejfa-rules-v31";
+const CACHE_VERSION = "gejfa-rules-v35";
+const SYNC_TAG = "gejfa-rulebook-sync";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./search.js",
+  "./flows.js",
   "./vendor/minisearch.min.js",
   "./fonts/graduate-400.woff2",
   "./fonts/barlow-400.woff2",
@@ -17,6 +21,7 @@ const ASSETS = [
   "./data/situations.js",
   "./data/synonyms.js",
   "./data/diagrams.js",
+  "./data/flows.js",
   "./manifest.webmanifest",
   "./2025-gejfa-rules.pdf",
   "./icons/logo.png",
@@ -55,5 +60,32 @@ self.addEventListener("fetch", (event) => {
         .catch(() => cached);
       return cached || fetchAndUpdate;
     })
+  );
+});
+
+/* Periodic Background Sync (Chrome/Edge, installed PWA only): fires roughly
+   every 24 h while the phone is online, even with the app closed. Two jobs:
+   1. registration.update() — re-fetch sw.js; a bumped CACHE_VERSION installs
+      the new version (precaching everything fresh) so the next open is current.
+   2. Re-fetch every precached asset straight from the network (bypassing the
+      HTTP cache) into the current cache, so content stays current even if a
+      deploy went out without a version bump. Failures are tolerated — the
+      existing cached copy stays in place. */
+function refreshAssets() {
+  return caches.open(CACHE_VERSION).then((cache) =>
+    Promise.allSettled(
+      ASSETS.map((url) =>
+        fetch(url, { cache: "no-cache" }).then((resp) => {
+          if (resp && resp.ok) return cache.put(url, resp);
+        })
+      )
+    )
+  );
+}
+
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag !== SYNC_TAG) return;
+  event.waitUntil(
+    Promise.allSettled([self.registration.update(), refreshAssets()])
   );
 });
