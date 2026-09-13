@@ -17,6 +17,11 @@
     flows: GEJFA_FLOWS, callouts: GEJFA_FLOW_CALLOUTS, rules: GEJFA_RULES,
   });
   const FLOW_ANSWER_KEYS = ["us", "them", "lvl", "sit", "time"];
+  // ?shot=1 — screenshot mode for `pnpm screenshots` (README images): suppresses
+  // the first-visit install banner and the service-worker status toasts so the
+  // captured screen is the app itself. Nothing else changes; the flag is not
+  // carried into the synced URL.
+  const SHOT_MODE = new URLSearchParams(location.search).has("shot");
 
   const $q = document.getElementById("q");
   const $clear = document.getElementById("clearBtn");
@@ -51,7 +56,7 @@
     history.replaceState(null, "", url);
   }
   function readUrlParams() {
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(location.search); // ?shot= is read once at startup (SHOT_MODE) and never re-synced
     const num = (k) => {
       const v = params.get(k);
       return v !== null && /^\d{1,3}$/.test(v) ? parseInt(v, 10) : undefined;
@@ -703,7 +708,9 @@
     foot.insertBefore(btn, foot.firstChild);
   }
 
-  if (!isStandalone && installState() === null) {
+  if (SHOT_MODE) {
+    // screenshot mode: no install UI
+  } else if (!isStandalone && installState() === null) {
     setTimeout(showInstallBanner, 1500); // one time only — first visit
   } else if (!isStandalone && installState() !== "done") {
     addFooterInstallLink();
@@ -719,6 +726,7 @@
      happened" info, not for anything requiring a decision (see .toast for
      that / the install banner). */
   function infoToast(text, ms) {
+    if (SHOT_MODE) return { remove() {} }; // screenshot mode: keep the frame clean
     const t = document.createElement("div");
     t.className = "toast-info";
     t.setAttribute("role", "status");
@@ -732,6 +740,7 @@
      for "an update is ready" (a decision the coach should make on their own
      time, not something to auto-dismiss like infoToast). */
   function actionToast(text, onClick) {
+    if (SHOT_MODE) return null;
     const t = document.createElement("button");
     t.type = "button";
     t.className = "toast";

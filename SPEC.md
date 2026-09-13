@@ -44,6 +44,9 @@ docs/                          ← deployed root (GitHub Pages, main:/docs)
 tests/
   verify-rules.cjs             pre-deploy gate: structural + source-fidelity + anchor + search + flow-scenario tests (§9); NOT deployed (outside docs/)
 src/                           TypeScript mirror of the data layer + `types.ts` contracts (typechecked by `pnpm typecheck`; not deployed — docs/ stays build-free)
+scripts/
+  readme-screenshots.mjs       `pnpm screenshots`: serves docs/, drives headless Chrome at phone width, rewrites screenshots/*.png for the README
+screenshots/                   generated README images (committed; regenerated whenever a widget changes — §9.5)
 ```
 
 ## 4. Data model
@@ -129,6 +132,7 @@ Black chrome, green field, chalk print: the hero and sticky search bar are solid
    - This test suite is a **regression net, not a substitute** for the full semantic audit required on genuinely new rule content (a shingle/anchor check can't catch a subtly-wrong paraphrase that reuses the right words) — for new content, do the multi-agent adversarial audit against the source (§2.1's method) first, then run this suite to lock the result in against future drift.
 3. Content changes: re-audit changed entries against `rules_extracted.txt`. For deep passes, cross-validate the extraction with a second PDF library (pypdf vs pdfminer numeric-token diff must be zero).
 4. After push: confirm the live build flipped (poll a version-stamped asset).
+5. **README screenshots stay current.** Whenever a widget (a Game Time tile, a guided flow, a card type, the search row) is added or visibly changed: add or update its entry in the `SHOTS` list of `scripts/readme-screenshots.mjs`, run `pnpm screenshots`, check the PNGs, and commit them in the same change. The README's Screenshots section references those files by name, so a new widget without a screenshot entry is a doc gap. Shots load the app with `?shot=1`, which `app.js` reads once at startup (`SHOT_MODE`) to suppress the first-visit install banner and the service-worker status toasts; the flag is never written back into the synced URL and has no other effect.
 
 ## 10. Deploy & operations
 

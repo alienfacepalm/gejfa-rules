@@ -3,7 +3,7 @@
    Update triggers: every open/resume of the app (app.js calls registration.update()),
    and a Periodic Background Sync every 24 h (see "periodicsync" below). */
 
-const CACHE_VERSION = "gejfa-rules-v35";
+const CACHE_VERSION = "gejfa-rules-v36";
 const SYNC_TAG = "gejfa-rulebook-sync";
 const ASSETS = [
   "./",

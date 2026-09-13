@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* GEJFA Rules — pre-deploy verification suite.
  *
- * Run before every deploy: `node tests/verify-rules.js`
+ * Run before every deploy: `pnpm test` (node tests/verify-rules.cjs)
  * Exits non-zero on any failure (suitable as a CI/deploy gate).
  *
  * This is a REGRESSION NET, not a substitute for the full semantic audit
