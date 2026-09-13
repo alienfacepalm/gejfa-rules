@@ -43,7 +43,7 @@ docs/                          ← deployed root (GitHub Pages, main:/docs)
   2025-gejfa-rules.pdf         official rulebook (linked upper-right, precached)
 tests/
   verify-rules.cjs             pre-deploy gate: structural + source-fidelity + anchor + search + flow-scenario tests (§9); NOT deployed (outside docs/)
-src/                           TypeScript mirror of the data layer + `types.ts` contracts (typechecked by `npm run typecheck`; not deployed — docs/ stays build-free)
+src/                           TypeScript mirror of the data layer + `types.ts` contracts (typechecked by `pnpm typecheck`; not deployed — docs/ stays build-free)
 ```
 
 ## 4. Data model
@@ -119,8 +119,8 @@ Black chrome, green field, chalk print: the hero and sticky search bar are solid
 
 ## 9. Verification (required before any deploy)
 
-1. `node --check` on every changed `.js` file; `npm run typecheck` when `src/` changed.
-2. **Run `npm test` (`node tests/verify-rules.cjs`) — must exit 0.** This is the automated pre-deploy gate (not shipped to `docs/`, so it isn't part of the deployed bundle). It checks, against `rules_extracted.txt`:
+1. `node --check` on every changed `.js` file; `pnpm typecheck` when `src/` changed.
+2. **Run `pnpm test` (`node tests/verify-rules.cjs`) — must exit 0.** This is the automated pre-deploy gate (not shipped to `docs/`, so it isn't part of the deployed bundle). It checks, against `rules_extracted.txt`:
    - **Structural integrity** — every situation `ruleId` and diagram key resolves to a real rule id, every quick-tile id resolves (situation or flow), every rule has its required fields, categories/levels are valid, no duplicate ids; flow steps/options are well-formed, flow level options are real levels, every flow callout cites a real rule. Counts are logged (81 rules / 45 situations / 31 diagrams / 9 quick / 1 flow / 25 callouts, as of this writing — update the anchor/count expectations in the test file when these legitimately change).
    - **Source fidelity** — every rule's verbatim `text` field, and every flow callout's `text`, is checked for 4-word shingle overlap against the source; below `MIN_COVERAGE` (currently 0.30, calibrated against this dataset's most heavily-synthesized entry) fails loudly. This is the automated defense against hallucinated/invented rule text — a wholly fabricated sentence scores near 0%, since no 38-page rulebook contains a 4-word run matching an invented claim by chance. The only callouts exempt are the two declared synthesized notes (`nfhs`, `pat-after-def-td`), listed by name in the test.
    - **Anchor facts** — a curated list of the highest-stakes numbers (PAT values, weigh-in tolerance, the 25/32/38-point thresholds, appeal windows, practice limits, transfer caps, etc.), each checked explicitly against *both* the app data and the source text — for rules and for flow callouts. Add an anchor here whenever a new rule carries a penalty, deadline, or threshold a coach would act on.

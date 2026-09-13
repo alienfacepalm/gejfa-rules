@@ -20,3 +20,7 @@ Key routing rules:
 - Save progress → invoke /context-save
 - Resume context → invoke /context-restore
 - Author a backlog-ready spec/issue → invoke /spec
+
+## Tooling
+
+Use pnpm for every package-manager action (`pnpm install`, `pnpm test`, `pnpm typecheck`). Never npm or npx; the lockfile is `pnpm-lock.yaml`.
