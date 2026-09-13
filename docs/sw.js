@@ -1,15 +1,19 @@
 /* GEJFA Rules service worker — cache-first for full offline use on the sideline.
-   Bump CACHE_VERSION whenever rules data or app files change so clients update.
+   The cache name comes from GEJFA_VERSION in version.js — bump it there whenever
+   rules data or app files change so clients update (browsers re-check imported
+   scripts on every registration.update(), so a version.js change is enough).
    Update triggers: every open/resume of the app (app.js calls registration.update()),
    and a Periodic Background Sync every 24 h (see "periodicsync" below). */
 
-const CACHE_VERSION = "gejfa-rules-v36";
+importScripts("./version.js");
+const CACHE_VERSION = "gejfa-rules-v" + GEJFA_VERSION;
 const SYNC_TAG = "gejfa-rulebook-sync";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./version.js",
   "./search.js",
   "./flows.js",
   "./vendor/minisearch.min.js",

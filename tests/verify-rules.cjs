@@ -456,6 +456,28 @@ check(flowEngine.cleanAnswers("score", { us: 1, them: 2, lvl: "jv", sit: "final"
 });
 
 // ===========================================================================
+// 6. Version wiring — version.js is the single source of truth: the footer
+//    shows it and sw.js derives its cache name from it. A hardcoded cache
+//    name or a missing script tag would silently break offline updates.
+// ===========================================================================
+console.log("\n== 6. Version wiring ==");
+{
+  const { GEJFA_VERSION } = require(path.join(DOCS, "version.js"));
+  check(Number.isInteger(GEJFA_VERSION) && GEJFA_VERSION >= 36, "[version] GEJFA_VERSION is an integer >= 36", `got ${JSON.stringify(GEJFA_VERSION)}`);
+  const sw = fs.readFileSync(path.join(DOCS, "sw.js"), "utf-8");
+  check(/importScripts\("\.\/version\.js"\)/.test(sw), "[version] sw.js imports version.js");
+  check(/const CACHE_VERSION = "gejfa-rules-v" \+ GEJFA_VERSION;/.test(sw), "[version] sw.js derives CACHE_VERSION from GEJFA_VERSION");
+  check(!/gejfa-rules-v\d/.test(sw), "[version] sw.js has no hardcoded cache version");
+  check(/"\.\/version\.js",/.test(sw), "[version] sw.js caches version.js in ASSETS");
+  const html = fs.readFileSync(path.join(DOCS, "index.html"), "utf-8");
+  const verTag = html.indexOf('<script src="version.js">'), appTag = html.indexOf('<script src="app.js">');
+  check(verTag !== -1 && appTag !== -1 && verTag < appTag, "[version] index.html loads version.js before app.js");
+  check(/id="appVersion"/.test(html), "[version] index.html has the footer #appVersion slot");
+  const app = fs.readFileSync(path.join(DOCS, "app.js"), "utf-8");
+  check(/getElementById\("appVersion"\)/.test(app) && /"v" \+ GEJFA_VERSION/.test(app), "[version] app.js fills #appVersion with vN");
+}
+
+// ===========================================================================
 console.log(`\n${passes} passed, ${failures} failed.`);
 if (failures > 0) {
   console.error("\nDo not deploy. Fix the failures above (re-check rules_extracted.txt if unsure).");

@@ -52,7 +52,7 @@ There is no bundling step: `docs/` is deployed exactly as committed. "Build" her
 ## Updating for a new season
 
 1. Re-curate `docs/data/rules.js` / `situations.js` from the new rulebook (full procedure: SPEC.md §10)
-2. Bump `CACHE_VERSION` in `docs/sw.js`
+2. Bump `GEJFA_VERSION` in `docs/version.js` (the footer shows it; the service worker cache is named from it)
 3. `pnpm test`, then push — installed apps pick up the new rules on next launch with connectivity
 
 Quick-reference only — the official GEJFA rulebook and NFHS rules govern.

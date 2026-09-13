@@ -23,6 +23,11 @@
   // carried into the synced URL.
   const SHOT_MODE = new URLSearchParams(location.search).has("shot");
 
+  // Footer credit line shows the build version (version.js is the single source
+  // of truth; sw.js derives its cache name from the same number).
+  const $appVersion = document.getElementById("appVersion");
+  if ($appVersion && typeof GEJFA_VERSION !== "undefined") $appVersion.textContent = "v" + GEJFA_VERSION;
+
   const $q = document.getElementById("q");
   const $clear = document.getElementById("clearBtn");
   const $mic = document.getElementById("micBtn");
