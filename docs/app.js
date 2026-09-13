@@ -736,6 +736,10 @@
     t.className = "toast-info";
     t.setAttribute("role", "status");
     t.textContent = text;
+    // Place it just under the sticky search bar, whatever height the bar has
+    // at this width (the Topic/home row wraps beneath the input on phones).
+    const bar = document.querySelector(".searchwrap");
+    if (bar) t.style.setProperty("--toast-top", (bar.offsetHeight + 6) + "px");
     document.body.appendChild(t);
     setTimeout(() => t.remove(), ms || 3200);
     return t;

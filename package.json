@@ -11,7 +11,9 @@
     "typecheck": "tsc --noEmit",
     "test": "node tests/verify-rules.cjs",
     "screenshots": "node scripts/readme-screenshots.mjs",
-    "build": "pnpm typecheck && pnpm test && pnpm screenshots"
+    "build": "pnpm typecheck && pnpm test && pnpm screenshots",
+    "e2e": "node scripts/e2e-frames.mjs",
+    "e2e:deck": "node scripts/e2e-deck.mjs"
   },
   "devDependencies": {
     "typescript": "^5.6.3",

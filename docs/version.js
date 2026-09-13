@@ -4,6 +4,6 @@
    cache ("gejfa-rules-vN"), so one bump both labels the build and makes every
    installed phone fetch the new files. Plain script, no modules, so the page
    and the service worker can both load it. */
-var GEJFA_VERSION = 37;
+var GEJFA_VERSION = 38;
 
 if (typeof module !== "undefined") module.exports = { GEJFA_VERSION };

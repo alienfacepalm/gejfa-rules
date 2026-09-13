@@ -47,6 +47,8 @@ tests/
 src/                           TypeScript mirror of the data layer + `types.ts` contracts (typechecked by `pnpm typecheck`; not deployed — docs/ stays build-free)
 scripts/
   readme-screenshots.mjs       `pnpm screenshots`: serves docs/, drives headless Chrome at phone width, rewrites screenshots/*.png for the README
+  e2e-frames.mjs               `pnpm e2e`: empirical end-to-end run — real taps/typing/reloads/offline in headless Chrome, DOM checks per frame, one PNG per frame + frames.json into e2e-out/ (git-ignored)
+  e2e-deck.mjs                 `pnpm e2e:deck`: turns an e2e-out/ run into a self-contained HTML deck (each frame with its sideline use case and checks)
 screenshots/                   generated README images (committed; regenerated whenever a widget changes — §9.5)
 ```
 

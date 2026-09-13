@@ -411,11 +411,16 @@ mark { background: var(--chalk); color: var(--field); padding: 0 2px; border-rad
 }
 .reset-home:active { color: var(--chalk); background: var(--field-press); }
 /* Non-interactive status message (offline-saved confirmation, downloading
-   indicator) — sits below the sticky search bar so it never collides with
-   the install banner or the What's New sheet, both anchored to the bottom. */
+   indicator) — sits just below the sticky search bar so it never collides with
+   the install banner or the update toast, both anchored to the bottom.
+   `--toast-top` is set by app.js from the bar's measured height: at phone
+   width the Topic/home row wraps under the input, so a fixed 70px offset put
+   the toast right on those buttons. `pointer-events: none` because it is a
+   status line, not a control — it must never intercept a coach's tap. */
 .toast-info {
   position: fixed; left: 12px; right: 12px;
-  top: calc(70px + env(safe-area-inset-top)); z-index: 45;
+  top: calc(var(--toast-top, 70px) + env(safe-area-inset-top)); z-index: 45;
+  pointer-events: none;
   padding: 12px 16px; text-align: center;
   font-family: var(--body); font-weight: 600; font-size: .82rem;
   color: var(--field); background: var(--chalk);
