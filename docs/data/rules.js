@@ -18,6 +18,7 @@ const GEJFA_CATEGORIES = [
   { id: "protests",     label: "Protests" },
   { id: "practice",     label: "Practice" },
   { id: "eligibility",  label: "Eligibility & Rosters" },
+  { id: "open-questions", label: "Rule Contradictions" },
 ];
 
 const GEJFA_LEVELS = [
@@ -724,6 +725,59 @@ const GEJFA_RULES = [
     answer: "Since 2024 GEJFA has contracted with Northwest Sports Officials to assign game officials, so clubs no longer have to recruit officials, and the Referee's Coordinator position is currently not needed (there is no separate officials program within GEJFA). The 2026 book still prints the clubs' annual recruiting quota right after that note: clubs with up to 7 teams recruit two new officials, 8–10 teams at least three, 11+ teams at least four; short by August 15 = $1350 per official short; short by August 31 = also provide coaches to fill the requirement; replace a recruited official who quits mid-season promptly.",
     text: "In 2024, GEJFA first contracted with Northwest Sports Officials for assignment of game officials, thus eliminating the need for each Club to recruit game officials. Each year, each franchised Club shall recruit new game officials as follows: Clubs having up to 7 teams shall recruit two new officials; Clubs with 8 to 10 teams shall recruit at least three new officials; and Clubs with 11 or more teams shall recruit at least four new officials. If a Club fails to recruit the required number of game officials by August 15 each year, it will be subject to a monetary penalty of $1350 for each official they are short of those required. If a Club fails to recruit the required number of game officials by August 31 each year, the Club shall provide coaches to fulfill the requirement. If during the season a game official who is one of those fulfilling the requirements of this paragraph, quits, the Club shall provide prompt replacement or suffer the penalties referenced above. REFEREE'S COORDINATOR is currently not needed due to contract with Northwest Sports Officials. There is no longer a separate officials program within GEJFA.",
     keywords: ["northwest sports officials", "nwso", "who assigns officials", "official assignment", "recruit new officials", "1350 penalty", "referee coordinator", "officials program"]
+  },
+
+  // ============ OPEN QUESTIONS — places where the 2026 book contradicts itself ============
+  // Each entry quotes the conflicting passages verbatim, says what the app assumes, and lists the
+  // question to put to the league. When the league answers, fix the real rule entry and delete the OQ entry (SPEC §12).
+
+  {
+    id: "OQ-ejection", cite: "Open question · Part II §3.c vs §3.d", category: "open-questions",
+    title: "Open question: how long is an ejected player out — and can it be appealed?",
+    levels: ["all"],
+    answer: "UNCLEAR IN THE BOOK. §3.d says a player ejected from a regular-season or post-season game is suspended for the next FOUR CONSECUTIVE QUARTERS, with no path to appeal. But §3.c still says a player or coach who is ejected is 'automatically ineligible for the next game'; a leftover §3.c paragraph still says a player's suspension 'may be appealed per Appendix B' (Appendix B is now the playoff brackets); and Appendix A still lists 'player ejection unless appealed per the policy in Appendix B'.\n\nWHAT THE APP SHOWS: §3.d for players (four quarters, no appeal) and §3.c for coaches.\n\nASK THE LEAGUE:\n(1) Does an ejected player sit four quarters (§3.d) or the whole next game (§3.c)?\n(2) Can a player ejection be appealed at all?\n(3) Is a player ejection still an Appendix A automatic suspension? Playing an ineligible player means forfeiting every game he appeared in plus a head-coach suspension (§3.b) — confirm before playing him early.",
+    text: "§3.c: Subject to GEJFA Grievance Committee review, a player or coach who is disqualified (ejected) by a game official is automatically ineligible for the next game. §3.c(4): Players will not appear before the Grievance Committee, however, their suspension resulting from an ejection may be appealed per Appendix B to these rules. §3.d: If a player is ejected from a regular season or post-season game, they are automatically suspended for the four consecutive quarters to follow. Players will not appear before the Grievance Committee. There is no path to appeal an ejection. Appendix A: Examples of those violations include player ejection unless appealed per the policy in Appendix B, coach ejection, late game report (2nd and subsequent violations as the 1st violation equals club probation).",
+    keywords: ["open question", "unclear rule", "contradiction", "conflict", "ask the league", "ejection unclear", "ejection appeal unclear", "four quarters or next game"]
+  },
+  {
+    id: "OQ-videographers", cite: "Open question · Part II §5.c(1) vs §5.k(1)(a)", category: "open-questions",
+    title: "Open question: are videographers allowed inside the fence?",
+    levels: ["all"],
+    answer: "UNCLEAR IN THE BOOK. §5.c(1) still says 'No videographers will be allowed in the fenced area.' The new §5.k(1)(a) says no more than two videographers are permitted inside the fence line but outside, and generally behind, the team area (one may also be the team photographer). §5.c(1) also allows one still photographer outside the team box, so the book doesn't say whether that photographer is in addition to the two videographers.\n\nWHAT THE APP SHOWS: §5.k(1)(a), the newer and more specific provision — and a school district's own prohibitions overrule either.\n\nASK THE LEAGUE:\n(1) Are two videographers allowed inside the fence this season?\n(2) Is the still photographer separate from them?",
+    text: "§5.c(1): This may also include rostered team statisticians and one still photographer who shall be outside the team box. No videographers will be allowed in the fenced area. §5.k(1)(a): No more than two videographers are permitted inside the fence line but outside and generally behind the team area. One of two videographer may also serve as the team photographer.",
+    keywords: ["open question", "unclear rule", "contradiction", "conflict", "ask the league", "videographer unclear", "film inside fence"]
+  },
+  {
+    id: "OQ-rookie-ball", cite: "Open question · Part II §4.g(2) vs §4.g(3)", category: "open-questions",
+    title: "Open question: which football do Rookies use?",
+    levels: ["all"],
+    answer: "UNCLEAR IN THE BOOK. §4.g(2) puts Rookies (with Sophomore and Cubs) on the 'Junior' ball: 9½–10½ in long, 25–26 in long circumference, 18–19 in short circumference, 11–13 oz. The new §4.g(3) gives Rookies their own spec: 9½ in long, 6 in wide, 10 oz (a Wilson 'Size 5' pee-wee ball is the book's example) — and 10 oz is below the Junior ball's 11 oz minimum.\n\nWHAT THE APP SHOWS: both specs. ASK THE LEAGUE: Is the Rookie ball the Junior ball, the 10 oz pee-wee ball, or either? And what do Cubs at the 8-player level use?",
+    text: "§4.g(2): For Sophomore, and Cubs, and Rookies levels: length 9 1/2 -10 1/2 inches; long circumference 25 - 26 inches: short circumference 18 - 19 inches; and weight 11-13 oz. §4.g(3): For Rookies level: length 9 1/2 inches in length and 6 inches in width and weighs 10 ounces.",
+    keywords: ["open question", "unclear rule", "contradiction", "conflict", "ask the league", "rookie ball unclear", "ball weight rookie"]
+  },
+  {
+    id: "OQ-officials", cite: "Open question · Part I §5.f", category: "open-questions",
+    title: "Open question: do clubs still have to recruit game officials?",
+    levels: ["all"],
+    answer: "UNCLEAR IN THE BOOK. Part I §5.f says GEJFA has contracted with Northwest Sports Officials since 2024, 'thus eliminating the need for each Club to recruit game officials' — and the very next paragraph still requires each club to recruit new officials every year (two for clubs with up to 7 teams, three for 8–10, four for 11+), with a $1350-per-official penalty if short by August 15 and coaches filling in if short by August 31.\n\nWHAT THE APP SHOWS: both paragraphs (see 'Who assigns the game officials'). ASK THE LEAGUE: Is the club recruiting quota — and the $1350 penalty — in force for 2026?",
+    text: "In 2024, GEJFA first contracted with Northwest Sports Officials for assignment of game officials, thus eliminating the need for each Club to recruit game officials. Each year, each franchised Club shall recruit new game officials as follows: Clubs having up to 7 teams shall recruit two new officials; Clubs with 8 to 10 teams shall recruit at least three new officials; and Clubs with 11 or more teams shall recruit at least four new officials. If a Club fails to recruit the required number of game officials by August 15 each year, it will be subject to a monetary penalty of $1350 for each official they are short of those required.",
+    keywords: ["open question", "unclear rule", "contradiction", "conflict", "ask the league", "recruit officials unclear", "officials penalty 1350"]
+  },
+  {
+    id: "OQ-pat-offsides", cite: "Open question · Part II §11.a(1) vs §6.d(1)(g)", category: "open-questions",
+    title: "Open question: who does the two-offsides PAT rule apply to?",
+    levels: ["all"],
+    answer: "UNCLEAR IN THE BOOK. New for 2026, §11 says 'If there are two consecutive defensive offside fouls, the penalty will be a successful two point PAT.' It is printed under the paragraph about the conversion KICK, and the book doesn't say whether it also covers run/pass tries, what 'consecutive' counts (the same try or across tries), or how it fits 8-player football, where §6.d(1)(g) says offsides and encroachment penalties 'shall not apply' to a kick try.\n\nWHAT THE APP SHOWS: the sentence as printed, under the kick PAT, without extending it.\n\nASK THE LEAGUE:\n(1) Kick tries only, or run/pass tries too?\n(2) Does it apply in 8-player football?\n(3) What counts as 'consecutive'?",
+    text: "§11.a: A point after touchdown conversion kick will be worth two (2) points. If there are two consecutive defensive offside fouls, the penalty will be a successful two point PAT. §6.d(1)(g) (8 Player Football): If a rule infraction occurs prior to the kick, the kick shall be replayed after the penalty has been assessed; however, offsides and encroachment penalties shall not apply.",
+    keywords: ["open question", "unclear rule", "contradiction", "conflict", "ask the league", "two offsides pat unclear", "consecutive offside"]
+  },
+  {
+    id: "OQ-cross-refs", cite: "Open question · printed cross-references (Part II §6.h–i, §13.a, §16.e)", category: "open-questions",
+    title: "Open question: printed cross-references still use the old numbering",
+    levels: ["all"],
+    answer: "UNCLEAR IN THE BOOK. The 2026 book renumbered Part II, but several cross-references and the table of contents still use the old numbers. §6.h says 'the score management rules of paragraph 9' (score management is now §12) and §6.i says 'the substitution rule of paragraph 7' (now §8); §13.a points to 'paragraph 14.e' (the seeding discussion is now §16.j); §13.d points to 'paragraph 11.c' (now §13.c); the Gold-tournament paragraph cites 'Appendix C' (the brackets are now Appendix B); and the table of contents still lists the 2025 numbering.\n\nWHAT THE APP SHOWS: the printed words, with the corrected section in the citations. ASK THE LEAGUE: Confirm these mean §12, §8, §16.j, §13.c and Appendix B — the 8-player 25-point rules in §6.h matter most on game day.",
+    text: "§6.h: The score management rules of paragraph 9 below apply; the trailing team starts offense from mid-field, the leading team starts offense from its own 15. §6.i: The substitution rule of paragraph 7 applies as does any other game management rule not altered by the 8 Player Football format covered in paragraph 6. §13.a: Tie breakers for playoff seeding (shoot-outs) will not be used except per the seeding discussion in paragraph 14.e. below. §16.e: the pairing will progress to the single winning team through a quarter final, semi-final and final per the format in Appendix C.",
+    keywords: ["open question", "unclear rule", "contradiction", "conflict", "ask the league", "wrong paragraph number", "old numbering", "table of contents"]
   },
 
 ];

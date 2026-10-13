@@ -335,13 +335,13 @@ try {
 
   // 5 ─ category sheet
   await frame("05-topic-sheet", "Filter by category",
-    "The coach doesn't know the exact words, only the area: weigh-in. The Topic button opens a two-column sheet of the rulebook's 12 categories plus 'All topics'.",
+    "The coach doesn't know the exact words, only the area: weigh-in. The Topic button opens a two-column sheet of the rulebook's 13 categories (the last is Rule Contradictions) plus 'All topics'.",
     async (t) => {
       t.step("Tap the 'Topic' button in the sticky search row");
       await page.tap("#browseBtn");
       t.check("Category sheet is visible", await page.visible("#catSheet"));
       t.check("Button reports aria-expanded=true", (await page.eval("document.getElementById('browseBtn').getAttribute('aria-expanded')")) === "true");
-      t.check("13 options: 'All topics' + 12 categories", (await page.count("#catOptions .level-option")) === 13, await page.count("#catOptions .level-option"));
+      t.check("14 options: 'All topics' + 13 categories", (await page.count("#catOptions .level-option")) === 14, await page.count("#catOptions .level-option"));
       t.check("'All topics' is the active choice by default", await page.eval("document.querySelector('#catOptions .cat-option-all').classList.contains('active')"));
     });
 

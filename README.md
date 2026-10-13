@@ -25,7 +25,7 @@ After the first load it works fully **offline** — no signal needed at the fiel
 ## What's inside
 
 - `docs/` — the app (static PWA, no build step, no backend)
-  - `data/rules.js` — the 2026 rulebook structured into 84 entries (plain-English answer + citation + verbatim rule text)
+  - `data/rules.js` — the 2026 rulebook structured into 90 entries (plain-English answer + citation + verbatim rule text), including an **Rule Contradictions** category: the places where the 2026 book contradicts itself, each with the conflicting quotes, what the app assumes, and the question to put to the league
   - `data/situations.js` — 48 common sideline scenarios
   - `data/synonyms.js` — coach-speak → rulebook-term search expansion
   - `data/diagrams.js` — chalk-style SVG diagrams (possession spots, 8-player formation, OT formats, brackets…)
@@ -43,8 +43,9 @@ After the first load it works fully **offline** — no signal needed at the fiel
 pnpm install       # Node 22+ (the screenshot script uses Node's built-in WebSocket)
 pnpm test          # must pass before any push
 pnpm typecheck     # when src/ changed
+pnpm css           # when Tailwind classes in docs/index.html or app.js changed (compiles src/tailwind.css -> docs/tailwind.css)
 pnpm screenshots   # when a widget changed
-pnpm build         # all three in one go — the full pre-deploy gate
+pnpm build         # css + typecheck + test + screenshots — the full pre-deploy gate
 ```
 
 There is no bundling step: `docs/` is deployed exactly as committed. "Build" here means "prove it is safe to push".

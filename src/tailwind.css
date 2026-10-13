@@ -1,0 +1,23 @@
+/* Tailwind entry for the app's "field" backdrop (and any future Tailwind-styled UI).
+   Compiled by `pnpm css` into docs/tailwind.css (committed, so docs/ stays deployable as-is).
+
+   Preflight is deliberately NOT imported: docs/styles.css still owns the base/reset layer, and
+   Tailwind's reset would restyle every existing control. Only the theme and utilities layers load. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@source "../docs/index.html";
+@source "../docs/app.js";
+
+/* Tokens mirror docs/styles.css :root / DESIGN.md "Palette". `static` keeps every token emitted even
+   when it is only referenced through var() inside an arbitrary value. */
+@theme static {
+  --color-ink: #050705;
+  --color-field: #16281c;
+  --color-turf-a: #1e3a29;      /* lighter mowing stripe */
+  --color-turf-b: #132517;      /* darker mowing stripe */
+  --color-endzone: #0f1d14;     /* end-zone green, deepest */
+  --color-chalk: #f5f3ec;       /* off-white print — never pure #fff */
+  --font-display: "Graduate", "Arial Black", sans-serif;
+}

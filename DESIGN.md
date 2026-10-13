@@ -47,7 +47,7 @@ No hex values were specified in the original mockups — this section formalizes
 | 🟩 | `--field-press` | `#28442f` | Pressed/active surface, dividers, grid lines |
 | ⬜ | `--chalk` | `#f5f3ec` | Opaque white plastisol ink — primary text, print graphics |
 | ⬜ | `--chalk-dim` | `#b7c2b6` | Light grey print — secondary text |
-| ⬜ | `--chalk-faint` | `#7e8f80` | Worn print — meta/caption text |
+| ⬜ | `--chalk-faint` | `#8a9a8c` | Worn print — meta/caption text (lifted from #7e8f80 so it stays ≥ 4.5:1 on the lighter mowing stripe) |
 
 Rule: **black chrome, green field, chalk print** — the header and search bar are a deliberate black "away jersey" block (`--ink`), distinct from the green playing-field content area below it. Within the green content area, hierarchy still comes from value steps in the forest-green family plus chalk white/grey type, never a fourth hue. Any background texture or gradient must be built from these same tokens (see "Non-solid background" below), not new colors.
 
@@ -55,7 +55,15 @@ Rule: **black chrome, green field, chalk print** — the header and search bar a
 `.hero` and `.searchwrap` (the sticky search row) are solid `--ink` — a black band that reads as team chrome, distinct from the playing surface below. Everything from the results area down (`main.results`, footer, credit line) sits on the green `--field` background, so the page reads in two clear bands: **black nav on top, green field below**, exactly like a team's dark jersey over a lit field.
 
 ### Non-solid background
-Below the black header, the page background is `--field` drawn as a **top-down gridiron**: full-width horizontal yard lines every 384px, crossed by two dashed vertical **hash-mark lanes** running the length of the page at 30% and 70% (16px dash / 48px period), the way a real field's inbounds hash columns run between the sidelines — the lanes and yard lines intersect, so the lines visibly connect rather than floating as separate ticks. All marks are `--field-press` at 45% opacity. Implementation is three pure-CSS gradient layers (each a self-repeating `repeating-linear-gradient` inside a `no-repeat` box — no image asset, no viewport anchoring, no `background-attachment: fixed`, which has known rendering conflicts with `position: sticky` in Safari). An earlier PNG-tile approach (`field-grid.png`) existed only because per-yard-line *confined* ticks can't be done in plain gradients; full-length dashed lanes can, so the image and its generator were removed. Static, no animation, stays within the palette above. Elements with their own solid surface (`.card`, etc.) paint over it; it shows through in the margins and gaps between them.
+Below the black header, the page is `--field` drawn as a **top-down football field**, modelled on a vector field diagram but dimmed so it never competes with the UI. It is the `#field` element at the top of `<body>` in `index.html`, built **only from Tailwind utilities** (source `src/tailwind.css`, compiled by `pnpm css` into `docs/tailwind.css`) — no image asset:
+
+* **Mowing stripes:** alternating `turf-a` `#1e3a29` / `turf-b` `#132517` bands, 96px each (a "5-yard" stripe), via `repeating-linear-gradient`.
+* **Yard lines:** a 2px line at every stripe boundary, in the off-white chalk at 11% opacity.
+* **Hash ticks:** 1-yard ticks (2px every 19.2px) in four columns — both sidelines and the two inbounds-hash columns at 38% / 62% — at 12% opacity — plus 2px sidelines at 15%.
+* **Yard numbers:** 10-20-30-40-50-40-30-20-10 in Graduate, turned 90° (left side clockwise, right side counter-clockwise) and centred on each 10-yard line, at 14% opacity.
+* **End zone:** the bottom 18rem is `endzone` `#0f1d14` at 80% with a goal line, so the footer sits on the darkest green.
+
+Every "white" mark is `--color-chalk` `#f5f3ec` at low alpha — **never pure white**. Cards, controls and sheets stay opaque on top, so the field only shows in the gaps and gutters. It is `absolute` (not `fixed`/`background-attachment: fixed`, which conflict with `position: sticky` in Safari), is `aria-hidden`/`pointer-events-none`, and is hidden entirely under `prefers-reduced-transparency: reduce` (the flat `--field` colour remains). Preflight is not imported, so Tailwind never resets the existing hand-written `styles.css`.
 
 ---
 

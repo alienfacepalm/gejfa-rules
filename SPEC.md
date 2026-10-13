@@ -26,11 +26,12 @@ A coach on the sideline must find out whether a rule covers a situation **within
 ```
 docs/                          ← deployed root (GitHub Pages, main:/docs)
   index.html                   single page; hero, search row, sheets, results
-  styles.css                   all styling; tokens per DESIGN.md
+  styles.css                   hand-written styling; tokens per DESIGN.md
+  tailwind.css                 COMPILED Tailwind utilities for the #field backdrop (source: src/tailwind.css; `pnpm css`; committed, precached)
   app.js                       DOM glue ONLY (rendering, events, PWA wiring)
   search.js                    pure search engine factory (portable)
   flows.js                     pure guided-flow resolver: Score check arithmetic + rule selection (portable)
-  data/rules.js                84 rule entries (portable, pure data)
+  data/rules.js                90 rule entries incl. 6 Rule Contradictions (portable, pure data)
   data/situations.js           48 situation cards + GEJFA_QUICK (9: 8 cards + the Score check flow) (portable)
   data/synonyms.js             coach-speak → rulebook-term expansion (portable)
   data/diagrams.js             31 chalk-style SVG builders keyed by rule id (portable)
@@ -70,7 +71,7 @@ screenshots/                   generated README images (committed; regenerated w
 `synonyms.js` — single-token map (e.g. `mercy → 32 point rule`).
 `diagrams.js` — SVG string builders per rule id; every label/number sourced from the book.
 `flows.js` (data) — **guided flows**: tap-through follow-up questions that resolve a live situation with no AI. `GEJFA_FLOWS` holds each flow's ordered `steps` (`kind: "score"` = two numeric fields; `kind: "choice"` = option buttons; `skipWhen` drops a step given another answer). `GEJFA_FLOW_CALLOUTS` is the table of rule-cited lines a result can show: `{ ruleId, tone: "stop" | "go" | "note", heading, text }`. Callout `text` is rulebook language (same fidelity bar as a rule's `text`, enforced by the shingle test) and is phrased team-neutrally ("the leading team" / "the trailing team"), exactly as the book phrases it; the status line says which one you are. The only flow today is `score` (steps: score → level → what's happening → quarter/time). The level step has six options: Rookie (8-player), **Cub (11-player)** (`cub`), **Cub (8-player)** (`cub8`), Sophomore, JV, Varsity — because the Council votes each season whether Cubs play 8- or 11-player (Part II §7.b); `cub8` resolves exactly like Rookie (no FG row, midfield/own-15 spots) and `cub` like the 11-player levels.
-Categories (12) and levels (5: Rookie/Cub/Sophomore/JV/Varsity) are defined in `rules.js`.
+Categories (13 — the last, `open-questions`, is the Rule Contradictions section, see §12) and levels (5: Rookie/Cub/Sophomore/JV/Varsity) are defined in `rules.js`.
 
 ## 5. Search behavior (`search.js`)
 
@@ -97,7 +98,7 @@ The resolver never gives advice beyond the rule (it does not say "kick from the 
 
 - **Hero** (scrolls away): DESIGN.md "Design 2" lockup — arched SKYLINE (Graduate), `SAMMAMISH [2026] WASHINGTON` banner, accent stripe, SPARTANS. **PDF** button upper-right opens the official rulebook in a new tab.
 - **Sticky search row**: autofocus-free large input, clear ×, mic (Web Speech API where supported), ☰ category filter button, and an always-visible **reset-to-home** button (`#resetHomeBtn`, calls `resetAll()`). Tapping the header logo does the same thing, but that gesture alone isn't discoverable — a user reported clicking it by accident without realizing it was clickable — so a real, always-visible button is the primary affordance and the logo tap is a bonus.
-- **Category filter**: the only filter (a level filter — Rookie/Cub/Sophomore/JV/Varsity — was removed; see below). `#browseBtn` (class `.level-btn`, a historical name — see docs/styles.css) shows the active category's name on the button itself (default "Topic"), opening a bottom sheet (2-column grid of 12 categories + "All topics"); Escape/overlay close; focus returned. Deliberately not framed as a "browse" menu: it only ever allows one selection, so it is a filter, styled and worded like one (no separate pill, no hamburger icon).
+- **Category filter**: the only filter (a level filter — Rookie/Cub/Sophomore/JV/Varsity — was removed; see below). `#browseBtn` (class `.level-btn`, a historical name — see docs/styles.css) shows the active category's name on the button itself (default "Topic"), opening a bottom sheet (2-column grid of 13 categories + "All topics"); Escape/overlay close; focus returned. Deliberately not framed as a "browse" menu: it only ever allows one selection, so it is a filter, styled and worded like one (no separate pill, no hamburger icon).
 - **Why there's no level filter**: measured directly — for 11 of 12 categories, every level (All/Rookie/Cub/Sophomore/JV/Varsity) returned an identical result count, because almost all GEJFA rules apply to every level and multi-level facts (e.g. quarter lengths) are stored as one `levels: ["all"]` entry rather than split per level. Only the 8-Player category actually varied. A control that changes the result for one category out of twelve isn't worth the UI space, so it was removed rather than kept as a rarely-useful filter.
 - **Results**: banner-bar count divider. Cards show **title + 2-line clamped answer at a glance**; tapping opens the topic in focus mode (accordion — one open, auto-scrolled under the search bar) revealing the full answer, the section diagram (when one exists), the citation badge, level tags, and the official rule text. Query terms are highlighted.
 - **Best match**: with a non-empty query the top hit renders pre-opened with a "Best match" tag.
@@ -108,7 +109,7 @@ The resolver never gives advice beyond the rule (it does not say "kick from the 
 
 ## 7. Visual system (per DESIGN.md)
 
-Black chrome, green field, chalk print: the hero and sticky search bar are solid black (`--ink` #050705) — team chrome, distinct from the playing surface below; everything from the results area down sits on dark forest green (`--field` #16281c, raised #1f3627, pressed #28442f) with chalk white (#f5f3ec) and light-grey secondary (#b7c2b6) type. The green content area's background is a faint gridiron grid (yard-line/hash rules in `--field-press`, 48px spacing), not a flat fill. Display type Graduate (collegiate block serif); body Barlow. Banner bars and the horizontal stripe are the structural motifs. Diagrams are chalk-on-green (X's-and-O's vernacular). See DESIGN.md's Palette section for the full token table.
+Black chrome, green field, chalk print: the hero and sticky search bar are solid black (`--ink` #050705) — team chrome, distinct from the playing surface below; everything from the results area down sits on dark forest green (`--field` #16281c, raised #1f3627, pressed #28442f) with chalk white (#f5f3ec) and light-grey secondary (#b7c2b6) type. The green content area's background is a dimmed top-down football field (mowing stripes, yard lines, hash ticks, yard numbers, end zone — all off-white chalk at low alpha, never pure white) built purely from Tailwind utilities in the `#field` element, not a flat fill (DESIGN.md "Non-solid background"). **Styling rule:** new UI styling is Tailwind (`src/tailwind.css` → `pnpm css`); `styles.css` is the legacy hand-written layer and shrinks as components are migrated (Tailwind's preflight is intentionally not loaded so the two can coexist). Display type Graduate (collegiate block serif); body Barlow. Banner bars and the horizontal stripe are the structural motifs. Diagrams are chalk-on-green (X's-and-O's vernacular). See DESIGN.md's Palette section for the full token table.
 
 ## 8. PWA behavior
 
@@ -129,7 +130,7 @@ Black chrome, green field, chalk print: the hero and sticky search bar are solid
 
 1. `node --check` on every changed `.js` file; `pnpm typecheck` when `src/` changed.
 2. **Run `pnpm test` (`node tests/verify-rules.cjs`) — must exit 0.** This is the automated pre-deploy gate (not shipped to `docs/`, so it isn't part of the deployed bundle). It checks, against `rules_extracted.txt`:
-   - **Structural integrity** — every situation `ruleId` and diagram key resolves to a real rule id, every quick-tile id resolves (situation or flow), every rule has its required fields, categories/levels are valid, no duplicate ids; flow steps/options are well-formed, flow level options are real levels, every flow callout cites a real rule. Counts are logged (84 rules / 48 situations / 31 diagrams / 9 quick / 1 flow / 25 callouts, as of this writing — update the anchor/count expectations in the test file when these legitimately change).
+   - **Structural integrity** — every situation `ruleId` and diagram key resolves to a real rule id, every quick-tile id resolves (situation or flow), every rule has its required fields, categories/levels are valid, no duplicate ids; flow steps/options are well-formed, flow level options are real levels, every flow callout cites a real rule. Counts are logged (90 rules / 48 situations / 31 diagrams / 9 quick / 1 flow / 25 callouts, as of this writing — update the anchor/count expectations in the test file when these legitimately change).
    - **Source fidelity** — every rule's verbatim `text` field, and every flow callout's `text`, is checked for 4-word shingle overlap against the source; below `MIN_COVERAGE` (currently 0.30, calibrated against this dataset's most heavily-synthesized entry) fails loudly. This is the automated defense against hallucinated/invented rule text — a wholly fabricated sentence scores near 0%, since no 38-page rulebook contains a 4-word run matching an invented claim by chance. The only callouts exempt are the two declared synthesized notes (`nfhs`, `pat-after-def-td`), listed by name in the test.
    - **Anchor facts** — a curated list of the highest-stakes numbers (PAT values, weigh-in tolerance, the 25/32/38-point thresholds, the four-quarter ejection suspension, practice limits, transfer caps, etc.), each checked explicitly against *both* the app data and the source text — for rules and for flow callouts. Add an anchor here whenever a new rule carries a penalty, deadline, or threshold a coach would act on.
    - **Search behavior** — the top-hit gauntlet (mercy, up 30, late weigh in, 4th and 10, overtime, ejected, twelve plays, headsets, …).
@@ -173,6 +174,10 @@ What changed in the book, and where it lives in the app:
 | Part I §5.f: officials are assigned by **Northwest Sports Officials** (since 2024); Referee's Coordinator not currently needed | `I-5-f` (new) |
 
 Deliberately **not** in the app (club/league administration, never covered by this coach-facing app): the Mercer Island Islanders home jersey change (Black → Royal Blue) in the club-colors table; the 2026-only suspension of the rule that the GEJFA President may not hold Club positions (Part I §6.b(2)(b)).
+
+#### Rule Contradictions section (in the app)
+
+The contradictions below are surfaced to coaches as the **Rule Contradictions** category (topic sheet → "Rule Contradictions"; also reachable by searching "open question" / "contradiction"). Each `OQ-*` rule entry quotes the conflicting passages verbatim, states what the app assumes, and lists the questions to ask the league. They are down-weighted in search (`boostDocument` ×0.4 in `search.js`) so they never outrank the real rule, and `pnpm test` enforces that they live only in this category and carry the "UNCLEAR IN THE BOOK" / "ASK THE LEAGUE" structure. **When the league answers**: correct the real rule entry, then delete the OQ entry (and its line below). Current entries: `OQ-ejection`, `OQ-videographers`, `OQ-rookie-ball`, `OQ-officials`, `OQ-pat-offsides`, `OQ-cross-refs`.
 
 #### Known internal inconsistencies in the 2026 PDF (and how the app resolves them)
 

@@ -41,7 +41,8 @@ function createGejfaSearch({ MiniSearch, rules, situations, synonyms }) {
       prefix: true,
       fuzzy: 0.2,
       boost: { question: 5, title: 4, keywords: 3.5, answer: 2, text: 0.6 },
-      boostDocument: (docId) => (docId.startsWith("sit:") ? 1.4 : 1),
+      // Open-question entries (docs about contradictions in the book) must never outrank the real rule.
+      boostDocument: (docId) => (docId.startsWith("sit:") ? 1.4 : docId.startsWith("rule:OQ-") ? 0.4 : 1),
     },
   });
   mini.addAll(docs);

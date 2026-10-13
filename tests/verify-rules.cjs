@@ -336,6 +336,24 @@ GAUNTLET.forEach(([query, expect]) => {
     `top hit was: ${text.slice(0, 90)}`);
 });
 
+// Open-question entries (contradictions in the book) are a separate section: they must live only in
+// the "open-questions" category, and must never outrank the real rule for an everyday query.
+GEJFA_RULES.forEach(r => {
+  const isOq = r.id.startsWith("OQ-");
+  check(isOq === (r.category === "open-questions"),
+    `[${r.id}] open-question entries (and only they) use the open-questions category`, `id/category mismatch: ${r.category}`);
+  if (isOq) check(/^Open question:/.test(r.title) && /UNCLEAR IN THE BOOK/.test(r.answer) && /ASK THE LEAGUE/.test(r.answer),
+    `[${r.id}] states the conflict and the question for the league`, "missing title prefix / UNCLEAR IN THE BOOK / ASK THE LEAGUE");
+});
+["ejected", "appeal ejection", "player ejected four quarters", "videographers", "ball size", "rookie ball", "pat", "officials", "two offsides on the pat", "own 15"]
+  .forEach(q => {
+    const top = engine.search(q)[0];
+    check(!!top && !(top.rule && top.rule.id.startsWith("OQ-")), `search("${q}") top hit is a real rule, not an open question`,
+      `top hit was ${top && top.rule ? top.rule.id : "none"}`);
+  });
+check((engine.search("open question")[0] || {}).rule && engine.search("open question")[0].rule.id.startsWith("OQ-"),
+  'search("open question") surfaces the Rule Contradictions section', "top hit was not an OQ entry");
+
 // ===========================================================================
 // 5. SCORE CHECK FLOW — the resolver's arithmetic and rule selection, pinned
 //    scenario by scenario. Each expectation was hand-checked against Part II
@@ -500,6 +518,16 @@ console.log("\n== 6. Version wiring ==");
   const verTag = html.indexOf('<script src="version.js">'), appTag = html.indexOf('<script src="app.js">');
   check(verTag !== -1 && appTag !== -1 && verTag < appTag, "[version] index.html loads version.js before app.js");
   check(/id="appVersion"/.test(html), "[version] index.html has the footer #appVersion slot");
+  // Tailwind field backdrop: the compiled sheet must be linked, precached, and contain the classes index.html uses
+  // (a forgotten `pnpm css` would silently ship an unstyled backdrop).
+  check(/<link rel="stylesheet" href="tailwind\.css">/.test(html), "[tailwind] index.html links tailwind.css");
+  check(/"\.\/tailwind\.css",/.test(sw), "[tailwind] sw.js precaches tailwind.css");
+  const tw = fs.readFileSync(path.join(DOCS, "tailwind.css"), "utf-8");
+  check(tw.includes("--color-turf-a") && tw.includes("repeating-linear-gradient") && /\.-z-10\b/.test(tw) && tw.includes("19.2px"),
+    "[tailwind] docs/tailwind.css contains the field utilities (run `pnpm css`)", "stale or missing compiled Tailwind output");
+  const fieldHtml = html.slice(html.indexOf('id="field"'), html.indexOf("</header>"));
+  check(!/#fff(fff)?|(bg|text|border)-white/i.test(fieldHtml) && /--color-chalk:#f5f3ec/.test(tw),
+    "[tailwind] the field uses off-white chalk (#f5f3ec), never pure white", "pure white found in the field markup, or --color-chalk changed");
   const app = fs.readFileSync(path.join(DOCS, "app.js"), "utf-8");
   check(/getElementById\("appVersion"\)/.test(app) && /"v" \+ GEJFA_VERSION/.test(app), "[version] app.js fills #appVersion with vN");
 }
