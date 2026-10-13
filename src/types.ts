@@ -5,6 +5,8 @@
  *  Naming convention: interfaces are prefixed `I`, type aliases `T`. */
 
 export type TLevelId = "rookie" | "cub" | "soph" | "jv" | "varsity";
+/** Score check level options: `cub8` = Cubs at the 8-player level (Council vote, Part II §7.b); it resolves like Rookie. */
+export type TFlowLevelOption = TLevelId | "cub8";
 export type TRuleLevels = ReadonlyArray<TLevelId | "all">;
 
 export interface ICategory {
@@ -25,7 +27,7 @@ export interface IRule {
   levels: TRuleLevels;
   /** Plain-English ruling — may simplify wording, must never alter substance. */
   answer: string;
-  /** Near-verbatim rule language, sourced from the official 2025 GEJFA PDF. */
+  /** Near-verbatim rule language, sourced from the official 2026 GEJFA PDF. */
   text: string;
   keywords: string[];
 }
@@ -83,7 +85,7 @@ export interface IFlowCallout {
 export type TFlowAnswers = {
   us?: number;
   them?: number;
-  lvl?: TLevelId;
+  lvl?: TFlowLevelOption;
   sit?: string;
   time?: string;
 };

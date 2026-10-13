@@ -1,4 +1,7 @@
-/* GEJFA 2025 Rules — structured data curated from "2025 GEJFA Rules Final" (adopted Aug 1, 2025).
+/* GEJFA 2026 Rules — structured data curated from "GEJFA 2026 Rules" (revised/posted Aug 1, 2026).
+   Rule `id`s are stable keys (they keep deep links working across seasons), NOT citations — the `cite` field
+   carries the 2026 numbering, which shifted after Part II §6 (11 Player Football and Protection of the Center
+   were inserted).
    Pure data module: no DOM/browser APIs. Usable in browser (global), Node, or a future native port.
    Fields: id, cite, category, title, levels, answer (plain-English), text (rule language), keywords. */
 
@@ -7,7 +10,7 @@ const GEJFA_CATEGORIES = [
   { id: "substitution", label: "Substitution" },
   { id: "score-mgmt",   label: "Score Mgmt (32-pt)" },
   { id: "kickoffs-pat", label: "Kickoffs & PAT" },
-  { id: "8-player",     label: "8-Player (Rookie)" },
+  { id: "8-player",     label: "8-Player (Rookie/Cub)" },
   { id: "playoffs",     label: "Playoffs & Ties" },
   { id: "discipline",   label: "Ejections & Discipline" },
   { id: "equipment",    label: "Equipment" },
@@ -132,7 +135,7 @@ const GEJFA_RULES = [
     title: "Weigh-ins in playoffs and matchup games",
     levels: ["all"],
     answer: "Playoff games: weigh-ins required. End-of-season match-up (consolation) games: no weigh-in needed — except a player who was overweight and disqualified the previous game must weigh in to qualify.",
-    text: "Weigh-ins are required for playoff games. Weigh-ins are not required for match-up games at the end of the season. (Per §14.d: players in consolation games need not weigh-in, except those players who were overweight and thus disqualified in the previous game must weigh-in to qualify. Rosters are to be exchanged at all games including consolation games.)",
+    text: "Weigh-ins are required for playoff games. Weigh-ins are not required for match-up games at the end of the season. (Per §16.h: players in consolation games need not weigh-in, except those players who were overweight and thus disqualified in the previous game must weigh-in to qualify. Rosters are to be exchanged at all games including consolation games, §16.i.)",
     keywords: ["playoff weigh in", "matchup game", "consolation weigh in", "postseason weigh in"]
   },
 
@@ -155,11 +158,19 @@ const GEJFA_RULES = [
   },
   {
     id: "II-3-c", cite: "Part II §3.c", category: "discipline",
-    title: "Ejection: what happens next",
+    title: "Ejected coach: out the next game, then Grievance Committee",
     levels: ["all"],
-    answer: "A player or coach ejected by an official automatically sits out the NEXT game. A second ejection in the same season = suspended for the rest of the season. Ejected coaches must appear before the Grievance Committee (with Club President and Head Coach) before reinstatement; if the committee can't meet in time, the GEJFA President may temporarily reinstate.",
-    text: "Subject to GEJFA Grievance Committee review, a player or coach who is disqualified (ejected) by a game official is automatically ineligible for the next game. If the same player or coach is disqualified (ejected) a second time in one season, he is suspended for the remainder of the games that season. All coaches disqualified in a game and consequently suspended from the next game must appear before the Grievance Committee, accompanied by his/her Club President and team Head Coach prior to reinstatement. If the Grievance Committee is unable to meet prior to the game following the automatic game suspension, the coach may be temporarily reinstated by the GEJFA President pending an appearance before the Grievance Committee.",
-    keywords: ["ejected", "ejection", "kicked out", "disqualified", "thrown out", "next game suspension", "second ejection", "season suspension"]
+    answer: "An ejected COACH is automatically ineligible for the NEXT game and must appear before the Grievance Committee (with the Club President and team Head Coach) before reinstatement; if the committee can't meet before the game FOLLOWING the automatic suspension, the GEJFA President may temporarily reinstate the coach pending the appearance. A SECOND ejection of the same player or coach in a season = suspended for the rest of that season's games. PLAYER ejections are handled by Part II §3.d (four consecutive quarters, no Grievance Committee, no appeal) — the §3.c lead sentence still says 'player or coach … next game', but §3.d is the specific, newer player rule.",
+    text: "Subject to GEJFA Grievance Committee review, a player or coach who is disqualified (ejected) by a game official is automatically ineligible for the next game. If the same player or coach is disqualified (ejected) a second time in that same season, he/she is suspended for the remainder of the games that season. All coaches disqualified in a game and consequently suspended from the next game must appear before the Grievance Committee, accompanied by his/her Club President and team Head Coach prior to reinstatement. If the Grievance Committee is unable to meet prior to the game following the automatic game suspension, the coach may be temporarily reinstated by the GEJFA President pending an appearance before the Grievance Committee.",
+    keywords: ["ejected", "ejection", "kicked out", "disqualified", "thrown out", "next game suspension", "second ejection", "season suspension", "coach ejected", "coach suspended"]
+  },
+  {
+    id: "II-3-dp", cite: "Part II §3.d", category: "discipline",
+    title: "Player ejected: out four consecutive quarters (no appeal)",
+    levels: ["all"],
+    answer: "A player ejected from a regular-season or post-season game is automatically suspended for the FOUR CONSECUTIVE QUARTERS that follow, starting with the next full quarter. Ejected in the 2nd quarter → can't return until the 3rd quarter of the next game. Ejected in the 4th quarter → can't play in the following game. Players do not appear before the Grievance Committee and there is NO path to appeal an ejection. A second ejection of the same player in the season = suspended for the remainder of that season's games. (Heads-up: the §3.c lead sentence still says a player or coach is out 'the next game' — if there's any doubt, confirm with the league before playing him early.)",
+    text: "If a player is ejected from a regular season or post-season game, they are automatically suspended for the four consecutive quarters to follow. Players will not appear before the Grievance Committee. There is no path to appeal an ejection. Suspension will start with the next full quarter. Examples include the following: If a player is ejected in the 2nd quarter, they are not eligible to return to play until the 3rd quarter of the next game. If a player is ejected in the 4th quarter, they are not eligible to play in the following game. If the same player is disqualified (ejected) a second time in that same season, he/she is suspended for the remainder of the games that season.",
+    keywords: ["player ejected", "ejected player", "four quarters", "4 quarters", "next full quarter", "no appeal", "cannot appeal ejection", "player suspension", "second ejection", "return after ejection", "dq player", "flagrant"]
   },
   {
     id: "II-3-c3", cite: "Part II §3.c(3)", category: "discipline",
@@ -170,20 +181,12 @@ const GEJFA_RULES = [
     keywords: ["suspended coach", "no contact", "sideline ban", "texting team", "communication suspended", "serve suspension"]
   },
   {
-    id: "II-3-d", cite: "Part II §3.d", category: "discipline",
+    id: "II-3-d", cite: "Part II §3.c(4)–(5)", category: "discipline",
     title: "Coach suspension for conduct",
     levels: ["all"],
     answer: "Coaches can also be suspended after Grievance Committee review of reported misconduct. Same game-day rules apply: zero communication/contact with the team until the game ends.",
     text: "Coaches may also be subject to suspension based on Grievance Committee review of a reported breach in proper conduct. A coach suspended for any reason shall not have communication/contact of any type with the team on game day until after the game is completed. It is the responsibility of each Club to monitor the coach/team to be sure the suspension is enforced.",
     keywords: ["conduct", "misconduct", "breach", "coach behavior", "grievance suspension"]
-  },
-  {
-    id: "APP-B", cite: "Appendix B", category: "discipline",
-    title: "Appealing a player ejection",
-    levels: ["all"],
-    answer: "Player ejections from judgment calls CAN be appealed with video: the Club's appointed board member contacts the Grievance Committee within 24 HOURS of the game's end, submitting video that clearly shows the play and the referee's penalty assessment. The committee decides within 48 hours (or before the next game if sooner). Its decision is final. Ignoring the decision = forfeit + head coach suspension.",
-    text: "Player ejections resulting from a judgment call may be appealed. Video evidence, submitted by the Club's appointed board member, may be used to determine whether an ejection was due to incorrect judgment on the part of the ejecting official(s). The Club's appointed board member of the ejected player must contact the GEJFA Grievance Committee within 24 hours from the conclusion of the game. The video evidence must clearly document the situation/play including the referee's penalty assessment. The Committee has 48 hours from submission to decide (or decides before the next game if that game is sooner). The Grievance Committee shall review and either 1) affirm the head coach/designee with the understanding that the one (1) game suspension shall not be assessed, or 2) overrule the head coach/designee whereby the ejected player will be required to serve the one (1) game suspension. The decision of the GEJFA Grievance Committee regarding the ejection is final. Failure of the team to enforce the decision will result in forfeiture of the game the player appeared in, and immediate suspension of the player's head coach until reviewed by the Grievance Committee.",
-    keywords: ["appeal ejection", "video evidence", "24 hours", "overturn ejection", "wrongly ejected", "judgment call appeal", "wiaa"]
   },
 
   // ---- Equipment ----
@@ -239,9 +242,9 @@ const GEJFA_RULES = [
     id: "II-4-g", cite: "Part II §4.g", category: "equipment",
     title: "Legal football sizes by level",
     levels: ["all"],
-    answer: "JV & Varsity: 'Youth/Intermediate' ball (10–11 in long, 26–27 in long circumference, 12–14 oz). Sophomore, Cub & Rookie: 'Junior' ball (9.5–10.5 in, 25–26 in, 11–13 oz). Leather, composite, or rubber all OK.",
-    text: "Footballs may be leather, composite, or rubber. For Junior Varsity and Varsity levels: length 10–11 inches; long circumference 26–27 inches; short circumference 19–20 inches; and weight 12–14 oz (e.g., 'Youth' or 'Intermediate' designation). For Sophomore, Cubs, and Rookies levels: length 9 1/2–10 1/2 inches; long circumference 25–26 inches; short circumference 18–19 inches; and weight 11–13 oz (e.g., 'Junior' designation).",
-    keywords: ["ball size", "football size", "junior ball", "youth ball", "intermediate ball", "what ball"]
+    answer: "JV & Varsity: 'Youth/Intermediate' ball (10–11 in long, 26–27 in long circumference, 12–14 oz). Sophomore, Cub & Rookie: 'Junior' ball (9.5–10.5 in, 25–26 in, 11–13 oz). Rookies also have their own listed spec: 9½ in long, 6 in wide, 10 oz (the book's example is a Wilson 'Size 5' pee-wee ball). Leather, composite, or rubber all OK.",
+    text: "Footballs may be leather, composite, or rubber. For Junior Varsity and Varsity levels: length 10–11 inches; long circumference 26–27 inches; short circumference 19–20 inches; and weight 12–14 oz (e.g., 'Youth' or 'Intermediate' designation). For Sophomore, Cubs, and Rookies levels: length 9 1/2–10 1/2 inches; long circumference 25–26 inches; short circumference 18–19 inches; and weight 11–13 oz (e.g., 'Junior' designation). For Rookies level: length 9 1/2 inches in length and 6 inches in width and weighs 10 ounces (e.g., Wilson pee wee footballs, known as Size 5, perfectly scaled for young players ages 6 to 9).",
+    keywords: ["ball size", "football size", "junior ball", "youth ball", "intermediate ball", "what ball", "rookie ball", "size 5", "pee wee ball", "wilson"]
   },
   {
     id: "II-4-h", cite: "Part II §4.h", category: "equipment",
@@ -273,16 +276,16 @@ const GEJFA_RULES = [
     id: "II-5-c", cite: "Part II §5.c", category: "game-day",
     title: "Who's allowed inside the fence / spectator line",
     levels: ["all"],
-    answer: "Fenced fields: only players, coaches, officials — plus rostered statisticians and ONE still photographer (outside the team box; no videographers inside the fence). Unfenced fields: spectators stay at least 5 yards off the sideline.",
-    text: "At high school fields where the playing field is fenced from the spectator areas, only the game participants (players, coaches, and officials) may be inside the fenced area. This may also include rostered team statisticians and one still photographer who shall be outside the team box. No videographers will be allowed in the fenced area. On fields where such fencing does not exist, coaches shall inform spectators that League rules require all spectators remain five (5) yards or more from the sideline. Nothing prohibits a Club from establishing stricter field access rules.",
+    answer: "Fenced fields: only players, coaches, officials — plus rostered statisticians and ONE still photographer (outside the team box). Videographers: this paragraph still says none inside the fenced area, but the new 2026 Part II §5.k(1)(a) allows up to TWO videographers inside the fence line (outside, generally behind the team area) — see Photo & video rules. Some fields (and school districts) don't allow even the still photographer inside the fence, and those prohibitions overrule. Unfenced fields: spectators stay at least 5 yards off the sideline.",
+    text: "At high school fields where the playing field is fenced from the spectator areas, only the game participants (players, coaches, and officials) may be inside the fenced area. This may also include rostered team statisticians and one still photographer who shall be outside the team box. No videographers will be allowed in the fenced area [but see §5.k(1)(a), new for 2026: no more than two videographers are permitted inside the fence line but outside and generally behind the team area]. At some fields (having stricter rules) even the still photographer may not be allowed within the fenced area. On fields where such fencing does not exist, coaches shall inform spectators that League rules require all spectators remain five (5) yards or more from the sideline. Nothing prohibits a Club from establishing stricter field access rules.",
     keywords: ["fence", "sideline access", "parents on field", "spectators", "5 yards", "who allowed on sideline", "statistician"]
   },
   {
     id: "II-5-d", cite: "Part II §5.d", category: "game-day",
     title: "Quarter length by level",
     levels: ["all"],
-    answer: "Rookies (8-player) and Cubs: 8-minute quarters. Sophomore, JV, Varsity: 10-minute quarters. High school (NFHS) timing rules apply.",
-    text: "8 Player Football (Rookies) and Cubs will each play 8 minute quarters. Sophomores, Junior Varsity and Varsity will play 10 minute quarters. All games will be played per high school rule book timing rules.",
+    answer: "8-player football (Rookies, and sometimes Cubs): 8-minute quarters. All 11-player football (sometimes Cubs, otherwise always Sophomore, JV, Varsity): 10-minute quarters. The Council votes before each season whether Cubs play 8-player or 11-player (Part II §7.b); Cubs playing 11-player follow all 11-player rules, including quarter length. High school (NFHS) timing rules apply.",
+    text: "8 Player Football (Rookies, and sometime Cubs) will each play 8 minute quarters. All 11 Player Football (sometimes Cubs, otherwise always Sophomores, Junior Varsity and Varsity) will play 10 minute quarters. All games will be played per high school rule book timing rules.",
     keywords: ["quarter length", "how long quarters", "game length", "8 minute", "10 minute", "timing"]
   },
   {
@@ -313,8 +316,8 @@ const GEJFA_RULES = [
     id: "II-5-h", cite: "Part II §5.h", category: "game-day",
     title: "How many officials per game",
     levels: ["all"],
-    answer: "Target: 3 officials per game, 4 for Sophomore/JV/Varsity. Rookies (8-player): 2 officials = full crew. Cubs: 3 = full crew. The home club provides officials with refreshments.",
-    text: "There will be an attempt to assign three (3) game officials to every game and a fourth (4) for Sophomore, JV and Varsity games. For 8 Player Football (Rookies), two (2) officials will constitute a full crew, however, more may be assigned. For Cubs, three (3) officials constitute a full crew, however, a fourth may be assigned. The home/host Club is responsible for providing game officials with proper refreshments.",
+    answer: "Target: 3 officials per game, 4 for Sophomore/JV/Varsity. ANY 8-player game: 2 officials = full crew (more may be assigned). Cubs at the 11-player level: 3 = full crew (a fourth may be assigned). The home club provides officials with refreshments.",
+    text: "There will be an attempt to assign three (3) game officials to every game and a fourth (4) for Sophomore, JV and Varsity games. For any 8 Player Football games, two (2) officials will constitute a full crew, however, more may be assigned. For Cubs when at the 11 player level, three (3) officials constitute a full crew, however, a fourth may be assigned. The home/host Club is responsible for providing game officials with proper refreshments.",
     keywords: ["officials", "referees", "how many refs", "full crew", "short crew"]
   },
   {
@@ -337,48 +340,48 @@ const GEJFA_RULES = [
     id: "II-5-k", cite: "Part II §5.k", category: "game-day",
     title: "Photo and video rules",
     levels: ["all"],
-    answer: "Film/photograph from your side, in the stands or beyond the field boundary. One still photographer per team may be on the sideline outside the team box (where the field allows). Stationary AI-type tripod cameras that don't live-broadcast are OK on the track/behind your bench with field manager permission. Coaches/team photographer may NOT shoot sideline smartphone footage. Field-camera video, if used, must be shared with both teams. Misbehaving photographers can be shut down and lose field access for the whole team.",
-    text: "Picture taking and videotaping is allowed from your side of the field in the stands or beyond the playing field boundary except that one still picture photographer per team may be on the sideline outside the team box (except on fields that prohibit it). As permitted by the field manager, stationary AI type cameras (typically on a tall tripod) that do not live broadcast are allowed on the track or behind the filming team bench. Sideline smartphone footage is not allowed by coaches or the team photographer. There will be no filming of practices not involving your team. Where field video cameras exist, the video from those cameras, if used, shall be shared with both the teams involved. Teams may share game video, but are not required to do so. Photographers who don't follow the rules may be shut down and/or asked to leave the field; repeat issues bar that team's photographers from inside the fence.",
-    keywords: ["video", "filming", "camera", "photographer", "veo", "hudl", "tripod", "smartphone video", "share film"]
+    answer: "Film/photograph from your side — in the stands or beyond the field boundary (in most cases outside the fenced area). New for 2026: up to TWO videographers may be inside the fence line but outside, and generally behind, the team area (one of them may also be the team photographer); where a school district prohibits even the still photographer inside the fence, that prohibition overrules. Stationary AI-type tripod cameras that don't live-broadcast are OK on the track or behind your bench as field management permits. To film from the opponent's side, get that team's permission. No filming (or any scouting) of practices that don't involve your own team. Sharing game video with the opponent is encouraged, not required. Coaches and the team photographer may NOT shoot sideline smartphone footage. Misbehaving photographers can be shut down and lose the whole team's access inside the fence.",
+    text: "Picture taking and videotaping is allowed from your side of the field in the stands or beyond the playing field boundary (in most cases outside the fenced area). No more than two videographers are permitted inside the fence line but outside and generally behind the team area. One of two videographer may also serve as the team photographer. On any field for which the school district prohibits even the still photographer inside the fenced area, such school district prohibitions overrule. As permitted by the field management, stationary AI type cameras (typically on a tall tripod) that do not live broadcast are allowed on the track or behind the filming team bench. If you wish to film from the opponent's side, get permission from that team and please be respectful of the fans for that team. There will be no filming (or any scouting) of practices not involving your own team. Teams are encouraged to share game video with the opposing team, but are not required to do so. Whether still photography or video, photographers who don't follow the rules may be shutdown and/or asked to leave the field. Photography inside the fenced boundary is a privilege, not a right, and if the photographers do not follow the rules relative to where they are permitted to stand, then that photographer and others with the same team will not be permitted in the field area (inside the fence). Sideline smartphone footage is not allowed by coaches or the team photographer.",
+    keywords: ["video", "filming", "camera", "photographer", "veo", "hudl", "tripod", "smartphone video", "share film", "videographer", "two videographers", "behind the bench", "opponent sideline"]
   },
 
   // ---- 8-Player Football (Rookie) ----
   {
     id: "II-6-a", cite: "Part II §6.a", category: "8-player",
-    title: "8-player: players on the field",
-    levels: ["rookie"],
-    answer: "8 players per side. Five must be on the line of scrimmage: two eligible receivers and three ineligible linemen. Roster: minimum 11, maximum 21.",
-    text: "The number of players on the field per team is eight (8). Five players must be on the line of scrimmage; two eligible receivers, and three ineligible linemen. The minimum roster size is 11 players to field a team for the season; the maximum roster size is 21.",
+    title: "8-player: players on the field (Rookie; Cubs when so voted)",
+    levels: ["rookie", "cub"],
+    answer: "8-player football is the Rookie format, and the Council may also vote annually to put Cubs at this level. Except where 11-player rules are specifically addressed, 8-player football is subject to all the other Part II rules. 8 players per side. Five must be on the line of scrimmage: two eligible receivers and three ineligible linemen. Roster: minimum 11, maximum 21.",
+    text: "Except as specially addressed to 11 Player Football, 8 Player Football is subject to all other rules in this section. The Rookie level football has been altered to the following format. Council may also vote annually to put Cubs at this level of play. The number of players on the field per team is eight (8). Five players must be on the line of scrimmage; two eligible receivers, and three ineligible linemen. The minimum roster size is 11 players to field a team for the season; the maximum roster size is 21.",
     keywords: ["8 man", "eight player", "players on field", "line of scrimmage", "eligible receivers", "formation"]
   },
   {
     id: "II-6-b", cite: "Part II §6.b", category: "8-player",
     title: "8-player: field size and ball spot",
-    levels: ["rookie"],
+    levels: ["rookie", "cub"],
     answer: "Field is 100 yards long but only 35 yards wide — home sideline to the far hashmarks (the far hash is the visitor sideline). Every play is spotted on the home-side hashmark, equidistant from each sideline.",
     text: "The field is 100 yards from goal line to goal line. End zones are 10 yards deep. The field is 35 yards wide, from the usual home sideline to the far/visitor side hashmarks (the hashmarks become the visitor sideline). For each play, regardless which team has possession, the ball is spotted on the (home team's) hashmark which is equal distance from each sideline.",
     keywords: ["field size", "narrow field", "35 yards wide", "hashmark", "spot ball", "field dimensions"]
   },
   {
     id: "II-6-c", cite: "Part II §6.c", category: "8-player",
-    title: "8-player: coach on the field",
+    title: "8-player: coach on the field (Rookie only)",
     levels: ["rookie", "cub"],
-    answer: "One coach on the field at ROOKIE only. NO coach on the field at Cub.",
-    text: "Per rule 5.g.(2), one coach is allowed on the field at the Rookie level only. There will be no coach allowed on the field at the Cub level.",
-    keywords: ["coach on field cub", "rookie coach field"]
+    answer: "One coach per team may be on the field at the ROOKIE level only (rule 5.g.(2)). Cub coaches follow rule 5.g.(1): not on the field except during a timeout or an injury.",
+    text: "Per rule 5.g.(2) above, one coach is allowed on the field at the Rookie level only.",
+    keywords: ["coach on field cub", "rookie coach field", "coaches on field 8 player"]
   },
   {
     id: "II-6-d", cite: "Part II §6.d", category: "8-player",
     title: "8-player PAT (kick = 2, run/pass = 1)",
-    levels: ["rookie"],
+    levels: ["rookie", "cub"],
     answer: "Ball spotted at the 3-yard line for either try. Kick try (worth 2): must be snapped, held, and kicked; the holder may move to get the ball; kicker gets exactly ONE swing once the ball is on the tee (a whiff or shank counts as the attempt); NO fakes; no one may cross the line of scrimmage; on-field coaches must be clear. If there's a penalty before the kick, replay the kick after assessment — but offsides/encroachment don't apply.",
-    text: "If scoring team opts for a two-point attempt (no rush kick): the ball is spotted at the three (3) yard line. Coaches (as allowed at the Rookie level only) must be clear of the play. No player may cross the line of scrimmage at any time during the attempt. The ball must be snapped by the center, held and kicked. The holder may move to get the ball. The kicker will have one attempt at kicking the ball once the holder places the ball on the tee. Missing the ball completely, shanking it, or hitting it square is considered an attempt. NO FAKES ALLOWED. If a rule infraction occurs prior to the kick, the kick shall be replayed after the penalty has been assessed; however, offsides and encroachment penalties shall not apply. For a one (1) point attempt, the ball is placed at the three (3) yard line.",
+    text: "If scoring team opts for a two-point attempt (no rush kick): the ball is spotted at the three (3) yard line. Coaches must be clear of the play. No player may cross the line of scrimmage at any time during the attempt. The ball must be snapped by the center, held and kicked. The holder may move to get the ball. The kicker will have one attempt at kicking the ball once the holder places the ball on the tee. Missing the ball completely, shanking it, or hitting it square is considered an attempt. NO FAKES ALLOWED. If a rule infraction occurs prior to the kick, the kick shall be replayed after the penalty has been assessed; however, offsides and encroachment penalties shall not apply. For a one (1) point attempt, the ball is placed at the three (3) yard line.",
     keywords: ["rookie pat", "no rush kick", "fake kick", "extra point rookie", "tee", "shank", "one attempt"]
   },
   {
     id: "II-6-ef", cite: "Part II §6.e–f", category: "8-player",
     title: "8-player: no field goals, no kickoffs",
-    levels: ["rookie"],
+    levels: ["rookie", "cub"],
     answer: "No field goals and no kickoff play. Offense starts at its own 35. Onside-kick alternative: 4th and 10 from your own 25. Punts exist (free punt, no return) and are subject to the substitution rule.",
     text: "There is no field goal (FG) and no kickoff play. There are still punts (no return), but still subject to the substitution rule. In lieu of kickoffs, the offense starts scrimmage play on their own 35 yard line. Onside kick placement: 4th down & 10 yards from own 25.",
     keywords: ["field goal rookie", "no fg", "kickoff rookie", "start at 35", "onside rookie"]
@@ -386,7 +389,7 @@ const GEJFA_RULES = [
   {
     id: "II-6-g", cite: "Part II §6.g", category: "8-player",
     title: "8-player free punt rule",
-    levels: ["rookie"],
+    levels: ["rookie", "cub"],
     answer: "All punts must be DECLARED to the referee; the clock stops until the ball is punted. Both teams put all 8 within 3 yards of the line (except the punter). The punt may be blocked but NOT returned — it's dead where it stops, even short of the line. No one crosses the line until the ball is punted. Pre-punt infractions: assess and re-punt (offsides/encroachment don't apply).",
     text: "There is a free punt rule in 8 Player Football, and all punts must be declared. If the offensive team wishes to have a free punt, they notify the referee and the referee will notify the other team. The clock then stops until the ball is punted. Both teams must have 8 players within 3 yards of the line of scrimmage, except the punter, and the coaches on the field must stay clear of the punted ball. The ball may be blocked but not returned and is dead where it stops within the field of play, whether or not it crosses the line of scrimmage. No player may cross the line of scrimmage until the ball is punted. If a rule infraction occurs prior to the punt, the punt shall be replayed after the penalty has been assessed; however, offsides and encroachment penalties shall not apply.",
     keywords: ["free punt", "declared punt", "punt return rookie", "blocked punt", "4th down rookie"]
@@ -394,15 +397,23 @@ const GEJFA_RULES = [
   {
     id: "II-6-hi", cite: "Part II §6.h–i", category: "8-player",
     title: "8-player: score management & substitution apply",
-    levels: ["rookie"],
+    levels: ["rookie", "cub"],
     answer: "The 25-point score-management rules apply, with 8-player spots: trailing team starts offense from MIDFIELD; the leading team starts from its own 15. The substitution rule and all other unaltered game-management rules also apply.",
-    text: "The score management rules of paragraph 9 below apply [the rulebook's cross-reference; the Score Management rules are §10]; the trailing team starts offense from midfield, the leading team starts offense from its own 15. The substitution rule of paragraph 7 applies as does any other game management rule not altered by the 8 Player Football format.",
+    text: "The score management rules of paragraph 9 below apply [the rulebook's printed cross-reference; the Score Management rules are now §12]; the trailing team starts offense from mid-field, the leading team starts offense from its own 15. The substitution rule of paragraph 7 [now §8] applies as does any other game management rule not altered by the 8 Player Football format covered in paragraph 6.",
     keywords: ["rookie mercy", "rookie blowout", "own 15", "midfield start"]
+  },
+  {
+    id: "II-11p", cite: "Part II §7", category: "game-day",
+    title: "11-player football — and which format Cubs play",
+    levels: ["all"],
+    answer: "Sophomore, Junior Varsity and Varsity play 11-player football. Before each season the Council votes whether the Cubs play 8-player or 11-player football. Cubs playing 11-player follow ALL 11-player rules, including time per quarter (10 minutes). Rookies play the 8-player format (see Part II §6).",
+    text: "Sophomore, Junior Varsity and Varsity levels will play 11 Player Football. Prior to each season, the Council will take under consideration and will vote to determine whether the Cubs will play 8 Player Football or 11 Player Football. When playing 11 Player Football, Cubs will play by all 11 Player Football rules (including time per quarter).",
+    keywords: ["cubs 8 player or 11 player", "cubs format", "11 man", "eleven player", "council vote cubs", "which level 11 player", "cub quarter length"]
   },
 
   // ---- Substitution rule ----
   {
-    id: "II-7-a", cite: "Part II §7.a", category: "substitution",
+    id: "II-7-a", cite: "Part II §8.a", category: "substitution",
     title: "The substitution rule (empty the bench)",
     levels: ["all"],
     answer: "On EVERY change of possession (fumble, downs, interception, punt), the coach must empty the bench and replace all players on the field, if possible. The new group stays on for FOUR consecutive legal plays (unless possession changes again). After 4 plays, substitute freely — until the next change of possession restarts the cycle.",
@@ -410,7 +421,7 @@ const GEJFA_RULES = [
     keywords: ["empty bench", "four plays", "4 plays", "change of possession", "sub rule", "mandatory substitution", "platoon"]
   },
   {
-    id: "II-7-a3", cite: "Part II §7.a(3)–(5)", category: "substitution",
+    id: "II-7-a3", cite: "Part II §8.a(3)–(5)", category: "substitution",
     title: "Substitution after scores and injuries",
     levels: ["all"],
     answer: "After a touchdown or field goal: free substitution for the try, then the substitution rule RESTARTS at the next scrimmage play. Injured player: free substitution for him; he may return after sitting at least one play. An injury sub doesn't cancel the empty-bench duty at the next change of possession.",
@@ -418,7 +429,7 @@ const GEJFA_RULES = [
     keywords: ["sub after touchdown", "injury substitution", "free sub", "return after injury", "sit one play"]
   },
   {
-    id: "II-7-b", cite: "Part II §7.b", category: "substitution",
+    id: "II-7-b", cite: "Part II §8.b", category: "substitution",
     title: "Injured player on the bench",
     levels: ["all"],
     answer: "An injured player removes his/her helmet and sits on/near the bench. Out for a prolonged period → shoulder pads come off too.",
@@ -426,7 +437,7 @@ const GEJFA_RULES = [
     keywords: ["injured bench", "helmet off injured", "hurt player"]
   },
   {
-    id: "II-7-c", cite: "Part II §7.c", category: "substitution",
+    id: "II-7-c", cite: "Part II §8.c", category: "substitution",
     title: "Every player plays at least 12 plays",
     levels: ["all"],
     answer: "ALL players — including those being disciplined for part of the game — must play at least TWELVE plays from scrimmage during the game. The Council's intent is equitable playing time for everyone.",
@@ -434,7 +445,7 @@ const GEJFA_RULES = [
     keywords: ["minimum plays", "12 plays", "twelve plays", "playing time", "equal time", "kid didn't play"]
   },
   {
-    id: "II-7-d", cite: "Part II §7.d", category: "substitution",
+    id: "II-7-d", cite: "Part II §8.d", category: "substitution",
     title: "Substitution rule violations",
     levels: ["all"],
     answer: "After Grievance review: possible forfeiture and coach suspension/termination. The club can land on 'Substitution Rule Probation' for the rest of this season plus ALL of next season; violating while on probation usually means automatic forfeit (even if the violation didn't affect the outcome) and possible playoff ineligibility. Even violating the SPIRIT of the rule can draw discipline.",
@@ -444,7 +455,7 @@ const GEJFA_RULES = [
 
   // ---- Kickoffs & PAT ----
   {
-    id: "II-8", cite: "Part II §8", category: "kickoffs-pat",
+    id: "II-8", cite: "Part II §9.a, c", category: "kickoffs-pat",
     title: "No kickoffs — ball starts at the 35",
     levels: ["all"],
     answer: "There are NO kickoffs at any level. The would-be receiving team simply takes the ball at its own 35, 1st and 10. After a safety, the other team takes the ball at the 50.",
@@ -452,7 +463,7 @@ const GEJFA_RULES = [
     keywords: ["kickoff", "no kickoffs", "start at 35", "safety possession", "kick return", "opening kick"]
   },
   {
-    id: "II-8-b", cite: "Part II §8.b", category: "kickoffs-pat",
+    id: "II-8-b", cite: "Part II §9.b", category: "kickoffs-pat",
     title: "Onside 'kick' alternative (late, trailing)",
     levels: ["all"],
     answer: "If the trailing team scores a TD with under 4 minutes left and is STILL behind, it may elect to take the ball at its own 25, 4TH and 10 — the onside-kick substitute. It's a timed down, normal penalties, substitution rule applies, and once declared you can't change your mind. (If still down 25+, score management overrides: ball at the 50, 1st and 10.)",
@@ -460,7 +471,7 @@ const GEJFA_RULES = [
     keywords: ["onside kick", "onside alternative", "4th and 10", "fourth and ten", "under 4 minutes", "comeback", "late game trailing"]
   },
   {
-    id: "II-8-d", cite: "Part II §8.d", category: "kickoffs-pat",
+    id: "II-8-d", cite: "Part II §9.d", category: "kickoffs-pat",
     title: "Penalties on plays before a would-be kickoff",
     levels: ["all"],
     answer: "A foul on any play preceding what would have been a kickoff (e.g., roughing the kicker or unsportsmanlike on a successful PAT) is assessed from the spot of the ball where play is to resume.",
@@ -468,17 +479,25 @@ const GEJFA_RULES = [
     keywords: ["penalty on pat", "unsportsmanlike after score", "roughing kicker", "enforce penalty kickoff"]
   },
   {
-    id: "II-9", cite: "Part II §9", category: "kickoffs-pat",
-    title: "PAT values: kick = 2, run/pass = 1",
+    id: "II-prot", cite: "Part II §10", category: "kickoffs-pat",
+    title: "Kicker or placeholder may set 5+ yards back (all levels)",
     levels: ["all"],
-    answer: "At ALL levels: a PAT conversion KICK is worth TWO points; a run or pass PAT is worth ONE point.",
-    text: "At all levels: a point after touchdown conversion kick will be worth two (2) points. A run or pass PAT will be worth one (1) point.",
-    keywords: ["pat", "extra point", "two point", "conversion", "point after touchdown", "kick worth", "try"]
+    answer: "At every level, on a kick from scrimmage (punts, PATs and field goals), the kicker or placeholder may be at 5 yards or more.",
+    text: "PROTECTION OF THE CENTER AND/OR PLACEHOLDER: At all levels, when kicking during a scrimmage play (e.g., punts, PATs and FGs) the kicker or placeholder may be at 5 yards or more.",
+    keywords: ["protection of the center", "placeholder", "holder", "center protection", "snapper", "5 yards", "kicker distance", "punt depth", "pat holder"]
+  },
+  {
+    id: "II-9", cite: "Part II §11", category: "kickoffs-pat",
+    title: "PAT values: kick = 2, run/pass = 1 (and two straight defensive offsides)",
+    levels: ["all"],
+    answer: "At ALL levels: a PAT conversion KICK is worth TWO points; a run or pass PAT is worth ONE point. New for 2026: if there are two consecutive defensive offside fouls, the penalty is a successful two-point PAT (the book lists this under the kick-PAT paragraph).",
+    text: "At all levels: a point after touchdown conversion kick will be worth two (2) points. If there are two consecutive defensive offside fouls, the penalty will be a successful two point PAT. A run or pass PAT will be worth one (1) point.",
+    keywords: ["pat", "extra point", "two point", "conversion", "point after touchdown", "kick worth", "try", "offside pat", "two offsides", "consecutive offside", "defensive offside"]
   },
 
   // ---- Score management ----
   {
-    id: "II-10-a", cite: "Part II §10.a", category: "score-mgmt",
+    id: "II-10-a", cite: "Part II §12.a", category: "score-mgmt",
     title: "Down 25+? Take the ball",
     levels: ["all"],
     answer: "Any team behind by 25+ points — even right after scoring, or at the start of the second half — may ELECT to take possession of the ball.",
@@ -486,7 +505,7 @@ const GEJFA_RULES = [
     keywords: ["down 25", "take possession", "keep ball", "behind by 25", "elect possession"]
   },
   {
-    id: "II-10-b", cite: "Part II §10.b", category: "score-mgmt",
+    id: "II-10-b", cite: "Part II §12.b", category: "score-mgmt",
     title: "The 32-Point Rule and 25-point protocol",
     levels: ["all"],
     answer: "It is the intent and spirit of the Council that no team defeat — or at any point lead — an opponent by more than 32 points. At 25+ ahead, either coach may call a league timeout to discuss protocol, and special possession rules kick in: after a score creating the gap, the TRAILING team takes the ball at the 50 (no kickoff); when the trailing team gains possession it starts at the 50 (or the spot if inside the opponent's 50); when the LEADING team takes possession outside its own 20, the ball moves BACK to its 20.",
@@ -494,7 +513,7 @@ const GEJFA_RULES = [
     keywords: ["32 point rule", "mercy rule", "mercy", "blowout", "running up score", "25 points", "lead cap", "50 yard line start", "back to 20"]
   },
   {
-    id: "II-10-b2d", cite: "Part II §10.b(2)(d)", category: "score-mgmt",
+    id: "II-10-b2d", cite: "Part II §12.b(2)(d)", category: "score-mgmt",
     title: "Leading team pinned inside the 20 → ball flips",
     levels: ["all"],
     answer: "While up 25+: if at the end of any play the leading team's next snap would be at or inside the TRAILING team's 20-yard line, possession immediately flips to the trailing team at the 50. Also, no penalty (even a mandatory one) may advance the ball to/inside the 20 without first giving the leading team the choice to decline.",
@@ -502,7 +521,7 @@ const GEJFA_RULES = [
     keywords: ["red zone give up ball", "inside 20", "flip possession", "20 yard line rule", "cant score"]
   },
   {
-    id: "II-10-b2e", cite: "Part II §10.b(2)(e)–(g)", category: "score-mgmt",
+    id: "II-10-b2e", cite: "Part II §12.b(2)(e)–(g)", category: "score-mgmt",
     title: "Running clock",
     levels: ["all"],
     answer: "A 25+ point gap at the start of the 4th quarter (or any time in the 4th) = running clock, stopped only for injuries or timeouts. Both coaches can agree to a running clock at ANY time. If the gap drops below 25, regular play resumes — but once a running clock, ALWAYS a running clock.",
@@ -510,7 +529,7 @@ const GEJFA_RULES = [
     keywords: ["running clock", "continuous clock", "clock rules blowout", "4th quarter clock"]
   },
   {
-    id: "II-10-c", cite: "Part II §10.c", category: "score-mgmt",
+    id: "II-10-c", cite: "Part II §12.c", category: "score-mgmt",
     title: "Penalties for violating the 32-point rule",
     levels: ["all"],
     answer: "Exceed a 32-point lead OFFENSIVELY → head coach automatically suspended for the next game (no hearing needed). Exceed it on a DEFENSIVE score → coach meets the Grievance Committee before the next game. Win by MORE than 38 in any situation → automatic next-game suspension. Suspended = zero team contact on game day. A SECOND 32-point violation (or violating the no-contact rule) = suspended for the season, no appeal.",
@@ -518,7 +537,7 @@ const GEJFA_RULES = [
     keywords: ["won by too much", "38 points", "suspension 32", "beat by 40", "margin of victory", "auto suspension"]
   },
   {
-    id: "II-10-d", cite: "Part II §10.d", category: "score-mgmt",
+    id: "II-10-d", cite: "Part II §12.d", category: "score-mgmt",
     title: "Point differential never matters for standings",
     levels: ["all"],
     answer: "Margin of victory has NO effect on standings or playoff seeding — ever.",
@@ -528,15 +547,15 @@ const GEJFA_RULES = [
 
   // ---- Playoffs, ties, scheduling ----
   {
-    id: "II-11-b", cite: "Part II §11.b", category: "playoffs",
+    id: "II-11-b", cite: "Part II §13.b", category: "playoffs",
     title: "Seeding shootout format (pre-playoff tiebreaker)",
     levels: ["all"],
-    answer: "When a shootout must break a standings tie: coin toss for possession choice (team traveling farthest = visitor). Each team gets 1st-and-10 from the 20; if still tied, from the 10, repeating from the 10 until decided. TDs include a PAT try. Substitution rule applies (empty bench on any change of hands), one timeout per session. Three-way tie: coin toss gives one team a bye, then series play per rule 11.b(1).",
-    text: "If a tie breaker format is needed to determine team seeding for playoff games: For a three-way tie, a coin toss will determine which team will be awarded a first-round bye (detailed series procedures per §11.b(1)(a)–(b)). A coin toss will determine which team gets choice of possession. For purposes of the coin toss, the team traveling the farthest will be the visiting team. Each team will have a 1st and 10 from the 20 yard line; if this session ends in a tie, then another session of 1st and 10 from the 10 yard line; if this results in a tie, then play will continue subsequent sessions from the 10 yard line until a winner is decided. If a touchdown is scored, the point after touchdown will be tried. The substitution rule is in effect throughout except when the ball changes hands the coach must again empty his bench for a minimum of four consecutive plays. Each team will have one timeout per complete session.",
+    answer: "When a shootout must break a standings tie: coin toss for possession choice (team traveling farthest = visitor). Each team gets 1st-and-10 from the 20; if still tied, from the 10, repeating from the 10 until decided. TDs include a PAT try. Substitution rule applies (empty bench on any change of hands), one timeout per session. Three-way tie: coin toss gives one team a bye, then series play per rule 13.b(1).",
+    text: "If a tie breaker format is needed to determine team seeding for playoff games: For a three-way tie, a coin toss will determine which team will be awarded a first-round bye (detailed series procedures per §13.b(1)(a)–(b)). A coin toss will determine which team gets choice of possession. For purposes of the coin toss, the team traveling the farthest will be the visiting team. Each team will have a 1st and 10 from the 20 yard line; if this session ends in a tie, then another session of 1st and 10 from the 10 yard line; if this results in a tie, then play will continue subsequent sessions from the 10 yard line until a winner is decided. If a touchdown is scored, the point after touchdown will be tried. The substitution rule is in effect throughout except when the ball changes hands the coach must again empty his bench for a minimum of four consecutive plays. Each team will have one timeout per complete session.",
     keywords: ["shootout", "seeding tiebreaker", "three way tie", "coin toss seed", "from the 20"]
   },
   {
-    id: "II-11-c", cite: "Part II §11.c–d", category: "playoffs",
+    id: "II-11-c", cite: "Part II §13.c–d", category: "playoffs",
     title: "Overtime in playoff games",
     levels: ["all"],
     answer: "Playoff game tied after regulation: coin toss for possession choice; each team gets 1st-and-10 from the 10; still tied → 1st-and-goal from the 5, repeating from the 5 until decided. TDs get a PAT try; substitution rule stays in effect. CHAMPIONSHIP games: same format, but after TWO full tiebreak sessions still tied, the game ENDS as a tie.",
@@ -544,7 +563,7 @@ const GEJFA_RULES = [
     keywords: ["overtime", "ot", "tied game", "playoff tie", "championship tie", "extra period", "from the 10"]
   },
   {
-    id: "II-12", cite: "Part II §12", category: "game-day",
+    id: "II-12", cite: "Part II §14", category: "game-day",
     title: "Interrupted games (weather, lightning, lights)",
     levels: ["all"],
     answer: "Resume as soon as safe — same day if possible. If not, report to the League President and scheduler by end of game day; resumption is typically the following Tuesday or Wednesday evening, from the exact point of interruption (per HS rules) — unless both teams agree to end it with the existing score. If the score is lopsided, terminating is encouraged; if teams can't agree, the League rules.",
@@ -552,7 +571,7 @@ const GEJFA_RULES = [
     keywords: ["lightning", "weather delay", "suspended game", "resume game", "storm", "lights out", "postponed"]
   },
   {
-    id: "II-13-abc", cite: "Part II §13.a–c", category: "protests",
+    id: "II-13-abc", cite: "Part II §15.a–c", category: "protests",
     title: "Protesting a game / an official's call",
     levels: ["all"],
     answer: "You CANNOT protest a judgment call. You CAN protest an official's INTERPRETATION of a game or association rule: written protest from the head coach, with Club Director concurrence, to the GEJFA President by 8:00 AM Monday after the game.",
@@ -560,7 +579,7 @@ const GEJFA_RULES = [
     keywords: ["protest game", "bad call", "wrong rule", "referee mistake", "monday 8am", "file protest"]
   },
   {
-    id: "II-13-e", cite: "Part II §13.e", category: "protests",
+    id: "II-13-e", cite: "Part II §15.e", category: "protests",
     title: "Protesting a substitution violation (exact procedure)",
     levels: ["all"],
     answer: "In-game: ask the officials for an official's timeout to discuss a league rule; at midfield tell the opposing coach, \"You are violating the league substitution rule,\" and specify exactly how; try to resolve it. If it happens AGAIN: repeat, adding that a formal protest will go to the Grievance Committee — then drop it for the rest of the game and file a written protest (via Club Director) to the President by 8 AM Monday. Family members cannot protest. Skipping the procedure forfeits the protest (though the committee can still act on its own).",
@@ -568,7 +587,7 @@ const GEJFA_RULES = [
     keywords: ["substitution protest", "not subbing", "other team not substituting", "protest procedure", "official timeout rule discussion"]
   },
   {
-    id: "II-14-a", cite: "Part II §14 (Schedules)", category: "playoffs",
+    id: "II-14-a", cite: "Part II §16.a–b (Schedules)", category: "playoffs",
     title: "Season format and standings points",
     levels: ["all"],
     answer: "8-game regular season in two Conferences (split into Divisions if >20 teams at the level). Standings: WIN = 2 points, TIE = 1, LOSS = 0. Everyone plays at least 9 games (8 + a playoff or matchup game in week 9) — except at levels with an odd number of teams, where a weekly bye exists; the week-9 bye goes to a team that hasn't already had one. Non-counting games (bye-balancing) don't affect standings but CAN be used for tiebreakers.",
@@ -576,7 +595,7 @@ const GEJFA_RULES = [
     keywords: ["standings", "points for win", "how many games", "conference", "division", "schedule", "season format"]
   },
   {
-    id: "II-14-c", cite: "Part II §14.c", category: "playoffs",
+    id: "II-14-c", cite: "Part II §16.c", category: "playoffs",
     title: "Can't field a team? Forfeit notice deadlines",
     levels: ["all"],
     answer: "If you can't field a team for a scheduled game, give notice on the SUNDAY before the game so options can be considered; final decision by WEDNESDAY before the game.",
@@ -584,15 +603,15 @@ const GEJFA_RULES = [
     keywords: ["forfeit", "cant field team", "not enough players", "cancel game", "notice deadline"]
   },
   {
-    id: "II-14-d", cite: "Part II §14.d", category: "playoffs",
+    id: "II-14-d", cite: "Part II §16.d–g", category: "playoffs",
     title: "Playoff structure: Gold, Silver, Consolation",
     levels: ["all"],
-    answer: "Playoffs and matchup games start week 9. GOLD: top 4 per Conference (by record; with two Divisions, division winners seed #1–2) → quarterfinal, semifinal, championship (bracket in Appendix C). SILVER: next 2 teams per Conference → semifinal (week 9), championship (week 10). Everyone else gets a CONSOLATION matchup with a similar-record team — every attempt is made to avoid a rematch. Quarterfinals aim for the high seed's home field; semis and championships at Council-designated fields.",
-    text: "At each playing level, the playoffs and match-up games will start in week nine. Gold Tournament: the top four teams from each Conference make the Gold playoffs, progressing through a quarter final, semi-final and final per Appendix C (with two Divisions per Conference, the top team in each Division is seeded #1 and #2, next two by record are #3 and #4). Silver Tournament: the next two teams with best win/loss record in each Conference play a semi-final (week 9, conference teams play each other) and the winners play for the Silver Championship (week 10). Consolation: all remaining teams are paired with teams of similar win/loss records for one additional game in week nine, avoiding rematches where possible. Quarter final games are scheduled on the highest seed's home field as best as possible; semi-finals and Championship games are played at predetermined fields decided by the Council.",
+    answer: "Playoffs and matchup games start week 9. GOLD: top 4 per Conference (by record; with two Divisions, division winners seed #1–2) → quarterfinal, semifinal, championship (bracket in Appendix B). SILVER: next 2 teams per Conference → semifinal (week 9), championship (week 10). Everyone else gets a CONSOLATION matchup with a similar-record team — every attempt is made to avoid a rematch. If a level has an odd number of teams, one matchup team has a bye and a week-10 matchup game may be arranged at that bye team's request. Quarterfinals aim for the high seed's home field; semis and championships at Council-designated fields.",
+    text: "At each playing level, the playoffs and match-up games will start in week nine. Gold Tournament: the top four teams from each Conference make the Gold playoffs, progressing through a quarter final, semi-final and final per Appendix B (with two Divisions per Conference, the top team in each Division is seeded #1 and #2, next two by record are #3 and #4). Silver Tournament: the next two teams with best win/loss record in each Conference play a semi-final (week 9, conference teams play each other) and the winners play for the Silver Championship (week 10). If a team cannot play in week 9 it must tell the league as soon as possible; the one exception is an odd number of teams at a level, where one matchup team has a bye and a matchup game in week 10 may be arranged (per the bye team's request). Consolation: all remaining teams are paired with teams of similar win/loss records for one additional game in week nine, avoiding rematches where possible. Quarter final games are scheduled on the highest seed's home field as best as possible; semi-finals and Championship games are played at predetermined fields decided by the Council.",
     keywords: ["playoffs", "gold tournament", "silver tournament", "consolation", "bracket", "who makes playoffs", "week 9", "seeding"]
   },
   {
-    id: "II-14-e", cite: "Part II §14.e", category: "playoffs",
+    id: "II-14-e", cite: "Part II §16.j", category: "playoffs",
     title: "Breaking standings ties for seeding",
     levels: ["all"],
     answer: "Tied records seed by: (1) head-to-head result; (2) if that doesn't settle it, a coin toss (GEJFA scheduler + President) — EXCEPT a tie for the LAST playoff spot uses the on-field shootout format (held by the Tuesday after the last regular-season game). A team may also voluntarily take the lower seed. In a three-way tie, the two remaining teams are seeded first by head-to-head record, then by coin toss.",
@@ -600,7 +619,7 @@ const GEJFA_RULES = [
     keywords: ["head to head", "seeding tie", "coin flip seed", "last playoff spot", "tied record"]
   },
   {
-    id: "II-14-f", cite: "Part II §14.f–g", category: "playoffs",
+    id: "II-14-f", cite: "Part II §16.k–l", category: "playoffs",
     title: "Extra games and non-GEJFA opponents",
     levels: ["all"],
     answer: "Two GEJFA teams may agree to play, make field arrangements, and notify the President and scheduler — the Club Director must notify the scheduler by 6 PM on the Sunday before the game. Playing a NON-GEJFA team: the Club Director must review the opponent's roster (birth dates + weights) to confirm no players exceed GEJFA formula point totals. Bye-week inter-league or practice games are allowed subject to Council review.",
@@ -646,9 +665,9 @@ const GEJFA_RULES = [
     id: "I-7-d", cite: "Part I §7.d", category: "eligibility",
     title: "Roster sizes and team splits",
     levels: ["all"],
-    answer: "Recommended 22+ per team. Single team at Soph/JV/Varsity: 14–33 players (Varsity: 20+ strongly encouraged). 8-player levels: 11–21. Teams must accept up to 26 players (21 at 8-player) in application order before turning anyone away; registration may close after June 30. Split thresholds (min/max before splitting): Rookie 11/21 · Cub 16/31 · Soph 17/33 · JV 18/35 · Varsity 20/35. Splits must be EQUAL (numbers/skill/size/age — geographic split by school boundary qualifies) and Council-approved before implementation.",
-    text: "The GEJFA Council recommends at least 22 players per team. Single team at Sophomore, Junior Varsity or Varsity: minimum 14, maximum 33 (unless exceptions approved). At Varsity, a minimum squad size of twenty (20) is strongly encouraged. At 8 Player Football levels the minimum is 11 rostered players and the maximum is 21. Each team must take up to 26 (21 at 8 Player levels) players in order of application before being considered full. Franchised Clubs may close registration after June 30 without regard to number of players and may do so earlier when approved by vote of the JFC. A Club may divide ('split') a team when the roster exceeds the division's maximum: Rookie 11–21, Cub 16–31, Sophomore 17–33, Junior Varsity 18–35, Varsity 20–35 (Varsity may result in sending 4 players to another Club). 'Equal' means parity of numbers, skill, size, age, etc.; a geographic split by school boundaries satisfies equity. Split method must be approved by the GEJFA Council prior to implementation; splits at multiple levels must be done in a like manner.",
-    keywords: ["roster size", "squad limit", "split team", "max players", "min players", "too many kids", "waiting list"]
+    answer: "Recommended 22+ per team. Single team at an 11-player level (Cubs when so determined, Sophomore, JV, Varsity): 14–33 players (Varsity: 20+ strongly encouraged). 8-player levels (Rookies, and Cubs when the Council puts them at that level): 11–21. Teams must accept up to 26 players (21 at 8-player) in application order before turning anyone away; registration may close after June 30. Split thresholds (min/max before splitting): Rookie 11/21 · Cub 16/31 (but the same as Rookie — 11/21 — when Cubs are assigned to the 8-player level) · Soph 17/33 · JV 18/35 · Varsity 20/35. Splits must be EQUAL (numbers/skill/size/age — geographic split by school boundary qualifies) and Council-approved before implementation.",
+    text: "The GEJFA Council recommends at least 22 players per team. Single team at any 11 player playing level (i.e., Cubs when so determined, Sophomore, Junior Varsity and Varsity): minimum 14, maximum 33 (unless exceptions approved). At Varsity, a minimum squad size of twenty (20) is strongly encouraged. At the 8 Player Football levels (i.e., Rookies and Cubs when determined by Council to be at this level) the minimum is 11 rostered players and the maximum is 21. Each team must take up to 26 (21 at 8 Player levels) players in order of application before being considered full. Franchised Clubs may close registration after June 30 without regard to number of players and may do so earlier when approved by vote of the JFC. A Club may divide ('split') a team when the roster exceeds the division's maximum: Rookie 11–21, Cub 16–31 (Note 1: when Cubs are assigned to the 8 player level then the minimum and maximum shall be the same as Rookies), Sophomore 17–33, Junior Varsity 18–35, Varsity 20–35 (Note 2: Varsity may result in having to send 4 players to another franchised Club). 'Equal' means parity of numbers, skill, size, age, etc.; a geographic split by school boundaries satisfies equity. Split method must be approved by the GEJFA Council prior to implementation; splits at multiple levels must be done in a like manner.",
+    keywords: ["roster size", "squad limit", "split team", "max players", "min players", "too many kids", "waiting list", "cub roster size"]
   },
   {
     id: "I-8", cite: "Part I §8", category: "game-day",
@@ -686,8 +705,8 @@ const GEJFA_RULES = [
     id: "APP-A", cite: "Appendix A", category: "discipline",
     title: "Progressive discipline points for clubs",
     levels: ["all"],
-    answer: "Confirmed violations earn a club points: Health/Safety/Ethics 1–4 · Rules 1–3 · Administrative 1–2 (individuals involved can also be suspended). Points accumulate over a season: 4 points = the club appears before the Grievance Committee; 8 points = recommended sanctions (playoff disqualification, probation, etc.). Some violations carry automatic one-game suspensions (player/coach ejection, 2nd+ late game report); some carry automatic forfeiture after review (altered rosters / illegal player, no approved game roster).",
-    text: "Violations are classified into: (1) Health, Safety and Ethics (1–4 points), (2) Rules (1–3 points), (3) Administrative Requirements (1–2 points), issued to the club by the Grievance Committee based on severity; involved individuals are also subject to penalty such as suspension. Points are cumulative. At 4 total points in a season, the club must appear before the Grievance Committee. At 8 points, the Committee will recommend sanctions to the council that may include playoff disqualification, probation, etc. Certain violations carry an automatic one game suspension without further review (e.g., player ejection unless appealed per Appendix B, coach ejection, late game report — 2nd and subsequent violations, as the 1st equals club probation). With the exception of a player ejection, these also require appearance before the Grievance Committee before returning to coaching. Certain violations, after review, carry automatic game forfeiture: altered game rosters (playing an illegal player), failure to produce an approved game roster.",
+    answer: "Confirmed violations earn a club points: Health/Safety/Ethics 1–4 · Rules 1–3 · Administrative 1–2 (individuals involved can also be suspended). Points accumulate over a season: 4 points = the club appears before the Grievance Committee; 8 points = recommended sanctions (playoff disqualification, probation, etc.). Some violations carry automatic one-game suspensions (coach ejection, 2nd+ late game report — Appendix A still lists 'player ejection unless appealed per Appendix B', but under 2026 Part II §3.d players serve the four-quarter ejection suspension and ejections cannot be appealed); some carry automatic forfeiture after review (altered rosters / illegal player, no approved game roster).",
+    text: "Violations are classified into: (1) Health, Safety and Ethics (1–4 points), (2) Rules (1–3 points), (3) Administrative Requirements (1–2 points), issued to the club by the Grievance Committee based on severity; involved individuals are also subject to penalty such as suspension. Points are cumulative. At 4 total points in a season, the club must appear before the Grievance Committee. At 8 points, the Committee will recommend sanctions to the council that may include playoff disqualification, probation, etc. Certain violations carry an automatic one game suspension without further review (e.g., player ejection unless appealed per the policy in Appendix B [as printed — the 2026 Part II §3.d says there is no appeal], coach ejection, late game report — 2nd and subsequent violations, as the 1st equals club probation). With the exception of a player ejection, these also require appearance before the Grievance Committee before returning to coaching. Certain violations, after review, carry automatic game forfeiture: altered game rosters (playing an illegal player), failure to produce an approved game roster.",
     keywords: ["discipline points", "club points", "progressive discipline", "sanctions", "late report penalty", "altered roster"]
   },
   {
@@ -697,6 +716,14 @@ const GEJFA_RULES = [
     answer: "GEJFA is made of independent franchised clubs (aligned to public HS boundaries), governed by the Junior Football Council (one vote per club). The Grievance Committee (3+ members, President-appointed) reviews ejections, protests, and violations; on coach ejections its decision is final unless appealed to the JFC. Rule amendments need a 2/3 vote of clubs, proposed in writing 2 weeks ahead.",
     text: "GEJFA is composed of the various independent franchised football Clubs voted into membership, directed through the Junior Football Council (JFC). In JFC voting, each franchised Club has one vote. There shall be a standing Grievance Committee of at least three Council members appointed by the President and approved by the JFC; a member is replaced when a case involves a team from that member's Club or there is a conflict of interest. The committee reviews all coach ejections and other matters as directed; on coach ejection, the committee's decisions are final unless appealed to the JFC. The rules and regulations may be amended by at least a two-thirds vote of the total membership of the JFC, with proposals submitted in writing at least two weeks before the meeting.",
     keywords: ["grievance committee", "jfc", "council", "who decides", "league structure", "amend rules"]
+  },
+  {
+    id: "I-5-f", cite: "Part I §5.f, §6.c(1)", category: "game-day",
+    title: "Who assigns the game officials (Northwest Sports Officials)",
+    levels: ["all"],
+    answer: "Since 2024 GEJFA has contracted with Northwest Sports Officials to assign game officials, so clubs no longer have to recruit officials, and the Referee's Coordinator position is currently not needed (there is no separate officials program within GEJFA). The 2026 book still prints the clubs' annual recruiting quota right after that note: clubs with up to 7 teams recruit two new officials, 8–10 teams at least three, 11+ teams at least four; short by August 15 = $1350 per official short; short by August 31 = also provide coaches to fill the requirement; replace a recruited official who quits mid-season promptly.",
+    text: "In 2024, GEJFA first contracted with Northwest Sports Officials for assignment of game officials, thus eliminating the need for each Club to recruit game officials. Each year, each franchised Club shall recruit new game officials as follows: Clubs having up to 7 teams shall recruit two new officials; Clubs with 8 to 10 teams shall recruit at least three new officials; and Clubs with 11 or more teams shall recruit at least four new officials. If a Club fails to recruit the required number of game officials by August 15 each year, it will be subject to a monetary penalty of $1350 for each official they are short of those required. If a Club fails to recruit the required number of game officials by August 31 each year, the Club shall provide coaches to fulfill the requirement. If during the season a game official who is one of those fulfilling the requirements of this paragraph, quits, the Club shall provide prompt replacement or suffer the penalties referenced above. REFEREE'S COORDINATOR is currently not needed due to contract with Northwest Sports Officials. There is no longer a separate officials program within GEJFA.",
+    keywords: ["northwest sports officials", "nwso", "who assigns officials", "official assignment", "recruit new officials", "1350 penalty", "referee coordinator", "officials program"]
   },
 
 ];

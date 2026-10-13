@@ -4,7 +4,7 @@ import type { IFlow, IFlowCallout } from "../types.js";
    situation to "the call" with no AI. Pure data module: no DOM/browser APIs.
 
    Every callout cites a rule id from rules.js, and its wording is the rulebook's
-   own language (Part II §1, §6, §8, §9, §10 — near-verbatim, meaning-identical
+   own language (Part II §1, §6, §9, §11, §12 — near-verbatim, meaning-identical
    condensation only) so nothing here can drift from the audited baseline. The
    arithmetic (which scores stay at or under 32) lives in flows.js. */
 
@@ -18,7 +18,8 @@ export const GEJFA_FLOWS: IFlow[] = [
       { id: "lvl", kind: "choice", prompt: "Which level?",
         options: [
           { id: "rookie",  label: "Rookie (8-player)" },
-          { id: "cub",     label: "Cub" },
+          { id: "cub8",    label: "Cub (8-player)" },
+          { id: "cub",     label: "Cub (11-player)" },
           { id: "soph",    label: "Sophomore" },
           { id: "jv",      label: "Junior Varsity" },
           { id: "varsity", label: "Varsity" },
@@ -63,7 +64,7 @@ export const GEJFA_FLOW_CALLOUTS: Record<string, IFlowCallout> = {
   "inside-20-penalty": { ruleId: "II-10-b2d", tone: "note", heading: "Penalties into the 20 may be declined",
     text: "The ball may not be advanced to or inside the 20 yard line by any penalty (including those that are mandatory) without first giving the leading team a choice to decline." },
   "rookie-spots": { ruleId: "II-6-hi", tone: "note", heading: "8-player spots: midfield and own 15",
-    text: "8-player (Rookie): the score management rules apply; the trailing team starts offense from midfield, and the leading team starts offense from its own 15." },
+    text: "8-player (Rookie, or Cubs at the 8-player level): the score management rules apply; the trailing team starts offense from midfield, and the leading team starts offense from its own 15." },
   "running-clock": { ruleId: "II-10-b2e", tone: "note", heading: "Running clock",
     text: "At the beginning of the 4th quarter, or at such time in the 4th quarter that a 25 point or more score differential exists, the game clock goes to a running clock and is stopped only for injuries or time outs. Once a running clock, always a running clock." },
   "running-clock-agree": { ruleId: "II-10-b2e", tone: "note", heading: "Running clock by agreement",
@@ -93,7 +94,7 @@ export const GEJFA_FLOW_CALLOUTS: Record<string, IFlowCallout> = {
   "pat-values": { ruleId: "II-9", tone: "note", heading: "PAT values",
     text: "At all levels: a point after touchdown conversion kick will be worth two (2) points. A run or pass PAT will be worth one (1) point." },
   "no-fg-rookie": { ruleId: "II-6-ef", tone: "stop", heading: "8-player: no field goals",
-    text: "8-player (Rookie): there is no field goal (FG) and no kickoff play. There are still punts (no return), but still subject to the substitution rule." },
+    text: "8-player (Rookie, or Cubs at the 8-player level): there is no field goal (FG) and no kickoff play. There are still punts (no return), but still subject to the substitution rule." },
   "pat-after-def-td": { ruleId: "II-1", tone: "note", heading: "PAT after a defensive touchdown",
     text: "The GEJFA rulebook does not say whether a PAT following a defensive touchdown counts as an offensive or a defensive score. Where the GEJFA book is silent, NFHS rules apply." },
   "nfhs": { ruleId: "II-1", tone: "note", heading: "Everything else",

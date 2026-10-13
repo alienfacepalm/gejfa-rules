@@ -47,7 +47,7 @@ export const GEJFA_SYNONYMS: TSynonymMap = {
 
   // discipline
   "ejected":    ["ejection", "disqualified", "suspension"],
-  "ejection":   ["disqualified", "suspension", "appeal"],
+  "ejection":   ["disqualified", "suspension"],
   "dq":         ["disqualified", "ejection"],
   "tossed":     ["ejected", "disqualified"],
   "flagrant":   ["ejection", "disqualified"],

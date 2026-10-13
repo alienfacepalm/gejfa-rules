@@ -205,7 +205,7 @@ const html = `<title>Spartans Rules Film Room</title>
 
 <div class="wrap">
   <header class="mast">
-    <p class="kicker">Skyline Spartans · GEJFA Rules 2025 · ${esc(m.version)}</p>
+    <p class="kicker">Skyline Spartans · GEJFA Rules 2026 · ${esc(m.version)}</p>
     <h1>Film Room</h1>
     <p class="sub">One continuous session in a real headless browser at phone size. Every frame below was reached by tapping, typing and reloading the live app; each carries the sideline use case it serves and the checks the run made against the DOM.</p>
   </header>

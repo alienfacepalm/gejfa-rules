@@ -248,7 +248,7 @@ D["II-11-b"] = flow([
   { t: "1 TIMEOUT", sub: "per session" },
 ], "For seeding ties that require a shootout — e.g., the last playoff spot.");
 
-// Playoff structure — Gold bracket per Appendix C (one-division format):
+// Playoff structure — Gold bracket per Appendix B (one-division format):
 // QF: A1 v B4, B2 v A3, B1 v A4, A2 v B3 → two SFs → Championship.
 D["II-14-d"] = (function () {
   function seed(x: number, y: number, t: string, w?: number): string {
@@ -287,7 +287,7 @@ D["I-9-fgh"] = flow([
 
 // Quarter lengths
 D["II-5-d"] = (function () {
-  const rows: [string, number][] = [["ROOKIE", 8], ["CUB", 8], ["SOPH", 10], ["JV", 10], ["VARSITY", 10]];
+  const rows: [string, number][] = [["ROOKIE", 8], ["CUB (8P)", 8], ["CUB (11P)", 10], ["SOPH", 10], ["JV", 10], ["VARSITY", 10]];
   let s = "";
   rows.forEach((r, i) => {
     const y = 12 + i * 22;
@@ -295,8 +295,8 @@ D["II-5-d"] = (function () {
     s += `<rect x="94" y="${y}" width="${r[1] * 18}" height="15" class="dgm-bar"/>`;
     s += `<text x="${98 + r[1] * 18}" y="${y + 12}" class="dgm-small">${r[1]} min</text>`;
   });
-  s += `<text x="${W / 2}" y="136" class="dgm-note" text-anchor="middle">Per quarter · NFHS timing rules otherwise.</text>`;
-  return svgWrap(s, 144);
+  s += `<text x="${W / 2}" y="158" class="dgm-note" text-anchor="middle">Per quarter · Council votes each season: Cubs play 8-player or 11-player.</text>`;
+  return svgWrap(s, 166);
 })();
 
 interface ICaseRow { ifT: string; ifSub?: string; thenT: string; thenSub?: string; }
@@ -349,18 +349,17 @@ function bars(rows: IBarRow[], maxVal: number, note?: string, unit?: string): st
 
 // Ejection consequences
 D["II-3-c"] = cases([
-  { ifT: "EJECTED", ifSub: "player or coach", thenT: "NEXT GAME", thenSub: "automatically out" },
-  { ifT: "2ND EJECTION", ifSub: "same season", thenT: "REST OF SEASON", thenSub: "suspended" },
+  { ifT: "EJECTED COACH", ifSub: "automatically", thenT: "NEXT GAME", thenSub: "out" },
   { ifT: "EJECTED COACH", ifSub: "before return", thenT: "GRIEVANCE CMTE", thenSub: "w/ club president" },
-], "Player ejections from judgment calls may be appealed with video — see Appendix B.");
+  { ifT: "2ND EJECTION", ifSub: "same season", thenT: "REST OF SEASON", thenSub: "suspended" },
+], "Players: four consecutive quarters (Part II §3.d) — no Grievance Committee, no appeal.");
 
-// Player ejection appeal clock (Appendix B)
-D["APP-B"] = timeline([
-  { at: "GAME ENDS", label: "ejection|occurred" },
-  { at: "+24 HRS", label: "board member files|with video" },
-  { at: "+48 HRS", label: "committee|decides" },
-  { at: "FINAL", label: "no further|appeal" },
-], "If the next game comes sooner, the decision comes before kickoff.");
+// Player ejection (Part II §3.d)
+D["II-3-dp"] = cases([
+  { ifT: "EJECTED IN Q2", ifSub: "player", thenT: "BACK IN Q3", thenSub: "of the NEXT game" },
+  { ifT: "EJECTED IN Q4", ifSub: "player", thenT: "OUT NEXT GAME", thenSub: "all four quarters" },
+  { ifT: "2ND EJECTION", ifSub: "same season", thenT: "REST OF SEASON", thenSub: "suspended" },
+], "Four consecutive quarters from the next full quarter · no Grievance Committee · no appeal.");
 
 // Practice limits
 D["I-9-abc"] = bars([
@@ -375,7 +374,7 @@ D["I-7-d"] = bars([
   { label: "SOPH", min: 17, max: 33 },
   { label: "JV", min: 18, max: 35 },
   { label: "VARSITY", min: 20, max: 35 },
-], 36, "Min–max roster before a split · take players in application order up to 26 (21 at 8-player).");
+], 36, "Min–max before a split · Cub = Rookie (11–21) when at 8-player · take players up to 26 (21 at 8-player).");
 
 // Ball specs
 D["II-4-g"] = (function () {
@@ -389,8 +388,9 @@ D["II-4-g"] = (function () {
   s += `<text x="249" y="44" class="dgm-label" text-anchor="middle">JUNIOR</text>`;
   s += `<text x="249" y="62" class="dgm-small" text-anchor="middle">9.5–10.5 in · 25–26 in circ.</text>`;
   s += `<text x="249" y="76" class="dgm-small" text-anchor="middle">11–13 oz</text>`;
-  s += `<text x="${W / 2}" y="106" class="dgm-note" text-anchor="middle">Leather, composite, or rubber — officials give final approval.</text>`;
-  return svgWrap(s, 114);
+  s += `<text x="${W / 2}" y="104" class="dgm-note" text-anchor="middle">Rookies also: 9½ in long · 6 in wide · 10 oz (Size 5 pee-wee).</text>`;
+  s += `<text x="${W / 2}" y="120" class="dgm-note" text-anchor="middle">Leather, composite, or rubber — officials give final approval.</text>`;
+  return svgWrap(s, 128);
 })();
 
 // Standings points
@@ -441,10 +441,10 @@ D["II-2-l"] = flow([
 
 // Officials per game
 D["II-5-h"] = bars([
-  { label: "ROOKIE", val: 2 },
-  { label: "CUB", val: 3 },
+  { label: "8-PLAYER", val: 2 },
+  { label: "CUB (11P)", val: 3 },
   { label: "SOPH/JV/V", val: 4 },
-], 5, "Full crew: 2 at Rookie, 3 at Cub · 3 assigned everywhere, 4th targeted for Soph/JV/V.", " officials");
+], 5, "Full crew: 2 at any 8-player game, 3 at 11-player Cub · 3 assigned everywhere, 4th targeted for Soph/JV/V.", " officials");
 
 // Weigh-in tolerance
 D["II-2-b"] = (function () {

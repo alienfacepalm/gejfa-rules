@@ -90,6 +90,7 @@ GEJFA_RULES.forEach(r => {
 
 const catIds = new Set(GEJFA_CATEGORIES.map(c => c.id));
 const levelIds = new Set(GEJFA_LEVELS.map(l => l.id).concat("all"));
+const LEVEL_VARIANTS = { cub8: "cub" };
 GEJFA_RULES.forEach(r => {
   check(catIds.has(r.category), `rule "${r.id}" has a valid category`, `category: ${r.category}`);
   (r.levels || []).forEach(lv =>
@@ -129,7 +130,8 @@ GEJFA_FLOWS.forEach(f => {
       (s.options || []).forEach(o => {
         check(!optIds.has(o.id) && !!o.label, `flow step "${s.id}" option "${o.id}" is unique with a label`);
         optIds.add(o.id);
-        if (s.id === "lvl") check(levelIds.has(o.id), `flow level option "${o.id}" is a real level`, `unknown level: ${o.id}`);
+        // "cub8" = Cubs at the 8-player level (Council vote, Part II §7.b); it is the `cub` level.
+        if (s.id === "lvl") check(levelIds.has(LEVEL_VARIANTS[o.id] || o.id), `flow level option "${o.id}" is a real level`, `unknown level: ${o.id}`);
       });
     }
     Object.keys(s.skipWhen || {}).forEach(k =>
@@ -243,8 +245,18 @@ anchor("II-10-b", "more than 32 points", "32-point rule cap");
 anchor("II-10-c", "more than 38 points", "38-point auto-suspension threshold");
 anchor("II-8-b", "four (4) minutes", "onside alternative: under 4:00 left");
 anchor("II-8-b", "own 25 yard line", "onside alternative spot: own 25");
-anchor("APP-B", "24 hours", "ejection appeal: 24-hour filing window");
-anchor("APP-B", "48 hours", "ejection appeal: 48-hour decision window");
+anchor("II-3-dp", "four consecutive quarters", "player ejection: suspended four consecutive quarters");
+anchor("II-3-dp", "no path to appeal", "player ejection: no appeal (2026)");
+anchor("II-3-dp", "3rd quarter of the next game", "ejected in Q2: back in Q3 of the next game");
+anchor("II-3-dp", "not eligible to play in the following game", "ejected in Q4: out the following game");
+anchor("II-3-c", "second time in that same season", "second ejection = rest of season");
+anchor("II-prot", "5 yards or more", "kicker/placeholder may be at 5 yards or more");
+anchor("II-9", "two consecutive defensive offside fouls", "two straight defensive offsides on a PAT");
+anchor("II-9", "successful two point PAT", "two straight defensive offsides = successful 2-pt PAT");
+anchor("II-4-g", "6 inches in width", "Rookie ball: 6 in wide");
+anchor("II-5-k", "No more than two videographers", "videographers inside the fence line: max two");
+anchor("II-11p", "vote to determine whether the Cubs will play 8 Player Football or 11 Player Football", "Cubs 8- or 11-player is a Council vote");
+anchor("I-5-f", "Northwest Sports Officials", "officials assigned by Northwest Sports Officials");
 anchor("I-9-abc", "five (5) practice sessions", "practice limit: 5/week pre-Labor Day");
 anchor("I-9-abc", "three (3) practices per week", "practice limit: 3/week after Labor Day");
 anchor("I-9-abc", "two (2) hours", "practice session cap: 2 hours");
@@ -252,8 +264,8 @@ anchor("I-7-b", "two external transfers", "external transfer cap: 2 per level");
 anchor("I-7-b", "five total external", "external transfer cap: 5 total");
 anchor("II-13-abc", "8:00am Monday", "protest deadline: Monday 8 AM");
 anchor("II-14-c", "Sunday", "forfeit notice: Sunday before the game");
-anchor("II-5-d", "8 minute quarters", "8-player/Cub quarter length: 8 minutes");
-anchor("II-5-d", "10 minute quarters", "Soph/JV/Varsity quarter length: 10 minutes");
+anchor("II-5-d", "8 minute quarters", "8-player quarter length: 8 minutes");
+anchor("II-5-d", "10 minute quarters", "11-player quarter length: 10 minutes");
 anchor("II-6-a", "eight (8)", "8-player: 8 players per side");
 anchor("II-6-b", "100 yards", "8-player field length: 100 yards");
 anchor("II-6-b", "35 yards wide", "8-player field width: 35 yards");
@@ -307,6 +319,9 @@ const GAUNTLET = [
   ["cast", "cast"], ["subs", "bench"], ["pat", "pat"], ["onside kick", "onside"],
   ["ejected", "eject"], ["metal cleats", "cleat"], ["8 man punt", "punt"],
   ["missed weight twice", "level"], ["how long quarters", "quarter"], ["lightning", "interrupt"],
+  ["player ejected four quarters", "four"], ["appeal ejection", "no path"],
+  ["two offsides on the pat", "offside"], ["how far back can the holder line up", "5 yards"],
+  ["cubs 8 player or 11 player", "cub"], ["videographers", "videographers"],
 ];
 
 GAUNTLET.forEach(([query, expect]) => {
@@ -324,8 +339,8 @@ GAUNTLET.forEach(([query, expect]) => {
 // ===========================================================================
 // 5. SCORE CHECK FLOW — the resolver's arithmetic and rule selection, pinned
 //    scenario by scenario. Each expectation was hand-checked against Part II
-//    §6.e/§6.h (8-player), §8 (no kickoffs / onside alternative), §9 (PAT
-//    values) and §10 (25 / "more than 32" / "more than 38"). If one of these
+//    §6.e/§6.h (8-player), §9 (no kickoffs / onside alternative), §11 (PAT
+//    values) and §12 (25 / "more than 32" / "more than 38"). If one of these
 //    fails, the app would tell a coach the wrong thing on the sideline.
 // ===========================================================================
 console.log("\n== 5. Score check flow (scenario gauntlet) ==");
@@ -365,6 +380,18 @@ scenario("28-0 Rookie (8-player), we have the ball, 2nd qtr", S(28, 0, "rookie",
   rows: { fg: null, td: [34, false] },
   has: ["no-fg-rookie", "rookie-spots", "inside-20-flip", "lead-back-20", "running-clock-agree"],
   not: ["running-clock"],
+});
+scenario("28-0 Cub (8-player), we have the ball, 2nd qtr — same as Rookie", S(28, 0, "cub8", "ball-us", "early"), {
+  regime: "protocol", headroom: 4,
+  rows: { fg: null, td: [34, false] },
+  has: ["no-fg-rookie", "rookie-spots", "inside-20-flip", "lead-back-20", "running-clock-agree"],
+  not: ["running-clock"],
+});
+scenario("28-0 Cub (11-player), we have the ball, 2nd qtr — field goal allowed", S(28, 0, "cub", "ball-us", "early"), {
+  regime: "protocol", headroom: 4,
+  rows: { fg: [31, true], td: [34, false] },
+  has: ["inside-20-flip", "lead-back-20", "running-clock-agree"],
+  not: ["no-fg-rookie", "rookie-spots", "running-clock"],
 });
 scenario("28-0 Varsity, they have the ball", S(28, 0, "varsity", "ball-them", "q4"), {
   regime: "protocol",

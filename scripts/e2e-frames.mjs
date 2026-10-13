@@ -446,7 +446,7 @@ try {
       t.check("Search box is emptied (flow takes over the view)", (await page.eval("document.getElementById('q').value")) === "");
       t.check("Score chip reads 28–0", includes(await page.text(".flow-chips"), "28–0"), await page.text(".flow-chips"));
       t.check("Current prompt is 'Which level?'", (await page.text(".flow-prompt")) === "Which level?", await page.text(".flow-prompt"));
-      t.check("Five level options", (await page.count(".flow-opt")) === 5);
+      t.check("Six level options (Cub is split into 8-player and 11-player)", (await page.count(".flow-opt")) === 6);
       t.check("URL is ?flow=score&us=28&them=0", (await page.url()) === "?flow=score&us=28&them=0", await page.url());
     });
 
@@ -480,7 +480,7 @@ try {
 
   // 15 ─ level
   await frame("15-flow-step-level", "Score check — Which level?",
-    "The coach enters 28 and 0 and taps Next. The score collapses into a chip (tap it later to change), and the level question shows five large buttons.",
+    "The coach enters 28 and 0 and taps Next. The score collapses into a chip (tap it later to change), and the level question shows six large buttons (Cubs are split into 8-player and 11-player).",
     async (t) => {
       t.step("Type 28 in Us, 0 in Them, tap Next");
       await page.type('input[name="us"]', "28");
@@ -545,7 +545,7 @@ try {
       await page.tap(".flow-call .flow-rule");
       t.check("Rule card expands", await page.visible(".flow-rule-card"));
       t.check("aria-expanded flips to true", (await page.eval("document.querySelector('.flow-rule').getAttribute('aria-expanded')")) === "true");
-      t.check("Shows 'Official rule — Part II §10…'", includes(await page.text(".flow-rule-card .ft-title"), "Official rule"), await page.text(".flow-rule-card .ft-title"));
+      t.check("Shows 'Official rule — Part II §12.b…'", includes(await page.text(".flow-rule-card .ft-title"), "Official rule"), await page.text(".flow-rule-card .ft-title"));
       t.check("'Open this rule ›' offered", await page.exists(".flow-open-rule"));
       await page.scrollTo(".flow-call");
     });
@@ -568,13 +568,13 @@ try {
 
   // 21 ─ open rule from flow
   await frame("21-open-rule-from-flow", "Open this rule → full rule card",
-    "From the inline rule, 'Open this rule' jumps to the complete card for Part II §10 with the eyebrow 'From score check', so the coach knows exactly how they got here.",
+    "From the inline rule, 'Open this rule' jumps to the complete card for Part II §12.b with the eyebrow 'From score check', so the coach knows exactly how they got here.",
     async (t) => {
       t.step("Tap the citation chip, then 'Open this rule ›'");
       await page.tap(".flow-call .flow-rule");
       await page.tap(".flow-open-rule");
       t.check("Single topic view with eyebrow 'From score check'", (await page.text(".card.open .best")) === "From score check", await page.text(".card.open .best"));
-      t.check("Card cites Part II §10", includes(await page.text(".card.open .cite"), "§10"), await page.text(".card.open .cite"));
+      t.check("Card cites Part II §12.b", includes(await page.text(".card.open .cite"), "§12.b"), await page.text(".card.open .cite"));
       t.check("Section diagram rendered for this rule", await page.exists(".card.open .dgm-wrap svg"));
       t.check("URL is a ?doc=rule: deep link", /^\?doc=rule%3AII-10/.test(await page.url()), await page.url());
       t.check("'← All topics' offered", await page.exists(".back-home"));
@@ -590,7 +590,7 @@ try {
       await page.tap(".quick", { text: "Onside option" });
       t.check("Eyebrow repeats the tile label", (await page.text(".card.open .best")) === "Onside option", await page.text(".card.open .best"));
       t.check("Question is the onside situation", includes(await page.text(".card.open .q"), "onside"), await page.text(".card.open .q"));
-      t.check("Cites Part II §8", includes(await page.text(".card.open .cite"), "§8"), await page.text(".card.open .cite"));
+      t.check("Cites Part II §9.b", includes(await page.text(".card.open .cite"), "§9.b"), await page.text(".card.open .cite"));
       t.check("URL is ?doc=sit%3AS-onside", (await page.url()) === "?doc=sit%3AS-onside", await page.url());
     });
 
@@ -668,7 +668,7 @@ try {
       t.step("Type 'overtime' while still offline");
       await page.type("#q", "overtime");
       t.check("Search works offline", (await page.count(".card")) > 0 && includes(await page.text(".card.open .q"), "overtime"), await page.text(".card.open .q"));
-      const pdfOk = await page.eval("fetch('2025-gejfa-rules.pdf').then(r => r.ok).catch(() => false)");
+      const pdfOk = await page.eval("fetch('2026-gejfa-rules.pdf').then(r => r.ok).catch(() => false)");
       t.check("The official PDF is served from the offline cache", pdfOk);
       const fontOk = await page.eval("document.fonts.check('16px Graduate')");
       t.check("Self-hosted display font available offline", fontOk);
@@ -690,7 +690,7 @@ try {
     });
 } finally {
   const manifest = {
-    app: "Skyline Spartans — GEJFA Rules 2025", version: EXPECTED_VERSION, browser, viewport: VIEWPORT, scale: SCALE,
+    app: "Skyline Spartans — GEJFA Rules 2026", version: EXPECTED_VERSION, browser, viewport: VIEWPORT, scale: SCALE,
     startedAt, finishedAt: new Date().toISOString(),
     totals: {
       frames: frames.length,

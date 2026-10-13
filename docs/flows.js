@@ -4,7 +4,7 @@
 
    The only flow today is "score": given the score, the level, what is
    happening, and the quarter/time, it returns the deterministic "call" —
-   which scoring plays keep the lead at or under 32 (Part II §10.b), the
+   which scoring plays keep the lead at or under 32 (Part II §12.b), the
    possession / clock rules in effect, and the consequences of a violation —
    each line tied to a rule id so the official text is one tap away.
 
@@ -18,11 +18,11 @@ function createGejfaFlows({ flows, callouts, rules }) {
   const flowById = {};
   (flows || []).forEach(f => { flowById[f.id] = f; });
 
-  const PROTOCOL_AT = 25; // Part II §10.b(2): "25 or more points"
-  const CAP = 32;         // Part II §10.b: "more than 32 points"
-  const AUTO_SUSPEND = 38; // Part II §10.c(3): "more than 38 points"
+  const PROTOCOL_AT = 25; // Part II §12.b(2): "25 or more points"
+  const CAP = 32;         // Part II §12.b: "more than 32 points"
+  const AUTO_SUSPEND = 38; // Part II §12.c(3): "more than 38 points"
 
-  // Scoring plays and their values (Part II §9: kick PAT = 2, run/pass PAT = 1).
+  // Scoring plays and their values (Part II §11: kick PAT = 2, run/pass PAT = 1).
   const OFFENSE_ROWS = [
     { id: "fg",      label: "Field goal",        pts: 3, elevenOnly: true }, // no FG in 8-player (§6.e)
     { id: "td",      label: "Touchdown",         pts: 6 },
@@ -106,7 +106,9 @@ function createGejfaFlows({ flows, callouts, rules }) {
     const us = a.us, them = a.them;
     const lead = us - them;
     const abs = Math.abs(lead);
-    const rookie = a.lvl === "rookie";
+    // `rookie` = "plays the 8-player format": Rookies always, and Cubs when the Council has put them
+    // at 8-player (Part II §6, §7.b) — the "cub8" level option.
+    const rookie = a.lvl === "rookie" || a.lvl === "cub8";
     const sit = a.sit, time = a.time;
     const isQ4 = time === "q4" || time === "q4-under4";
     const leading = lead > 0, trailing = lead < 0;

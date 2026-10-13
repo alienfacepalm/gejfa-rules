@@ -27,7 +27,7 @@ const ASSETS = [
   "./data/diagrams.js",
   "./data/flows.js",
   "./manifest.webmanifest",
-  "./2025-gejfa-rules.pdf",
+  "./2026-gejfa-rules.pdf",
   "./icons/logo.png",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

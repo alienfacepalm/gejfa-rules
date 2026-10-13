@@ -2,7 +2,7 @@
   "name": "gejfa-rules",
   "private": true,
   "version": "1.0.0",
-  "description": "Skyline Spartans sideline lookup PWA for the 2025 GEJFA rulebook",
+  "description": "Skyline Spartans sideline lookup PWA for the 2026 GEJFA rulebook",
   "type": "module",
   "engines": {
     "node": ">=22"
